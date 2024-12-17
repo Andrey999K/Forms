@@ -1,53 +1,61 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
+  FormPage,
+  FormResponse,
+  FormResponses,
+  FormsEdit,
+  FormsNew,
   Home,
   Login,
-  Signup,
   Me,
-  FormsNew,
-  FormsEdit,
-  FormPage,
-  FormResponses,
-  FormResponse,
+  Signup,
 } from "./pages";
+import { PageLayout } from "./layouts/PageLayout.tsx";
+import { Routes } from "./utils/routesConfig.ts";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />,
+    path: Routes.HOME,
+    element: <PageLayout />,
+    children: [
+      {
+        path: Routes.HOME,
+        element: <Home />,
+      },
+      {
+        path: Routes.ME,
+        element: <Me />,
+      },
+      {
+        path: Routes.FORMS_NEW,
+        element: <FormsNew />,
+      },
+      {
+        path: Routes.FORMS_EDIT,
+        element: <FormsEdit />,
+      },
+      {
+        path: Routes.FORM_PAGE,
+        element: <FormPage />,
+      },
+      {
+        path: Routes.FORM_RESPONSES,
+        element: <FormResponses />,
+      },
+      {
+        path: Routes.FORM_RESPONSE,
+        element: <FormResponse />,
+      },
+    ],
   },
   {
-    path: "/login",
+    path: Routes.LOGIN,
     element: <Login />,
   },
   {
-    path: "/signup",
+    path: Routes.SIGNUP,
     element: <Signup />,
-  },
-  {
-    path: "/me",
-    element: <Me />,
-  },
-  {
-    path: "/forms/new",
-    element: <FormsNew />,
-  },
-  {
-    path: "/forms/:formId/edit",
-    element: <FormsEdit />,
-  },
-  {
-    path: "/forms/:formId",
-    element: <FormPage />,
-  },
-  {
-    path: "/forms/:formId/responses",
-    element: <FormResponses />,
-  },
-  {
-    path: "/forms/:formId/responses/:responseId",
-    element: <FormResponse />,
   },
 ]);
 
