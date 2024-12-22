@@ -1,15 +1,15 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Routes } from "../utils/routesConfig.js";
-import { UserOutlined } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps } from "antd";
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Routes } from '../utils/routesConfig.js';
+import { UserOutlined } from '@ant-design/icons';
+import { Button, Dropdown, MenuProps } from 'antd';
 
 const pages = [
   {
-    title: "Главная",
+    title: 'Главная',
     href: Routes.HOME,
   },
   {
-    title: "Новая форма",
+    title: 'Новая форма',
     href: Routes.FORMS_NEW,
   },
 ];
@@ -21,13 +21,13 @@ export const PageLayout = () => {
     navigate(Routes.LOGIN);
   };
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      key: "1",
+      key: '1',
       label: <NavLink to={Routes.ME}>Профиль</NavLink>,
     },
     {
-      key: "2",
+      key: '2',
       label: <Button onClick={handleExit}>Выход</Button>,
     },
   ];
@@ -39,9 +39,10 @@ export const PageLayout = () => {
           <div className="flex items-center gap-5">
             {pages.map((page) => (
               <NavLink
-                className={({ isActive }) => (isActive ? "text-blue-500" : "")}
+                className={({ isActive }) => (isActive ? 'text-blue-500' : '')}
                 to={page.href}
-                key={page.href}>
+                key={page.href}
+              >
                 {page.title}
               </NavLink>
             ))}
