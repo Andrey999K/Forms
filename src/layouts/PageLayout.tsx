@@ -41,8 +41,7 @@ export const PageLayout = () => {
               <NavLink
                 className={({ isActive }) => (isActive ? "text-blue-500" : "")}
                 to={page.href}
-                key={page.href}
-              >
+                key={page.href}>
                 {page.title}
               </NavLink>
             ))}
