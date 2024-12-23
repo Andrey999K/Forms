@@ -1,14 +1,14 @@
 import { Button } from 'antd';
 import { FC } from 'react';
 import { useDrag } from 'react-dnd';
-import { FieldType } from '../../types/form';
+import { FieldType } from '../types';
 
 interface Props {
   type: FieldType;
   children: React.ReactNode;
 }
 
-export const DraggableToolItem: FC<Props> = (props) => {
+export const ToolboxDraggableItem: FC<Props> = (props) => {
   const { type, children } = props;
   const [{ isDragging }, drag] = useDrag(() => ({
     type,

@@ -7,8 +7,8 @@ import {
   SaveOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
-import { DraggableToolItem } from './DraggableToolItem';
-import { FieldTypes } from '../../types/form';
+import { ToolboxDraggableItem } from './ToolboxDraggableItem';
+import { FieldTypes } from '../types';
 
 interface Props {
   onSaveConstructor: () => void;
@@ -22,20 +22,20 @@ export const ToolboxPanel: FC<Props> = (props) => {
       <div className="p-4">
         <h3 className="text-base font-medium mb-4">Элементы формы</h3>
         <div className="flex flex-col gap-2">
-          <DraggableToolItem type={FieldTypes.INPUT}>
+          <ToolboxDraggableItem type={FieldTypes.INPUT}>
             <FormOutlined className="mr-2" />
             Однострочный текст
-          </DraggableToolItem>
+          </ToolboxDraggableItem>
 
-          <DraggableToolItem type={FieldTypes.TEXTAREA}>
+          <ToolboxDraggableItem type={FieldTypes.TEXTAREA}>
             <AlignLeftOutlined className="mr-2" />
             Многострочный текст
-          </DraggableToolItem>
+          </ToolboxDraggableItem>
 
-          <DraggableToolItem type={FieldTypes.RADIO}>
+          <ToolboxDraggableItem type={FieldTypes.RADIO}>
             <CheckCircleOutlined className="mr-2" />
             Список выбора
-          </DraggableToolItem>
+          </ToolboxDraggableItem>
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 import { CloseOutlined, HolderOutlined } from '@ant-design/icons';
 import { Button, Input, Switch, Tooltip } from 'antd';
 import { FC, ReactNode } from 'react';
-import { ConstructorField } from '../types/form';
+import { ConstructorField } from '../types';
 
 interface Props {
   children: ReactNode;

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useDrop } from 'react-dnd';
-import { FieldType, FieldTypes } from '../types/form';
+import { FieldType, FieldTypes } from '../types';
 
 interface Props {
   onDropField: (type: FieldType) => void;
@@ -8,7 +8,7 @@ interface Props {
   className?: string;
 }
 
-export const DropZone: FC<Props> = (props) => {
+export const ConstructorDropZone: FC<Props> = (props) => {
   const { onDropField, children, className } = props;
   const [{ isOverNewItem }, drop] = useDrop(
     () => ({
