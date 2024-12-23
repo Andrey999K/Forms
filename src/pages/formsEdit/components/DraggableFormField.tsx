@@ -1,7 +1,7 @@
-import { FC, useRef } from "react";
-import { useDrag, useDrop } from "react-dnd";
-import { FieldTypes, ConstructorField } from "../types/form";
-import { ConstructorFieldWrapper } from "./FormFieldWrapper";
+import { FC, useRef } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
+import { FieldTypes, ConstructorField } from '../types/form';
+import { ConstructorFieldWrapper } from './FormFieldWrapper';
 
 interface Props {
   field: ConstructorField;
@@ -35,8 +35,7 @@ export const DraggableFormField: FC<Props> = (props) => {
       if (dragIndex === hoverIndex) return;
 
       const hoverBoundingRect = ref.current.getBoundingClientRect();
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
       const hoverClientY = (clientOffset?.y || 0) - hoverBoundingRect.top;
 
@@ -59,9 +58,7 @@ export const DraggableFormField: FC<Props> = (props) => {
         return (
           <ConstructorFieldWrapper {...commonProps}>
             <div className="p-2 w-full text-sm text-gray-600 text-left">
-              <div className="w-full border-dotted border-b-2">
-                Короткий ответ
-              </div>
+              <div className="w-full border-dotted border-b-2">Короткий ответ</div>
             </div>
           </ConstructorFieldWrapper>
         );
@@ -69,19 +66,13 @@ export const DraggableFormField: FC<Props> = (props) => {
         return (
           <ConstructorFieldWrapper {...commonProps}>
             <div className="p-2 w-full text-sm text-gray-600 text-left">
-              <div className="w-full border-dotted border-b-2">
-                Развернутый ответ
-              </div>
+              <div className="w-full border-dotted border-b-2">Развернутый ответ</div>
               <div className="w-full border-dotted border-b-2 min-h-5"></div>
             </div>
           </ConstructorFieldWrapper>
         );
       case FieldTypes.RADIO: {
-        return (
-          <ConstructorFieldWrapper {...commonProps}>
-            RADIO
-          </ConstructorFieldWrapper>
-        );
+        return <ConstructorFieldWrapper {...commonProps}>RADIO</ConstructorFieldWrapper>;
       }
       default:
         return null;
@@ -92,7 +83,7 @@ export const DraggableFormField: FC<Props> = (props) => {
     <div ref={ref} className={`relative group border rounded`}>
       <div
         className={`border-2 border-transparent rounded ${
-          isDragging ? "border-dashed border-gray-500" : ""
+          isDragging ? 'border-dashed border-gray-500' : ''
         }`}
       >
         {renderField()}

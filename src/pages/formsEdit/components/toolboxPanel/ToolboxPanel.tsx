@@ -1,14 +1,14 @@
-import { FC } from "react";
-import { Button, Divider } from "antd";
+import { FC } from 'react';
+import { Button, Divider } from 'antd';
 import {
   FormOutlined,
   AlignLeftOutlined,
   CheckCircleOutlined,
   SaveOutlined,
   DeleteOutlined,
-} from "@ant-design/icons";
-import { DraggableToolItem } from "./DraggableToolItem";
-import { FieldTypes } from "../../types/form";
+} from '@ant-design/icons';
+import { DraggableToolItem } from './DraggableToolItem';
+import { FieldTypes } from '../../types/form';
 
 interface Props {
   onSaveConstructor: () => void;
@@ -53,12 +53,7 @@ export const ToolboxPanel: FC<Props> = (props) => {
             Сохранить форму
           </Button>
 
-          <Button
-            danger
-            icon={<DeleteOutlined />}
-            className="w-full"
-            onClick={onRemoveConstructor}
-          >
+          <Button danger icon={<DeleteOutlined />} className="w-full" onClick={onRemoveConstructor}>
             Удалить форму
           </Button>
         </div>

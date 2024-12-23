@@ -1,7 +1,7 @@
-import { Button } from "antd";
-import { FC } from "react";
-import { useDrag } from "react-dnd";
-import { FieldType } from "../../types/form";
+import { Button } from 'antd';
+import { FC } from 'react';
+import { useDrag } from 'react-dnd';
+import { FieldType } from '../../types/form';
 
 interface Props {
   type: FieldType;

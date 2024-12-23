@@ -1,8 +1,8 @@
 export const FieldTypes = {
-  INPUT: "input",
-  TEXTAREA: "textarea",
-  RADIO: "radio",
-  FORM_ELEMENT: "form_element",
+  INPUT: 'input',
+  TEXTAREA: 'textarea',
+  RADIO: 'radio',
+  FORM_ELEMENT: 'form_element',
 } as const;
 
 export type FieldType = (typeof FieldTypes)[keyof typeof FieldTypes];

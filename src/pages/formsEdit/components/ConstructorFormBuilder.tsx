@@ -1,10 +1,10 @@
-import { FC, Fragment } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { ConstructorField, ConstructorForm, FieldType } from "../types/form";
-import { DropZone } from "./DropZone";
-import { DraggableFormField } from "./DraggableFormField";
-import { ToolboxPanel } from "./toolboxPanel";
+import { FC, Fragment } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { ConstructorField, ConstructorForm, FieldType } from '../types/form';
+import { DropZone } from './DropZone';
+import { DraggableFormField } from './DraggableFormField';
+import { ToolboxPanel } from './toolboxPanel';
 
 interface Props {
   constructor: ConstructorForm;
@@ -41,9 +41,7 @@ export const ConstructorFormBuilder: FC<Props> = (props) => {
             <h2 className="text-sm text-gray-600">Описание формы</h2>
           </div>
           <div className="flex flex-col">
-            {fields.length === 0 && (
-              <DropZone onDropField={onDropField} className="min-h-24" />
-            )}
+            {fields.length === 0 && <DropZone onDropField={onDropField} className="min-h-24" />}
             {fields.length > 0 && (
               <>
                 {fields.map((field, index) => (

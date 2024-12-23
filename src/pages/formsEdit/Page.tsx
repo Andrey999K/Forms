@@ -1,15 +1,15 @@
-import { FC, useCallback, useState } from "react";
-import { ConstructorFormBuilder } from "./components/ConstructorFormBuilder";
-import { useNavigate } from "react-router-dom";
-import { ConstructorField, ConstructorForm, FieldType } from "./types/form";
-import { v4 as uuidv4 } from "uuid";
+import { FC, useCallback, useState } from 'react';
+import { ConstructorFormBuilder } from './components/ConstructorFormBuilder';
+import { useNavigate } from 'react-router-dom';
+import { ConstructorField, ConstructorForm, FieldType } from './types/form';
+import { v4 as uuidv4 } from 'uuid';
 
 export const FormsEdit: FC = () => {
   const init = {
     id: uuidv4(),
     createdAt: new Date().getTime(),
-    title: "title",
-    description: "description",
+    title: 'title',
+    description: 'description',
     fields: [],
   } as ConstructorForm;
   const [constructor, setConstructor] = useState<ConstructorForm>(init);
@@ -21,7 +21,7 @@ export const FormsEdit: FC = () => {
       const newField: ConstructorField = {
         id: uuidv4(),
         type,
-        question: "",
+        question: '',
         require: false,
       };
       const newFields = [...fields];
@@ -44,18 +44,13 @@ export const FormsEdit: FC = () => {
     });
   }, []);
 
-  const updateField = useCallback(
-    (id: string, updates: Partial<ConstructorField>) => {
-      setConstructor((prev) => {
-        const { fields } = prev;
-        const newFields = fields.map((field) =>
-          field.id === id ? { ...field, ...updates } : field
-        );
-        return { ...prev, fields: newFields };
-      });
-    },
-    []
-  );
+  const updateField = useCallback((id: string, updates: Partial<ConstructorField>) => {
+    setConstructor((prev) => {
+      const { fields } = prev;
+      const newFields = fields.map((field) => (field.id === id ? { ...field, ...updates } : field));
+      return { ...prev, fields: newFields };
+    });
+  }, []);
 
   const removeField = useCallback((id: string) => {
     setConstructor((prev) => {
@@ -66,11 +61,11 @@ export const FormsEdit: FC = () => {
   }, []);
 
   const handleSaveForms = () => {
-    console.log("handleSaveForms", constructor);
+    console.log('handleSaveForms', constructor);
   };
   const handleRemoveForms = () => {
     setConstructor((prev) => ({ ...prev, fields: [] }));
-    navigate("/");
+    navigate('/');
   };
 
   return (
