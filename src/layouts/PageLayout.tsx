@@ -5,11 +5,11 @@ import { Routes } from "../utils/routesConfig.ts";
 
 const pages = [
   {
-    title: "Главная",
+    title: 'Главная',
     href: Routes.HOME,
   },
   {
-    title: "Новая форма",
+    title: 'Новая форма',
     href: Routes.FORMS_NEW,
   },
 ];
@@ -21,13 +21,13 @@ export const PageLayout = () => {
     navigate(Routes.LOGIN);
   };
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      key: "1",
+      key: '1',
       label: <NavLink to={Routes.ME}>Профиль</NavLink>,
     },
     {
-      key: "2",
+      key: '2',
       label: <Button onClick={handleExit}>Выход</Button>,
     },
   ];
@@ -39,7 +39,7 @@ export const PageLayout = () => {
           <div className="flex items-center gap-5">
             {pages.map((page) => (
               <NavLink
-                className={({ isActive }) => (isActive ? "text-blue-500" : "")}
+                className={({ isActive }) => (isActive ? 'text-blue-500' : '')}
                 to={page.href}
                 key={page.href}
               >

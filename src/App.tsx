@@ -1,5 +1,5 @@
-import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import './App.css';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import {
   FormPage,
   FormResponse,
@@ -10,9 +10,9 @@ import {
   Login,
   Me,
   Signup,
-} from "./pages";
-import { PageLayout } from "./layouts/PageLayout.tsx";
-import { Routes } from "./utils/routesConfig.ts";
+} from './pages';
+import { PageLayout } from './layouts/PageLayout.tsx';
+import { Routes } from './utils/routesConfig.ts';
 
 const router = createBrowserRouter([
   {
