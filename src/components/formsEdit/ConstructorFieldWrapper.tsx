@@ -1,16 +1,16 @@
 import { CloseOutlined, HolderOutlined } from '@ant-design/icons';
 import { Button, Input, Switch, Tooltip } from 'antd';
 import { FC, ReactNode } from 'react';
-import { ConstructorField } from '../types';
+import { ConstructorField } from '../../types';
 
-interface Props {
+type Props = {
   children: ReactNode;
   dragRef: React.RefObject<HTMLButtonElement>;
   field: ConstructorField;
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
   className?: string;
-}
+};
 
 export const ConstructorFieldWrapper: FC<Props> = (props) => {
   const { field, children, dragRef, onRemoveField, onUpdateField, className = '' } = props;

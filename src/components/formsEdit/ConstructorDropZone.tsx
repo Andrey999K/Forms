@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import { useDrop } from 'react-dnd';
-import { FieldType, FieldTypes } from '../types';
+import { FieldType, FieldTypes } from '../../types';
 
-interface Props {
+type Props = {
   onDropField: (type: FieldType) => void;
   children?: React.ReactNode;
   className?: string;
-}
+};
 
 export const ConstructorDropZone: FC<Props> = (props) => {
   const { onDropField, children, className } = props;

@@ -1,12 +1,12 @@
-export const FieldTypes = {
-  INPUT: 'input',
-  TEXTAREA: 'textarea',
-  RADIO: 'radio',
-} as const;
+export enum FieldTypes {
+  INPUT = 'input',
+  TEXTAREA = 'textarea',
+  RADIO = 'radio',
+}
 
 export type FieldType = (typeof FieldTypes)[keyof typeof FieldTypes];
 
-export interface ConstructorField {
+export type ConstructorField = {
   id: string;
   type: FieldType;
   require: boolean;
@@ -16,12 +16,12 @@ export interface ConstructorField {
     id: string;
     label: string;
   }[];
-}
+};
 
-export interface ConstructorForm {
+export type ConstructorForm = {
   id: string;
   title: string;
   description: string;
   createdAt: number;
   fields: ConstructorField[];
-}
+};

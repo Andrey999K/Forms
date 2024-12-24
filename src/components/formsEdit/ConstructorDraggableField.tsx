@@ -1,15 +1,15 @@
 import { FC, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { FieldTypes, ConstructorField } from '../types';
+import { FieldTypes, ConstructorField } from '../../types';
 import { ConstructorFieldWrapper } from './ConstructorFieldWrapper';
 
-interface Props {
+type Props = {
   field: ConstructorField;
   index: number;
   onMoveField: (dragIndex: number, hoverIndex: number) => void;
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
-}
+};
 
 export const ConstructorDraggableField: FC<Props> = (props) => {
   const { field, index, onMoveField, onRemoveField, onUpdateField } = props;

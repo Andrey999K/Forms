@@ -8,12 +8,12 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons';
 import { ToolboxDraggableItem } from './ToolboxDraggableItem';
-import { FieldTypes } from '../types';
+import { FieldTypes } from '../../types';
 
-interface Props {
+type Props = {
   onSaveConstructor: () => void;
   onRemoveConstructor: () => void;
-}
+};
 
 export const ToolboxPanel: FC<Props> = (props) => {
   const { onSaveConstructor, onRemoveConstructor } = props;

@@ -1,21 +1,22 @@
-import { FC, useCallback, useState } from 'react';
-import { ConstructorFormBuilder } from '../../components/ConstructorFormBuilder';
+import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ConstructorField, ConstructorForm, FieldType } from '../../types';
 import { v4 as uuidv4 } from 'uuid';
+import { ConstructorFormBuilder } from '../../components/formsEdit/ConstructorFormBuilder';
+import { ConstructorField, ConstructorForm, FieldType } from '../../types';
+
+const initConstructor: ConstructorForm = {
+  id: uuidv4(),
+  createdAt: new Date().getTime(),
+  title: 'Название формы',
+  description: 'Описание формы',
+  fields: [],
+};
 
 export const FormsEdit: FC = () => {
-  const init = {
-    id: uuidv4(),
-    createdAt: new Date().getTime(),
-    title: 'title',
-    description: 'description',
-    fields: [],
-  } as ConstructorForm;
-  const [constructor, setConstructor] = useState<ConstructorForm>(init);
+  const [constructor, setConstructor] = useState<ConstructorForm>(initConstructor);
   const navigate = useNavigate();
 
-  const handleDropField = useCallback((type: FieldType, index?: number) => {
+  const handleDropField = (type: FieldType, index?: number) => {
     setConstructor((prev) => {
       const { fields } = prev;
       const newField: ConstructorField = {
@@ -32,9 +33,9 @@ export const FormsEdit: FC = () => {
       }
       return { ...prev, fields: newFields };
     });
-  }, []);
+  };
 
-  const moveField = useCallback((dragIndex: number, hoverIndex: number) => {
+  const moveField = (dragIndex: number, hoverIndex: number) => {
     setConstructor((prev) => {
       const { fields } = prev;
       const newFields = [...fields];
@@ -42,23 +43,23 @@ export const FormsEdit: FC = () => {
       newFields.splice(hoverIndex, 0, removed);
       return { ...prev, fields: newFields };
     });
-  }, []);
+  };
 
-  const updateField = useCallback((id: string, updates: Partial<ConstructorField>) => {
+  const updateField = (id: string, updates: Partial<ConstructorField>) => {
     setConstructor((prev) => {
       const { fields } = prev;
       const newFields = fields.map((field) => (field.id === id ? { ...field, ...updates } : field));
       return { ...prev, fields: newFields };
     });
-  }, []);
+  };
 
-  const removeField = useCallback((id: string) => {
+  const removeField = (id: string) => {
     setConstructor((prev) => {
       const { fields } = prev;
       const newFields = fields.filter((field) => field.id !== id);
       return { ...prev, fields: newFields };
     });
-  }, []);
+  };
 
   const handleSaveForms = () => {
     console.log('handleSaveForms', constructor);
@@ -66,6 +67,12 @@ export const FormsEdit: FC = () => {
   const handleRemoveForms = () => {
     setConstructor((prev) => ({ ...prev, fields: [] }));
     navigate('/');
+  };
+
+  const handleChangeForm = ({ value, name }: { value: string; name: string }) => {
+    console.log('handleChangeForm', { value, name });
+
+    setConstructor((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -77,6 +84,7 @@ export const FormsEdit: FC = () => {
       onMoveField={moveField}
       onRemoveField={removeField}
       onUpdateField={updateField}
+      onChangeForm={handleChangeForm}
     />
   );
 };
