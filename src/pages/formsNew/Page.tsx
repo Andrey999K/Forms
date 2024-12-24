@@ -1,9 +1,9 @@
 import { Spin } from 'antd';
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
 export const FormsNew = () => {
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = useState(true);
   const formId = 123;
 
   useEffect(() => {
