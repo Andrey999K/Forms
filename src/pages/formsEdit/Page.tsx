@@ -1,7 +1,7 @@
 import { FC, useCallback, useState } from 'react';
 import { ConstructorFormBuilder } from '../../components/ConstructorFormBuilder';
 import { useNavigate } from 'react-router-dom';
-import { ConstructorField, ConstructorForm, FieldType } from './types/form';
+import { ConstructorField, ConstructorForm, FieldType } from '../../types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const FormsEdit: FC = () => {

@@ -17,7 +17,7 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
   const dragRef = useRef<HTMLButtonElement>(null);
 
   const [{ isDragging }, drag, dragPreview] = useDrag({
-    type: FieldTypes.FORM_ELEMENT,
+    type: field.type,
     item: { index },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -25,7 +25,7 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
   });
 
   const [, drop] = useDrop({
-    accept: FieldTypes.FORM_ELEMENT,
+    accept: Object.values(FieldTypes),
     hover(item: { index: number }, monitor) {
       if (!ref.current) return;
 
