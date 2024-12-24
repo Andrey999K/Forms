@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { ConstructorFormBuilder } from '../../components/formsEdit/ConstructorFormBuilder';
 import { ConstructorField, ConstructorForm, FieldType } from '../../types';
+import { toast } from 'react-toastify';
 
 const initConstructor: ConstructorForm = {
   id: uuidv4(),
@@ -63,9 +64,20 @@ export const FormsEdit: FC = () => {
 
   const handleSaveForms = () => {
     console.log('handleSaveForms', constructor);
+
+    // if (isError) {
+    //   toast.error('Ошибка сохранения');
+    //   return;
+    // }
+    toast.success('Сохранено успешно');
   };
   const handleRemoveForms = () => {
     setConstructor((prev) => ({ ...prev, fields: [] }));
+    // if (isError) {
+    //   toast.error('Ошибка при удалении');
+    //   return;
+    // }
+    toast.success('Удалено успешно');
     navigate('/');
   };
 
