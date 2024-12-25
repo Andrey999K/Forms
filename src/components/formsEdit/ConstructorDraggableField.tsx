@@ -1,7 +1,9 @@
 import { FC, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { v4 as uuidv4 } from 'uuid';
 import { FieldTypes, ConstructorField } from '../../types';
 import { ConstructorFieldWrapper } from './ConstructorFieldWrapper';
+import { RadioEdit } from './RadioEdit';
 
 type Props = {
   field: ConstructorField;
@@ -57,22 +59,50 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
       case FieldTypes.INPUT:
         return (
           <ConstructorFieldWrapper {...commonProps}>
-            <div className="p-2 w-full text-sm text-gray-600 text-left">
-              <div className="w-full border-dotted border-b-2">Короткий ответ</div>
+            <div className="p-2 w-full text-sm text-gray-600 text-left border-2 rounded border-dotted bg-gray-100">
+              Короткий ответ
             </div>
           </ConstructorFieldWrapper>
         );
       case FieldTypes.TEXTAREA:
         return (
           <ConstructorFieldWrapper {...commonProps}>
-            <div className="p-2 w-full text-sm text-gray-600 text-left">
-              <div className="w-full border-dotted border-b-2">Развернутый ответ</div>
-              <div className="w-full border-dotted border-b-2 min-h-5"></div>
+            <div className="p-2 h-20 w-full text-sm text-gray-600 text-left border-2 rounded border-dotted bg-gray-100">
+              Развернутый ответ
             </div>
           </ConstructorFieldWrapper>
         );
-      case FieldTypes.RADIO: {
-        return <ConstructorFieldWrapper {...commonProps}>RADIO</ConstructorFieldWrapper>;
+      case FieldTypes.RADIO:
+      case FieldTypes.CHECKBOX: {
+        const handleAddOption = () => {
+          const options = field?.options || [];
+          const id = uuidv4();
+          onUpdateField(field.id, { options: [...options, { id, label: '' }] });
+        };
+
+        const handleChangeOption = (id: string, label: string) => {
+          const options = field?.options || [];
+          const index = options.findIndex((option) => option.id === id);
+          options[index] = { ...options[index], label };
+          onUpdateField(field.id, { options });
+        };
+
+        const handleRemoveOption = (id: string) => {
+          const options = field?.options || [];
+          onUpdateField(field.id, { options: options.filter((option) => option.id !== id) });
+        };
+
+        return (
+          <ConstructorFieldWrapper {...commonProps}>
+            <RadioEdit
+              data={field}
+              onAdd={handleAddOption}
+              onChange={handleChangeOption}
+              onRemove={handleRemoveOption}
+              onChangeType={(type) => onUpdateField(field.id, { type })}
+            />
+          </ConstructorFieldWrapper>
+        );
       }
       default:
         return null;

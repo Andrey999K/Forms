@@ -2,6 +2,7 @@ export enum FieldTypes {
   INPUT = 'input',
   TEXTAREA = 'textarea',
   RADIO = 'radio',
+  CHECKBOX = 'checkbox',
 }
 
 export type FieldType = (typeof FieldTypes)[keyof typeof FieldTypes];
