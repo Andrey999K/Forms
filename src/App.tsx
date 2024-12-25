@@ -1,5 +1,6 @@
-import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import './App.css';
+import { PageLayout } from './layouts/PageLayout.tsx';
 import {
   FormPage,
   FormResponse,
@@ -11,7 +12,6 @@ import {
   Me,
   Signup,
 } from './pages';
-import { PageLayout } from './layouts/PageLayout.tsx';
 import { Routes } from './utils/routesConfig.ts';
 
 const router = createBrowserRouter([
