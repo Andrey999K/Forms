@@ -1,7 +1,7 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Input, Radio, Select, Tooltip } from 'antd';
 import { FC } from 'react';
-import { ConstructorField, FieldTypes } from '../../types';
+import { ConstructorField, FieldTypes } from '@/types';
 
 type Props = {
   data: ConstructorField;

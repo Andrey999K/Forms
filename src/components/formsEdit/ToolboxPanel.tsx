@@ -8,7 +8,7 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons';
 import { ToolboxDraggableItem } from './ToolboxDraggableItem';
-import { FieldTypes } from '../../types';
+import { FieldTypes } from '@/types';
 
 type Props = {
   onSaveConstructor: () => void;

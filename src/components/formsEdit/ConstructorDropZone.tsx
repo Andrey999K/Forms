@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useDrop } from 'react-dnd';
-import { FieldType, FieldTypes } from '../../types';
+import { FieldType, FieldTypes } from '@/types';
 
 type Props = {
   onDropField: (type: FieldType) => void;
