@@ -1,6 +1,7 @@
+import { Slice, Sort } from '@/types';
 import { Card } from '@/types/card';
 
-export const CardsMock: Card[] = [
+export const cardsMock: Card[] = [
   {
     id: '0',
     title: 'Item 0',
@@ -602,3 +603,35 @@ export const CardsMock: Card[] = [
     responseCount: 109,
   },
 ];
+
+export const getMockedCard = (
+  slice: Slice = { offset: 0, limit: 30 },
+  order: Sort = Sort.ASC,
+  searchValue: string = ''
+): Promise<Card[]> => {
+  return new Promise<Card[]>((resolve) => {
+    setTimeout(() => {
+      let returnedArray = cardsMock;
+
+      returnedArray = [...cardsMock].sort((a, b) => {
+        let prev = a;
+        let next = b;
+
+        if (order === Sort.DESC) {
+          prev = b;
+          next = a;
+        }
+
+        return new Date(prev.createdAt) > new Date(next.createdAt) ? 1 : -1;
+      });
+
+      if (searchValue) {
+        returnedArray = returnedArray.filter((item) => item.title.includes(searchValue));
+      }
+
+      returnedArray = returnedArray.slice(slice.offset, slice.limit);
+
+      resolve(returnedArray);
+    }, 200);
+  });
+};

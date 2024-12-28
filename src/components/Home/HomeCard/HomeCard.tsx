@@ -16,7 +16,9 @@ export const HomeCard = (props: Props) => {
   return (
     <Card title={item.title}>
       <Flex gap={8}>
-        <Button className="grow">Изменить</Button>
+        <Button href={`/forms/${item.id}/edit`} className="grow">
+          Изменить
+        </Button>
         <Button className="grow" danger onClick={handleDeleteClick}>
           Удалить
         </Button>
