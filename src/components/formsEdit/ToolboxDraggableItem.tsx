@@ -11,7 +11,7 @@ type Props = {
 export const ToolboxDraggableItem: FC<Props> = (props) => {
   const { type, children } = props;
   const [{ isDragging }, drag] = useDrag(() => ({
-    type, // Оставляем оригинальный тип для новых элементов
+    type,
     item: { type, isNew: true },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),

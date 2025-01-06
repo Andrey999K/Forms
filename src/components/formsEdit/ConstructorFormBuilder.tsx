@@ -32,7 +32,6 @@ export const ConstructorFormBuilder: FC<Props> = (props) => {
   const { fields } = constructor;
   const workspaceRef = useRef<HTMLDivElement>(null);
 
-  // Функция для определения, находится ли элемент за пределами рабочей области
   const isOutsideWorkspace = (x: number, y: number) => {
     if (!workspaceRef.current) return false;
     const rect = workspaceRef.current.getBoundingClientRect();
@@ -46,10 +45,7 @@ export const ConstructorFormBuilder: FC<Props> = (props) => {
           onSaveConstructor={onSaveConstructor}
           onRemoveConstructor={onRemoveConstructor}
         />
-        <div
-          ref={workspaceRef}
-          className="flex flex-col gap-4 w-full relative bg-white min-h-[600px] rounded-lg shadow-sm"
-        >
+        <div className="flex flex-col w-full relative">
           <div className="flex flex-col gap-2 p-4">
             <ConstructorNameModal
               value={constructor.title}
@@ -68,18 +64,22 @@ export const ConstructorFormBuilder: FC<Props> = (props) => {
               <h2 className="text-sm text-gray-600">{constructor.description}</h2>
             </ConstructorNameModal>
           </div>
-          <div className="flex flex-col">
-            {fields.length === 0 && (
-              <ConstructorDropZone onDropField={onDropField} className="min-h-24" />
-            )}
-            {fields.length > 0 && (
+          <div ref={workspaceRef} className="flex flex-col rounded-lg shadow-sm">
+            {fields.length === 0 ? (
+              <ConstructorDropZone
+                onDropField={(type) => onDropField(type, 0)}
+                className="min-h-24"
+                index={0}
+              />
+            ) : (
               <>
+                <ConstructorDropZone
+                  onDropField={(type) => onDropField(type, 0)}
+                  className="min-h-5"
+                  index={0}
+                />
                 {fields.map((field, index) => (
                   <Fragment key={field.id}>
-                    <ConstructorDropZone
-                      onDropField={(type) => onDropField(type, index)}
-                      className="min-h-5"
-                    />
                     <ConstructorDraggableField
                       field={field}
                       index={index}
@@ -88,12 +88,13 @@ export const ConstructorFormBuilder: FC<Props> = (props) => {
                       onUpdateField={onUpdateField}
                       isOutsideWorkspace={isOutsideWorkspace}
                     />
+                    <ConstructorDropZone
+                      onDropField={(type) => onDropField(type, index + 1)}
+                      className="min-h-5"
+                      index={index + 1}
+                    />
                   </Fragment>
                 ))}
-                <ConstructorDropZone
-                  onDropField={(type) => onDropField(type, fields.length)}
-                  className="min-h-5"
-                />
               </>
             )}
           </div>
