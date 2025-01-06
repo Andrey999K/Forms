@@ -1,12 +1,9 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { v4 as uuidv4 } from 'uuid';
-import { FieldTypes, ConstructorField } from '../../types';
+import { ConstructorField, FieldExists, FieldTypes } from '../../types';
 import { ConstructorFieldWrapper } from './ConstructorFieldWrapper';
 import { RadioEdit } from './RadioEdit';
-
-// Добавляем новый тип для существующих полей
-const EXISTING_FIELD = 'EXISTING_FIELD';
 
 type Props = {
   field: ConstructorField;
@@ -24,12 +21,12 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
   const [isOverDelete, setIsOverDelete] = useState(false);
 
   const [{ isDragging }, drag, dragPreview] = useDrag({
-    type: EXISTING_FIELD, // Изменяем тип на EXISTING_FIELD
+    type: FieldExists,
     item: { index, id: field.id },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-    end: (item, monitor) => {
+    end: (_, monitor) => {
       const dropResult = monitor.getDropResult();
       const { x, y } = monitor.getClientOffset() || { x: 0, y: 0 };
 
@@ -40,7 +37,7 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
   });
 
   const [, drop] = useDrop({
-    accept: EXISTING_FIELD, // Принимаем только существующие поля
+    accept: FieldExists,
     hover(item: { index: number }, monitor) {
       if (!ref.current) return;
 
