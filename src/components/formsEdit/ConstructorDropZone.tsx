@@ -12,14 +12,14 @@ export const ConstructorDropZone: FC<Props> = (props) => {
   const { onDropField, children, className } = props;
   const [{ isOverNewItem }, drop] = useDrop(
     () => ({
-      accept: Object.values(FieldTypes),
+      accept: [...Object.values(FieldTypes), 'EXISTING_FIELD'], // Добавляем принятие существующих полей
       drop: (item: { type: FieldType; isNew: boolean }, monitor) => {
         if (monitor.isOver({ shallow: true }) && item.isNew) {
           onDropField(item.type);
         }
       },
       collect: (monitor) => ({
-        isOverNewItem: monitor.isOver({ shallow: true }) && monitor.getItem().isNew,
+        isOverNewItem: monitor.isOver({ shallow: true }) && monitor.getItem()?.isNew,
       }),
     }),
     []

@@ -1,4 +1,4 @@
-import { FC, Fragment } from 'react';
+import { FC, Fragment, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ConstructorField, ConstructorForm, FieldType } from '../../types';
@@ -30,6 +30,14 @@ export const ConstructorFormBuilder: FC<Props> = (props) => {
     onChangeForm,
   } = props;
   const { fields } = constructor;
+  const workspaceRef = useRef<HTMLDivElement>(null);
+
+  // Функция для определения, находится ли элемент за пределами рабочей области
+  const isOutsideWorkspace = (x: number, y: number) => {
+    if (!workspaceRef.current) return false;
+    const rect = workspaceRef.current.getBoundingClientRect();
+    return x < rect.left || x > rect.right || y < rect.top || y > rect.bottom;
+  };
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -38,7 +46,10 @@ export const ConstructorFormBuilder: FC<Props> = (props) => {
           onSaveConstructor={onSaveConstructor}
           onRemoveConstructor={onRemoveConstructor}
         />
-        <div className="flex flex-col gap-4 w-full">
+        <div
+          ref={workspaceRef}
+          className="flex flex-col gap-4 w-full relative bg-white min-h-[600px] rounded-lg shadow-sm"
+        >
           <div className="flex flex-col gap-2 p-4">
             <ConstructorNameModal
               value={constructor.title}
@@ -75,6 +86,7 @@ export const ConstructorFormBuilder: FC<Props> = (props) => {
                       onMoveField={onMoveField}
                       onRemoveField={onRemoveField}
                       onUpdateField={onUpdateField}
+                      isOutsideWorkspace={isOutsideWorkspace}
                     />
                   </Fragment>
                 ))}
