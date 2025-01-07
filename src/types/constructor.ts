@@ -1,3 +1,5 @@
+export const FieldExists = 'exists';
+
 export enum FieldTypes {
   INPUT = 'input',
   TEXTAREA = 'textarea',

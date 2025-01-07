@@ -1,13 +1,10 @@
-import { FieldTypes, FieldType, ConstructorField, ConstructorForm } from './constructor';
-
-export const FieldExists = 'exists';
-
-export enum FieldTypes {
-  INPUT = 'input',
-  TEXTAREA = 'textarea',
-  RADIO = 'radio',
-  CHECKBOX = 'checkbox',
-}
+import {
+  FieldExists,
+  FieldTypes,
+  FieldType,
+  ConstructorField,
+  ConstructorForm,
+} from './constructor';
 
 export enum Sort {
   ASC = 'ASC',
@@ -19,17 +16,5 @@ export type Slice = {
   limit: number;
 };
 
-export type ConstructorField = {
-  id: string;
-  type: FieldType;
-  require: boolean;
-  question: string;
-  // for 'radio'
-  options?: {
-    id: string;
-    label: string;
-  }[];
-};
-
 export type { FieldType, ConstructorField, ConstructorForm };
-export { FieldTypes };
+export { FieldExists, FieldTypes };
