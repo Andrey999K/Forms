@@ -19,7 +19,7 @@ export const ToolboxDraggableItem: FC<Props> = (props) => {
   }));
 
   return (
-    <div ref={drag} style={{ opacity: isDragging ? 0.5 : 1 }}>
+    <div ref={drag} className={isDragging ? 'opacity-50' : 'opacity-100'}>
       <Button className="w-full text-left justify-start" type="text">
         {children}
       </Button>

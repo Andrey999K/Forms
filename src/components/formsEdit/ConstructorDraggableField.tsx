@@ -1,7 +1,7 @@
-import { FC, useRef } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { v4 as uuidv4 } from 'uuid';
-import { FieldTypes, ConstructorField } from '@/types';
+import { ConstructorField, FieldExists, FieldTypes } from '@/types';
 import { ConstructorFieldWrapper } from './ConstructorFieldWrapper';
 import { RadioEdit } from './RadioEdit';
 
@@ -11,23 +11,33 @@ type Props = {
   onMoveField: (dragIndex: number, hoverIndex: number) => void;
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
+  isOutsideWorkspace: (x: number, y: number) => boolean;
 };
 
 export const ConstructorDraggableField: FC<Props> = (props) => {
-  const { field, index, onMoveField, onRemoveField, onUpdateField } = props;
+  const { field, index, onMoveField, onRemoveField, onUpdateField, isOutsideWorkspace } = props;
   const ref = useRef<HTMLDivElement>(null);
   const dragRef = useRef<HTMLButtonElement>(null);
+  const [isOverDelete, setIsOverDelete] = useState(false);
 
   const [{ isDragging }, drag, dragPreview] = useDrag({
-    type: field.type,
-    item: { index },
+    type: FieldExists,
+    item: { index, id: field.id },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
+    end: (_, monitor) => {
+      const dropResult = monitor.getDropResult();
+      const { x, y } = monitor.getClientOffset() || { x: 0, y: 0 };
+
+      if (!dropResult && isOutsideWorkspace(x, y)) {
+        onRemoveField(field.id);
+      }
+    },
   });
 
   const [, drop] = useDrop({
-    accept: Object.values(FieldTypes),
+    accept: FieldExists,
     hover(item: { index: number }, monitor) {
       if (!ref.current) return;
 
@@ -48,6 +58,18 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
       item.index = hoverIndex;
     },
   });
+
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleDrag = (e: MouseEvent) => {
+      const isOutside = isOutsideWorkspace(e.clientX, e.clientY);
+      setIsOverDelete(isOutside);
+    };
+
+    document.addEventListener('mousemove', handleDrag);
+    return () => document.removeEventListener('mousemove', handleDrag);
+  }, [isDragging, isOutsideWorkspace]);
 
   dragPreview(drop(ref));
   drag(dragRef);
@@ -110,7 +132,10 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
   };
 
   return (
-    <div ref={ref} className={`relative group border rounded`}>
+    <div
+      ref={ref}
+      className={`relative group border rounded ${isOverDelete ? 'opacity-50 border-red-500' : ''}`}
+    >
       <div
         className={`border-2 border-transparent rounded ${
           isDragging ? 'border-dashed border-gray-500' : ''
