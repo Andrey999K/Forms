@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { v4 as uuidv4 } from 'uuid';
-import { ConstructorField, FieldExists, FieldTypes } from '../../types';
+import { ConstructorField, FieldExists, FieldTypes } from '@/types';
 import { ConstructorFieldWrapper } from './ConstructorFieldWrapper';
 import { RadioEdit } from './RadioEdit';
 

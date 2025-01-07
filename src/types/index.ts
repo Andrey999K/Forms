@@ -1,3 +1,5 @@
+import { FieldTypes, FieldType, ConstructorField, ConstructorForm } from './constructor';
+
 export const FieldExists = 'exists';
 
 export enum FieldTypes {
@@ -7,7 +9,15 @@ export enum FieldTypes {
   CHECKBOX = 'checkbox',
 }
 
-export type FieldType = (typeof FieldTypes)[keyof typeof FieldTypes];
+export enum Sort {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+
+export type Slice = {
+  offset: number;
+  limit: number;
+};
 
 export type ConstructorField = {
   id: string;
@@ -21,10 +31,5 @@ export type ConstructorField = {
   }[];
 };
 
-export type ConstructorForm = {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: number;
-  fields: ConstructorField[];
-};
+export type { FieldType, ConstructorField, ConstructorForm };
+export { FieldTypes };

@@ -1,7 +1,7 @@
 import { FC, Fragment, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { ConstructorField, ConstructorForm, FieldType } from '../../types';
+import { ConstructorField, ConstructorForm, FieldType } from '@/types';
 import { ConstructorDropZone } from './ConstructorDropZone';
 import { ConstructorDraggableField } from './ConstructorDraggableField';
 import { ToolboxPanel } from './ToolboxPanel';

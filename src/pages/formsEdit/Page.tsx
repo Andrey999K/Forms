@@ -1,8 +1,8 @@
 import { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { ConstructorFormBuilder } from '../../components/formsEdit/ConstructorFormBuilder';
-import { ConstructorField, ConstructorForm, FieldType } from '../../types';
+import { ConstructorFormBuilder } from '@/components/formsEdit/ConstructorFormBuilder';
+import { ConstructorField, ConstructorForm, FieldType } from '@/types';
 import { toast } from 'react-toastify';
 
 const initConstructor: ConstructorForm = {
