@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Flip, Theme, ToastPosition } from 'react-toastify';
 
 type TToastConfig = {
