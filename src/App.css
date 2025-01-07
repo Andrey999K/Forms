@@ -1,7 +1,7 @@
 #root {
-  max-width: 1280px;
+  /* max-width: 1280px; */
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 2rem; */
   text-align: center;
 }
 
@@ -40,3 +40,24 @@
 .read-the-docs {
   color: #888;
 }
+
+/* .ant-btn:focus,
+.ant-btn:active,
+.ant-btn:hover {
+  box-shadow: none !important;
+  border-color: transparent !important;
+  outline: none !important;
+  transition: none !important;
+}
+
+.ant-btn:focus {
+  box-shadow: none !important;
+  border-color: transparent !important;
+  outline: none !important;
+}
+
+.ant-btn:active {
+  box-shadow: none !important;
+  border-color: transparent !important;
+  outline: none !important;
+} */

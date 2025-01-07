@@ -13,6 +13,9 @@ import {
   Signup,
 } from './pages';
 import { Routes } from './utils/routesConfig.ts';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import { toastConfig } from './utils/toast.config.ts';
 
 const router = createBrowserRouter([
   {
@@ -60,7 +63,12 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <ToastContainer {...toastConfig} />
+    </>
+  );
 }
 
 export default App;

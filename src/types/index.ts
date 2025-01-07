@@ -26,3 +26,11 @@ export type ConstructorForm = {
   createdAt: number;
   fields: ConstructorField[];
 };
+
+export type AuthFormValues = {
+  name?: string;
+  surname?: string;
+  email: string;
+  password: string;
+  copyPassword?: string;
+};
