@@ -16,6 +16,7 @@ type Props = {
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
   onChangeForm: ({ value, name }: { value: string; name: string }) => void;
+  isLoading?: boolean;
 };
 
 export const ConstructorFormBuilder: FC<Props> = (props) => {

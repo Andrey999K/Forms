@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import './App.css';
+import { Provider } from 'react-redux';
 import { PageLayout } from './layouts/PageLayout.tsx';
 import {
   FormPage,
@@ -13,6 +13,8 @@ import {
   Signup,
 } from './pages';
 import { Routes } from './utils/routesConfig.ts';
+import { store } from './redux/store.ts';
+import './App.css';
 
 const router = createBrowserRouter([
   {
@@ -60,7 +62,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  );
 }
 
 export default App;
