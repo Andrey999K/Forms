@@ -1,20 +1,40 @@
+import { FC, useEffect } from 'react';
 import { Spin } from 'antd';
-import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useCreateFormMutation } from '@/redux/form';
+import { toast } from 'react-toastify';
 
-export const FormsNew = () => {
-  const [loading, setLoading] = useState(true);
-  const formId = 123;
+export const FormsNew: FC = () => {
+  const navigate = useNavigate();
+  const [createForm, { isLoading, isSuccess, data: newForm }] = useCreateFormMutation();
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    const initForm = async () => {
+      try {
+        await createForm({}).unwrap();
+      } catch (error) {
+        console.log('Error', error);
+        toast.error('Ошибка при создании формы');
+        navigate('/');
+      }
+    };
+
+    initForm();
   }, []);
 
-  if (loading) {
-    return <Spin />;
+  useEffect(() => {
+    if (isSuccess && newForm?.id) {
+      navigate(`/forms/${newForm.id}/edit`);
+    }
+  }, [isSuccess, newForm]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Spin size="large" />
+      </div>
+    );
   }
 
-  return <Navigate to={`/forms/${formId}/edit`} />;
+  return null;
 };
