@@ -8,6 +8,7 @@ const CARDS_PER_PAGE = 30;
 
 export const useCards = () => {
   const [list, setList] = useState<Card[]>([]);
+  console.log('####: ', list);
   const [search, setSearch] = useState<string>('');
   const [order, setOrder] = useState<Sort>(Sort.DESC);
   const [page, setPage] = useState<number>(0);

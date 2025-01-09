@@ -25,7 +25,7 @@ export const Home = () => {
     useCards();
 
   const onDelete = async (id: string) => {
-    setList((prev) => prev.filter((item) => item.id !== id));
+    setList((prev) => prev.filter((item) => String(item.id) !== String(id)));
 
     try {
       await cardService.remove(id);

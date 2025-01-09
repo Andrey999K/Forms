@@ -5,13 +5,11 @@ export const http = axios.create({
   baseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
 });
 
-const transformData = (data: any) =>
-  data && typeof data === 'object' && !data._id
-    ? Object.entries(data).map(([key, value]) => ({
-        id: key,
-        ...(value as Record<string, unknown>),
-      }))
-    : data;
+const transformData = (data: Record<string, any>) =>
+  Object.entries(data || {})
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .filter(([_, value]) => value)
+    .map(([key, value]) => ({ id: key, ...value }));
 
 //перехватчик запроса для добавления .json к URL, если его нет
 http.interceptors.request.use((config) => {
