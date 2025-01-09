@@ -7,12 +7,6 @@ export const AuthSubmitButton = ({ children }: { children: ReactNode }) => {
       <Button
         htmlType="submit"
         block
-        // style={{
-        //   boxShadow: 'none !important',
-        //   borderColor: 'transparent !important',
-        //   outline: 'none !important',
-        //   transition: 'none !important',
-        // }}
         className="bg-[#2A2B34] text-white rounded-xl hover:!bg-[#4C4D5E] hover:!text-slate-200 h-[39.82px] !border-none focus:!outline-none active:!outline-none active:!shadow-none active:!ring-0"
       >
         {children}

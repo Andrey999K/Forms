@@ -9,18 +9,18 @@ import { RiLockFill } from 'react-icons/ri';
 //React
 import { useState } from 'react';
 //Custom Routes
-import { Routes } from '../../utils/routesConfig';
+import { Routes } from '@/utils/routesConfig';
 //Services
-import { authService } from '../../services/auth.service';
+import { authService } from '@/services/auth.service';
 //Validation
-import { AuthValidationRules } from '../../utils/validation';
+import { AuthValidationRules } from '@/utils/validation';
 //Custom Components
-import { AuthFormInput } from '../../components/auth/AuthFormInput';
-import { AuthSubmitButton } from '../../components/auth/AuthSubmitButton';
-import { AuthTextLink } from '../../components/auth/AuthTextLink';
+import { AuthFormInput } from '@/components/auth/AuthFormInput';
+import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
+import { AuthTextLink } from '@/components/auth/AuthTextLink';
 //Types
-import { AuthFormValues } from '../../types';
-import { AuthClearFormButton } from '../../components/auth/AuthClearFormButton';
+import { AuthFormValues } from '@/types';
+import { AuthClearFormButton } from '@/components/auth/AuthClearFormButton';
 import { useNavigate } from 'react-router-dom';
 
 export const Signup = () => {

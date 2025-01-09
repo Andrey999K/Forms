@@ -1,7 +1,7 @@
 import { Typography, Input, Form } from 'antd';
 import { ReactNode } from 'react';
 import { Control, Controller, RegisterOptions } from 'react-hook-form';
-import { AuthFormValues } from '../../types';
+import { AuthFormValues } from '@/types';
 
 type Props = {
   name: keyof AuthFormValues;

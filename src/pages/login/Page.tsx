@@ -11,16 +11,16 @@ import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 //React
 import { useState } from 'react';
 //Validation
-import { AuthValidationRules } from '../../utils/validation';
+import { AuthValidationRules } from '@//utils/validation';
 //Custom Components
-import { AuthFormInput } from '../../components/auth/AuthFormInput';
-import { AuthSubmitButton } from '../../components/auth/AuthSubmitButton';
-import { AuthTextLink } from '../../components/auth/AuthTextLink';
+import { AuthFormInput } from '@/components/auth/AuthFormInput';
+import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
+import { AuthTextLink } from '@/components/auth/AuthTextLink';
 //Custom Routes
-import { Routes } from '../../utils/routesConfig';
+import { Routes } from '@/utils/routesConfig';
 //Types
-import { AuthFormValues } from '../../types';
-import { authService } from '../../services/auth.service';
+import { AuthFormValues } from '@/types';
+import { authService } from '@/services/auth.service';
 import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {

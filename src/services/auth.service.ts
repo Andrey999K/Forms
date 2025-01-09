@@ -1,10 +1,10 @@
 // import axios from 'axios';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '../utils/firebase/firebaseConfig';
+import { auth, db } from '@/utils/firebase/firebaseConfig';
 import { doc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { FirebaseError } from 'firebase/app';
-import { AuthFormValues } from '../types';
+import { AuthFormValues } from '@/types';
 
 export const authService = {
   register: async (payloadData: AuthFormValues) => {

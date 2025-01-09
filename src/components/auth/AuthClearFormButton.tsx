@@ -1,6 +1,6 @@
 import { Button, Form } from 'antd';
 import { UseFormReset } from 'react-hook-form';
-import { AuthFormValues } from '../../types';
+import { AuthFormValues } from '@/types';
 
 export const AuthClearFormButton = ({ reset }: { reset: UseFormReset<AuthFormValues> }) => {
   return (
