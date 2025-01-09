@@ -1,32 +1,19 @@
-export const FieldExists = 'exists';
+import {
+  FieldExists,
+  FieldTypes,
+  FieldType,
+  ConstructorField,
+  ConstructorForm,
+} from './constructor';
 
-export enum FieldTypes {
-  INPUT = 'input',
-  TEXTAREA = 'textarea',
-  RADIO = 'radio',
-  CHECKBOX = 'checkbox',
+export enum Sort {
+  ASC = 'ASC',
+  DESC = 'DESC',
 }
 
-export type FieldType = (typeof FieldTypes)[keyof typeof FieldTypes];
-
-export type ConstructorField = {
-  id: string;
-  type: FieldType;
-  require: boolean;
-  question: string;
-  // for 'radio'
-  options?: {
-    id: string;
-    label: string;
-  }[];
-};
-
-export type ConstructorForm = {
-  id: string;
-  title: string;
-  description: string;
-  createdAt: number;
-  fields: ConstructorField[];
+export type Slice = {
+  offset: number;
+  limit: number;
 };
 
 export type AuthFormValues = {
@@ -36,3 +23,5 @@ export type AuthFormValues = {
   password: string;
   copyPassword?: string;
 };
+export type { FieldType, ConstructorField, ConstructorForm };
+export { FieldExists, FieldTypes };

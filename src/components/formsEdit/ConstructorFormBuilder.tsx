@@ -1,7 +1,7 @@
 import { FC, Fragment, useRef } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { ConstructorField, ConstructorForm, FieldType } from '../../types';
+import { ConstructorField, ConstructorForm, FieldType } from '@/types';
 import { ConstructorDropZone } from './ConstructorDropZone';
 import { ConstructorDraggableField } from './ConstructorDraggableField';
 import { ToolboxPanel } from './ToolboxPanel';
@@ -16,6 +16,7 @@ type Props = {
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
   onChangeForm: ({ value, name }: { value: string; name: string }) => void;
+  isLoading?: boolean;
 };
 
 export const ConstructorFormBuilder: FC<Props> = (props) => {

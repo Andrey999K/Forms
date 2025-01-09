@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import { FC } from 'react';
 import { useDrag } from 'react-dnd';
-import { FieldType } from '../../types';
+import { FieldType } from '@/types';
 
 type Props = {
   type: FieldType;
