@@ -13,6 +13,9 @@ import {
   Signup,
 } from './pages';
 import { Routes } from './utils/routesConfig.ts';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import { toastConfig } from './utils/toast.config.ts';
 import { store } from './redux/store.ts';
 import './App.css';
 
@@ -65,6 +68,7 @@ function App() {
   return (
     <Provider store={store}>
       <RouterProvider router={router} />
+      <ToastContainer {...toastConfig} />
     </Provider>
   );
 }

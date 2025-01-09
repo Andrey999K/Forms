@@ -16,5 +16,12 @@ export type Slice = {
   limit: number;
 };
 
+export type AuthFormValues = {
+  name?: string;
+  surname?: string;
+  email: string;
+  password: string;
+  copyPassword?: string;
+};
 export type { FieldType, ConstructorField, ConstructorForm };
 export { FieldExists, FieldTypes };
