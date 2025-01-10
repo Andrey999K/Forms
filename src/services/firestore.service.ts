@@ -6,14 +6,20 @@ import {
   DocumentData,
   DocumentSnapshot,
   getDoc,
+  getDocs,
   serverTimestamp,
   Timestamp,
   updateDoc,
 } from 'firebase/firestore';
 import { db } from '../utils/firebase/firebaseConfig';
 
-const convertTimestampToNumber = (timestamp: Timestamp | null | undefined): number =>
-  timestamp ? timestamp.toMillis() : Date.now();
+const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | number): number => {
+  if (typeof timestamp !== 'number') {
+    return timestamp ? timestamp.toMillis() : Date.now();
+  } else {
+    return timestamp;
+  }
+};
 
 const convertFirestoreData = (doc: DocumentSnapshot<DocumentData>) => {
   const data = doc.data();
@@ -31,6 +37,17 @@ export const firestoreService = {
     const docRef = await addDoc(collection(db, collectionName), data);
     const docSnap = await getDoc(docRef);
     return convertFirestoreData(docSnap);
+  },
+
+  getAll: async (collectionName: string) => {
+    const collectionRef = collection(db, collectionName);
+    const docSnap = await getDocs(collectionRef);
+
+    if (!docSnap.empty) {
+      return docSnap.docs.map((doc) => convertFirestoreData(doc));
+    }
+
+    throw new Error('Not found');
   },
 
   get: async (collectionName: string, id: string) => {
