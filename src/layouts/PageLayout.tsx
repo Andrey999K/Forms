@@ -1,7 +1,8 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { UserOutlined } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps } from "antd";
-import { Routes } from "../utils/routesConfig.ts";
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { UserOutlined } from '@ant-design/icons';
+import { Button, Dropdown, MenuProps } from 'antd';
+import { Routes } from '../utils/routesConfig.ts';
+import { ToastContainer } from 'react-toastify';
 
 const pages = [
   {
@@ -57,6 +58,7 @@ export const PageLayout = () => {
       <div className="mt-5 w-full max-w-screen-lg m-auto">
         <Outlet />
       </div>
+      <ToastContainer />
     </div>
   );
 };

@@ -1,5 +1,6 @@
-import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { PageLayout } from './layouts/PageLayout.tsx';
 import {
   FormPage,
   FormResponse,
@@ -11,8 +12,12 @@ import {
   Me,
   Signup,
 } from './pages';
-import { PageLayout } from './layouts/PageLayout.tsx';
 import { Routes } from './utils/routesConfig.ts';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import { toastConfig } from './utils/toast.config.ts';
+import { store } from './redux/store.ts';
+import './App.css';
 
 const router = createBrowserRouter([
   {
@@ -60,7 +65,12 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <Provider store={store}>
+      <RouterProvider router={router} />
+      <ToastContainer {...toastConfig} />
+    </Provider>
+  );
 }
 
 export default App;

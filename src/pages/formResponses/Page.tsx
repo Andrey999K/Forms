@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Card, DatePicker, Select } from "antd";
-import dayjs, { Dayjs } from "dayjs";
-import { mockResponses } from "./mockData.ts";
-import { sortDates } from "../../utils/sortDates.ts";
-import { SortType } from "../../utils/types.ts";
+import { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { Card, DatePicker, Select } from 'antd';
+import dayjs, { Dayjs } from 'dayjs';
+import { mockResponses } from './mockData.ts';
+import { sortDates } from '../../utils/sortDates.ts';
+import { SortType } from '../../utils/types.ts';
+import { Sort } from '@/types/index.ts';
 
 const { RangePicker } = DatePicker;
 
@@ -13,11 +14,11 @@ type Dates = {
   to: null | string;
 };
 
-const dateFormat = "DD.MM.YYYY";
+const dateFormat = 'DD.MM.YYYY';
 
 export const FormResponses = () => {
   const { formId } = useParams<{ formId: string }>();
-  const [sort, setSort] = useState<SortType>("asc");
+  const [sort, setSort] = useState<SortType>('asc');
   const [dates, setDates] = useState<Dates>({
     from: null,
     to: null,
@@ -34,22 +35,10 @@ export const FormResponses = () => {
     });
   };
 
-  useEffect(() => {
-    console.log("dates", dates);
-  }, [dates]);
-
-  const startDate = dates.from
-    ? dayjs(dates.from, dateFormat)
-    : dayjs("01.12.2024", dateFormat);
+  const startDate = dates.from ? dayjs(dates.from, dateFormat) : dayjs('01.12.2024', dateFormat);
   const endDate = dates.to ? dayjs(dates.to, dateFormat) : dayjs();
 
   let responses = sortDates(mockResponses, sort);
-  // if (dates.from && dates.to) {
-  //   responses = responses.filter((response) => {
-  //     const itemDate = dayjs(response.date, "DD.MM.YYYY");
-  //     return itemDate.isBetween(startDate, endDate, null, "[]");
-  //   });
-  // }
 
   if (dates.from && dates.to) {
     responses = responses.filter((response) => {
@@ -57,7 +46,7 @@ export const FormResponses = () => {
       // Проверяем, находится ли дата в диапазоне
       return (
         (itemDate.isSame(startDate) || itemDate.isAfter(startDate)) &&
-        (itemDate.isSame(endDate) || itemDate.isBefore(endDate.add(1, "day")))
+        (itemDate.isSame(endDate) || itemDate.isBefore(endDate.add(1, 'day')))
       );
     });
   }
@@ -68,20 +57,20 @@ export const FormResponses = () => {
       <div className="mt-4">
         <div className="flex items-center justify-end w-full gap-2">
           <Select
-            defaultValue={"asc"}
+            defaultValue={Sort.ASC}
             onChange={handleChangeSort}
             options={[
-              { value: "asc", label: "Сначала новые" },
-              { value: "desc", label: "Сначала старые" },
+              { value: Sort.ASC, label: 'Сначала новые' },
+              { value: Sort.DESC, label: 'Сначала старые' },
             ]}
             className="min-w-[20ch] text-left"
           />
           <RangePicker
-            // @ts-ignore
+            // @ts-expect-error not handle null
             onChange={handleEditDates}
             className="max-w-[30ch]"
             format={dateFormat}
-            minDate={dayjs("01.11.2024", "DD.MM.YYYY")}
+            minDate={dayjs('01.11.2024', 'DD.MM.YYYY')}
             maxDate={dayjs()}
           />
         </div>
