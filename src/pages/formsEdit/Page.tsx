@@ -18,8 +18,6 @@ export const FormsEdit: FC = () => {
   const [deleteForm, { isLoading: isDeleting }] = useDeleteFormMutation();
 
   useEffect(() => {
-    console.log('uf', formData);
-
     if (formData) setConstructor(() => formData);
   }, [formData]);
 
