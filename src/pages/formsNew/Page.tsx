@@ -20,12 +20,14 @@ export const FormsNew: FC = () => {
     };
 
     initForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (isSuccess && newForm?.id) {
       navigate(`/forms/${newForm.id}/edit`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, newForm]);
 
   if (isLoading) {

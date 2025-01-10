@@ -7,33 +7,25 @@ import { toast } from 'react-toastify';
 import { useGetFormQuery, useUpdateFormMutation, useDeleteFormMutation } from '@/redux/form';
 import { Spin } from 'antd';
 
-const initConstructor: ConstructorForm = {
-  id: uuidv4(),
-  createdAt: new Date().getTime(),
-  title: 'Название формы',
-  description: 'Описание формы',
-  fields: [],
-};
-
 export const FormsEdit: FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { formId } = useParams<{ formId: string }>();
   const navigate = useNavigate();
-  const [constructor, setConstructor] = useState<ConstructorForm>(initConstructor);
-
-  const { data: formData, isLoading: isLoadingForm } = useGetFormQuery(id || '', {
-    skip: !id,
+  const [constructor, setConstructor] = useState<ConstructorForm | null>(null);
+  const { data: formData, isLoading: isLoadingForm } = useGetFormQuery(formId || '', {
+    skip: !formId,
   });
   const [updateForm, { isLoading: isUpdating }] = useUpdateFormMutation();
   const [deleteForm, { isLoading: isDeleting }] = useDeleteFormMutation();
 
   useEffect(() => {
-    if (formData) {
-      setConstructor(formData);
-    }
+    console.log('uf', formData);
+
+    if (formData) setConstructor(() => formData);
   }, [formData]);
 
   const handleDropField = (type: FieldType, index?: number) => {
     setConstructor((prev) => {
+      if (!prev) return prev;
       const { fields } = prev;
       const newField: ConstructorField = {
         id: uuidv4(),
@@ -53,6 +45,7 @@ export const FormsEdit: FC = () => {
 
   const moveField = (dragIndex: number, hoverIndex: number) => {
     setConstructor((prev) => {
+      if (!prev) return prev;
       const { fields } = prev;
       const newFields = [...fields];
       const [removed] = newFields.splice(dragIndex, 1);
@@ -63,6 +56,7 @@ export const FormsEdit: FC = () => {
 
   const updateField = (id: string, updates: Partial<ConstructorField>) => {
     setConstructor((prev) => {
+      if (!prev) return prev;
       const { fields } = prev;
       const newFields = fields.map((field) => (field.id === id ? { ...field, ...updates } : field));
       return { ...prev, fields: newFields };
@@ -71,6 +65,7 @@ export const FormsEdit: FC = () => {
 
   const removeField = (id: string) => {
     setConstructor((prev) => {
+      if (!prev) return prev;
       const { fields } = prev;
       const newFields = fields.filter((field) => field.id !== id);
       return { ...prev, fields: newFields };
@@ -78,6 +73,7 @@ export const FormsEdit: FC = () => {
   };
 
   const handleSaveForms = async () => {
+    if (!constructor) return;
     try {
       await updateForm(constructor).unwrap();
       toast.success('Сохранено успешно');
@@ -89,8 +85,8 @@ export const FormsEdit: FC = () => {
 
   const handleRemoveForms = async () => {
     try {
-      if (id) {
-        await deleteForm(id).unwrap();
+      if (formId) {
+        await deleteForm(formId).unwrap();
         toast.success('Удалено успешно');
         navigate('/');
       }
@@ -101,7 +97,10 @@ export const FormsEdit: FC = () => {
   };
 
   const handleChangeForm = ({ value, name }: { value: string; name: string }) => {
-    setConstructor((prev) => ({ ...prev, [name]: value }));
+    setConstructor((prev) => {
+      if (!prev) return prev;
+      return { ...prev, [name]: value };
+    });
   };
 
   if (isLoadingForm) {
@@ -110,6 +109,15 @@ export const FormsEdit: FC = () => {
         <Spin size="large" />
       </div>
     );
+  }
+
+  if (!formData) {
+    toast.error('Ошибка загрузки');
+    navigate('/');
+    return;
+  }
+  if (!constructor) {
+    return;
   }
 
   return (
