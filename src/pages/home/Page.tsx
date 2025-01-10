@@ -1,7 +1,7 @@
 import { HomeList } from '@/components/Home/HomeList/HomeList';
 import { getMockedCard } from './mock';
-import { useIntersectionObserver } from '@siberiacancode/reactuse';
-import { useRef, useState } from 'react';
+import { useIntersectionObserver, debounce } from '@siberiacancode/reactuse';
+import { useState } from 'react';
 import { Card } from '@/types/card';
 import { Flex, Input, Select, Spin } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
@@ -36,17 +36,10 @@ export const Home = () => {
     // TODO: Add response to backend
   };
 
-  const searchTimeout = useRef<null | NodeJS.Timeout>(null);
-
-  const onSearch = (value: string) => {
-    if (searchTimeout.current) {
-      clearTimeout(searchTimeout.current);
-    }
-    searchTimeout.current = setTimeout(() => {
-      setSearch(value);
-      clearData();
-    }, 300);
-  };
+  const onSearch = debounce((value: string) => {
+    setSearch(value);
+    clearData();
+  }, 300);
 
   const onChangeSort = (value: Sort) => {
     setOrder(value);
@@ -58,8 +51,6 @@ export const Home = () => {
     setPage(0);
     setHasNext(true);
   };
-
-  const loadTimeout = useRef<null | NodeJS.Timeout>(null);
 
   const loadData = async (page: number) => {
     setPage(page);
@@ -79,15 +70,9 @@ export const Home = () => {
     setList((prev) => prev.concat(newData));
   };
 
-  const debouncedLoadData = (page: number) => {
-    if (loadTimeout.current) {
-      clearTimeout(loadTimeout.current);
-    }
-
-    loadTimeout.current = setTimeout(() => {
-      loadData(page);
-    }, 400);
-  };
+  const debouncedLoadData = debounce((page: number) => {
+    loadData(page);
+  }, 400);
 
   const { ref } = useIntersectionObserver<HTMLDivElement>({
     threshold: 1,
