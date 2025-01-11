@@ -3,6 +3,8 @@ import { Routes } from '../utils/routesConfig.js';
 import { UserOutlined } from '@ant-design/icons';
 import { Button, Dropdown, MenuProps } from 'antd';
 import { ToastContainer } from 'react-toastify';
+import { ShapeWrapper } from './GlassLayout.js';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.js';
 
 const pages = [
   {
@@ -34,8 +36,11 @@ export const PageLayout = () => {
   ];
 
   return (
-    <div className="min-h-screen">
-      <div className="p-5 flex items-center justify-center border-b-[1px] border-solid border-gray-200">
+    <ShapeWrapper>
+      <GlassWrapper
+        settings={{ rounded: 0 }}
+        className="p-5 flex items-center justify-center border-b-[1px] border-solid border-gray-200"
+      >
         <div className="flex items-center gap-5 w-full max-w-screen-lg justify-between">
           <div className="flex items-center gap-5">
             {pages.map((page) => (
@@ -54,11 +59,11 @@ export const PageLayout = () => {
             </div>
           </Dropdown>
         </div>
-      </div>
+      </GlassWrapper>
       <div className="mt-5 w-full max-w-screen-lg m-auto">
         <Outlet />
       </div>
       <ToastContainer />
-    </div>
+    </ShapeWrapper>
   );
 };

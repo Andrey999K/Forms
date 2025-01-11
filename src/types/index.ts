@@ -23,5 +23,6 @@ export type AuthFormValues = {
   password: string;
   copyPassword?: string;
 };
+
 export type { FieldType, ConstructorField, ConstructorForm };
 export { FieldExists, FieldTypes };

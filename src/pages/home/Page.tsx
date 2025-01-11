@@ -92,7 +92,9 @@ export const Home = () => {
           onChange={onChangeSort}
         />
       </Flex>
+
       <HomeList items={list} onDelete={onDelete} />
+
       {hasNext && (
         <div ref={ref} className="mt-4">
           <Spin />
