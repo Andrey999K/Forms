@@ -65,11 +65,11 @@ export const ConstructorFormBuilder: FC<Props> = (props) => {
               <h2 className="text-sm text-gray-600">{constructor.description}</h2>
             </ConstructorNameModal>
           </div>
-          <div ref={workspaceRef} className="flex flex-col rounded-lg shadow-sm">
+          <div ref={workspaceRef} className="flex flex-col rounded-lg shadow-sm border">
             {fields.length === 0 ? (
               <ConstructorDropZone
                 onDropField={(type) => onDropField(type, 0)}
-                className="min-h-24"
+                className="!min-h-64"
                 index={0}
               />
             ) : (

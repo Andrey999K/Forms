@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { ConstructorFormBuilder } from '@/components/formsEdit/ConstructorFormBuilder';
-import { ConstructorField, ConstructorForm, FieldType } from '@/types';
+import { ConstructorField, ConstructorForm, FieldType, FieldTypes } from '@/types';
 import { toast } from 'react-toastify';
 import { useGetFormQuery, useUpdateFormMutation, useDeleteFormMutation } from '@/redux/form';
 import { Spin } from 'antd';
@@ -25,11 +25,14 @@ export const FormsEdit: FC = () => {
     setConstructor((prev) => {
       if (!prev) return prev;
       const { fields } = prev;
+      const options =
+        type === FieldTypes.RADIO ? { options: [{ id: uuidv4(), label: 'Вариант 1' }] } : {};
       const newField: ConstructorField = {
         id: uuidv4(),
         type,
         question: '',
         require: false,
+        ...options,
       };
       const newFields = [...fields];
       if (index !== undefined) {

@@ -1,5 +1,8 @@
-import { Button, Input, Modal } from 'antd';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { Button, Modal } from 'antd';
+import { FC, useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+import { TextField } from '../ui/TextField';
 
 type Props = {
   value: string;
@@ -9,32 +12,30 @@ type Props = {
   children: React.ReactNode;
 };
 
+type FormValues = {
+  input: string;
+};
+
 export const ConstructorNameModal: FC<Props> = (props) => {
   const { name, value, title, children, onChange } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [input, setInput] = useState(value);
+  const { control, handleSubmit, reset } = useForm<FormValues>({
+    defaultValues: { input: value },
+  });
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
+  const handleOk = handleSubmit((data) => {
     setIsModalOpen(false);
-    onChange({ name, value: input });
-  };
+    onChange({ name, value: data.input });
+  });
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    reset({ input: value });
   };
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setInput(value);
-  };
-
-  useEffect(() => {
-    if (value) setInput(value);
-  }, [value]);
 
   return (
     <>
@@ -53,7 +54,14 @@ export const ConstructorNameModal: FC<Props> = (props) => {
           </Button>,
         ]}
       >
-        <Input value={input} onChange={handleChange} />
+        <TextField
+          name="input"
+          control={control}
+          rules={{
+            required: 'Поле не может быть пустым', // Сообщение об ошибке, если поле пустое
+          }}
+          placeholder="Введите значение"
+        />
       </Modal>
     </>
   );

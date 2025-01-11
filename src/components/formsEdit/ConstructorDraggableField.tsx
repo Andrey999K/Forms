@@ -134,7 +134,7 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
   return (
     <div
       ref={ref}
-      className={`relative group border rounded ${isOverDelete ? 'opacity-50 border-red-500' : ''}`}
+      className={`relative group border-t border-b ${isOverDelete ? 'opacity-50 border-red-500' : ''}`}
     >
       <div
         className={`border-2 border-transparent rounded ${
