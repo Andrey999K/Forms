@@ -26,5 +26,6 @@ export type ConstructorForm = {
   title: string;
   description: string;
   createdAt: number;
+  updatedAt: number;
   fields: ConstructorField[];
 };
