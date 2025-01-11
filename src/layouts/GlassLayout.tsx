@@ -1,7 +1,7 @@
-import { useState, useEffect, FC, useCallback, useMemo } from 'react';
+import { useState, useEffect, FC, useCallback, useMemo, ReactNode } from 'react';
 
 type Props = {
-  children: React.ReactNode;
+  children: ReactNode;
   settings?: Partial<Settings>;
 };
 
@@ -101,7 +101,7 @@ export const ShapeWrapper: FC<Props> = ({ children, settings }) => {
       setCircles((prev) => [...prev, ...newCircles]);
       setProcessedViewports((prev) => new Set(prev).add(currentViewportIndex));
 
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setCircles((prev) =>
           prev.map((circle) =>
             newCircles.some((newCircle) => newCircle.x === circle.x && newCircle.y === circle.y)
@@ -110,7 +110,10 @@ export const ShapeWrapper: FC<Props> = ({ children, settings }) => {
           )
         );
       }, 100);
+
+      return () => clearTimeout(timeoutId);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [circles, processedViewports, calculateCircleSize]);
 
@@ -137,9 +140,11 @@ export const ShapeWrapper: FC<Props> = ({ children, settings }) => {
       setCircles(initialCircles.map((pos, index) => ({ ...pos, id: index, visible: false })));
       setProcessedViewports((prev) => new Set(prev).add(0));
 
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setCircles((prev) => prev.map((circle) => ({ ...circle, visible: true })));
       }, 100);
+
+      return () => clearTimeout(timeoutId);
     }
 
     window.addEventListener('scroll', handleScroll);

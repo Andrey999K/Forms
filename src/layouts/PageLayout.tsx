@@ -4,7 +4,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { Button, Dropdown, MenuProps } from 'antd';
 import { ToastContainer } from 'react-toastify';
 import { ShapeWrapper } from './GlassLayout.js';
-import { GlassWrapper } from '@/components/wrapper/GlassWrapper.js';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.js';
 
 const pages = [
   {
