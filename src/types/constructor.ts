@@ -1,5 +1,3 @@
-export const FieldExists = 'exists';
-
 export enum FieldTypes {
   INPUT = 'input',
   TEXTAREA = 'textarea',
@@ -14,7 +12,7 @@ export type ConstructorField = {
   type: FieldType;
   require: boolean;
   question: string;
-  // for RADIO
+  // for RADIO and CHECKBOX
   options?: {
     id: string;
     label: string;
@@ -29,3 +27,7 @@ export type ConstructorForm = {
   updatedAt: number;
   fields: ConstructorField[];
 };
+
+// --- CONSTANTS ---
+
+export const FIELD_EXISTS = 'exists';

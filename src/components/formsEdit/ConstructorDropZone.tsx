@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useDrop } from 'react-dnd';
-import { FieldExists, FieldType, FieldTypes } from '@/types';
+import { FIELD_EXISTS, FieldType, FieldTypes } from '@/types';
 
 type Props = {
   onDropField: (type: FieldType) => void;
@@ -13,7 +13,7 @@ export const ConstructorDropZone: FC<Props> = (props) => {
   const { onDropField, children, className = '', index } = props;
   const [{ isOverNewItem }, drop] = useDrop(
     () => ({
-      accept: [...Object.values(FieldTypes), FieldExists],
+      accept: [...Object.values(FieldTypes), FIELD_EXISTS],
       drop: (item: { type: FieldType; isNew: boolean }, monitor) => {
         if (monitor.isOver({ shallow: true }) && item.isNew) {
           onDropField(item.type);

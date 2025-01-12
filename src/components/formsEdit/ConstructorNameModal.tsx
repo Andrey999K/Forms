@@ -46,10 +46,10 @@ export const ConstructorNameModal: FC<Props> = (props) => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
-          <Button key="back" onClick={handleCancel}>
+          <Button key="back" color="default" variant="filled" onClick={handleCancel}>
             Назад
           </Button>,
-          <Button key="submit" type="primary" onClick={handleOk}>
+          <Button key="submit" color="default" variant="solid" onClick={handleOk}>
             Сохранить
           </Button>,
         ]}

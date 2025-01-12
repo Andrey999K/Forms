@@ -1,9 +1,10 @@
+import { ConstructorField, FIELD_EXISTS, FieldTypes } from '@/types';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { v4 as uuidv4 } from 'uuid';
-import { ConstructorField, FieldExists, FieldTypes } from '@/types';
 import { ConstructorFieldWrapper } from './ConstructorFieldWrapper';
-import { RadioEdit } from './RadioEdit';
+import { RadioEditor } from './RadioEditor';
+import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
+import { AlignLeftOutlined, FormOutlined } from '@ant-design/icons';
 
 type Props = {
   field: ConstructorField;
@@ -21,7 +22,7 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
   const [isOverDelete, setIsOverDelete] = useState(false);
 
   const [{ isDragging }, drag, dragPreview] = useDrag({
-    type: FieldExists,
+    type: FIELD_EXISTS,
     item: { index, id: field.id },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -37,7 +38,7 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
   });
 
   const [, drop] = useDrop({
-    accept: FieldExists,
+    accept: FIELD_EXISTS,
     hover(item: { index: number }, monitor) {
       if (!ref.current) return;
 
@@ -74,57 +75,27 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
   dragPreview(drop(ref));
   drag(dragRef);
 
-  const renderField = () => {
-    const commonProps = { dragRef, field, onUpdateField, onRemoveField };
+  const commonProps = { dragRef, field, onUpdateField, onRemoveField };
 
+  const renderField = () => {
     switch (field.type) {
       case FieldTypes.INPUT:
         return (
-          <ConstructorFieldWrapper {...commonProps}>
-            <div className="p-2 w-full text-sm text-gray-600 text-left border-2 rounded border-dotted bg-gray-100">
-              Короткий ответ
-            </div>
-          </ConstructorFieldWrapper>
+          <div className="flex gap-2 text-sm px-1">
+            <FormOutlined />
+            <span>Однострочный текст</span>
+          </div>
         );
       case FieldTypes.TEXTAREA:
         return (
-          <ConstructorFieldWrapper {...commonProps}>
-            <div className="p-2 h-20 w-full text-sm text-gray-600 text-left border-2 rounded border-dotted bg-gray-100">
-              Развернутый ответ
-            </div>
-          </ConstructorFieldWrapper>
+          <div className="flex gap-2 text-sm px-1">
+            <AlignLeftOutlined />
+            <span>Многострочный текст</span>
+          </div>
         );
       case FieldTypes.RADIO:
       case FieldTypes.CHECKBOX: {
-        const handleAddOption = () => {
-          const options = field?.options || [];
-          const id = uuidv4();
-          onUpdateField(field.id, { options: [...options, { id, label: '' }] });
-        };
-
-        const handleChangeOption = (id: string, label: string) => {
-          const options = field?.options || [];
-          const index = options.findIndex((option) => option.id === id);
-          options[index] = { ...options[index], label };
-          onUpdateField(field.id, { options });
-        };
-
-        const handleRemoveOption = (id: string) => {
-          const options = field?.options || [];
-          onUpdateField(field.id, { options: options.filter((option) => option.id !== id) });
-        };
-
-        return (
-          <ConstructorFieldWrapper {...commonProps}>
-            <RadioEdit
-              data={field}
-              onAdd={handleAddOption}
-              onChange={handleChangeOption}
-              onRemove={handleRemoveOption}
-              onChangeType={(type) => onUpdateField(field.id, { type })}
-            />
-          </ConstructorFieldWrapper>
-        );
+        return <RadioEditor field={field} onUpdateField={onUpdateField} />;
       }
       default:
         return null;
@@ -132,17 +103,11 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
   };
 
   return (
-    <div
+    <GlassWrapper
       ref={ref}
-      className={`relative group border-t border-b ${isOverDelete ? 'opacity-50 border-red-500' : ''}`}
+      className={`relative group w-full flex ${isOverDelete ? 'opacity-50 border-red-500' : ''} ${isDragging ? 'border-dashed border-gray-500' : ''}`}
     >
-      <div
-        className={`border-2 border-transparent rounded ${
-          isDragging ? 'border-dashed border-gray-500' : ''
-        }`}
-      >
-        {renderField()}
-      </div>
-    </div>
+      <ConstructorFieldWrapper {...commonProps}>{renderField()}</ConstructorFieldWrapper>
+    </GlassWrapper>
   );
 };
