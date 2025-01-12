@@ -60,9 +60,11 @@ export const RadioEditor: FC<Props> = (props) => {
       <div className="flex gap-2 w-full justify-between">
         <div className="flex items-center gap-2">
           {field.type === 'radio' ? <Radio className="m-0" disabled /> : <Checkbox disabled />}
-          <Button color="default" variant="filled" onClick={handleAdd}>
-            Добавить
-          </Button>
+          <Tooltip title="Добавить вариант">
+            <Button color="default" variant="filled" onClick={handleAdd}>
+              Добавить
+            </Button>
+          </Tooltip>
         </div>
         <Select
           defaultValue={FieldTypes.RADIO}
