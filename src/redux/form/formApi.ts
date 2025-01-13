@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { firestoreService } from '@/services/firestore.service';
-import { ConstructorForm } from '@/types';
+import { ConstructorForm, FormListOptions, FormListResponse } from '@/types';
 import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 
 export const COLLECTION = 'form';
@@ -10,6 +10,32 @@ export const formApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   tagTypes: ['form'],
   endpoints: (builder) => ({
+    getFormList: builder.query<FormListResponse, FormListOptions>({
+      queryFn: async (options: FormListOptions) => {
+        try {
+          const result = await firestoreService.getAll(COLLECTION, options);
+          return {
+            data: result,
+          };
+        } catch (error) {
+          return { error: getFirebaseError(error) };
+        }
+      },
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName;
+      },
+      merge(currentCacheData, responseData) {
+        if (currentCacheData.lastVisible.id !== responseData.lastVisible.id) {
+          currentCacheData.data.push(...responseData.data);
+          currentCacheData.lastVisible = responseData.lastVisible;
+        }
+      },
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg?.page !== previousArg?.page;
+      },
+      providesTags: ['form'],
+    }),
+
     getForm: builder.query<ConstructorForm, string>({
       queryFn: async (id) => {
         try {

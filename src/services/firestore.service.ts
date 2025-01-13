@@ -7,11 +7,18 @@ import {
   DocumentSnapshot,
   getDoc,
   getDocs,
+  limit,
+  orderBy,
+  query,
+  QueryConstraint,
   serverTimestamp,
+  startAfter,
   Timestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore';
-import { db } from '../utils/firebase/firebaseConfig';
+import { db } from '@/utils/firebase/firebaseConfig';
+import { FormListOptions, FormListResponse } from '@/types';
 
 const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | number): number => {
   if (typeof timestamp !== 'number') {
@@ -21,14 +28,14 @@ const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | numb
   }
 };
 
-const convertFirestoreData = (doc: DocumentSnapshot<DocumentData>) => {
+const convertFirestoreData = <T>(doc: DocumentSnapshot<DocumentData>) => {
   const data = doc.data();
   return {
     id: doc.id,
     ...data,
     createdAt: convertTimestampToNumber(data?.createdAt),
     updatedAt: convertTimestampToNumber(data?.updatedAt),
-  };
+  } as T;
 };
 
 export const firestoreService = {
@@ -39,12 +46,31 @@ export const firestoreService = {
     return convertFirestoreData(docSnap);
   },
 
-  getAll: async (collectionName: string) => {
+  getAll: async (collectionName: string, options: FormListOptions): Promise<FormListResponse> => {
     const collectionRef = collection(db, collectionName);
-    const docSnap = await getDocs(collectionRef);
+
+    const constrains: QueryConstraint[] = [
+      orderBy('updatedAt', options.sort),
+      limit(options.limit),
+    ];
+
+    if (options.lastVisible) {
+      constrains.push(startAfter(options.lastVisible));
+    }
+
+    if (options.search?.length) {
+      constrains.push(where('title', '==', options.search));
+    }
+
+    const q = query(collectionRef, ...constrains);
+
+    const docSnap = await getDocs(q);
 
     if (!docSnap.empty) {
-      return docSnap.docs.map((doc) => convertFirestoreData(doc));
+      return {
+        data: docSnap.docs.map((doc) => convertFirestoreData(doc)),
+        lastVisible: docSnap.docs[docSnap.docs.length - 1],
+      };
     }
 
     throw new Error('Not found');

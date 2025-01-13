@@ -1,12 +1,14 @@
 import { HomeList } from '@/components/Home/HomeList/HomeList';
-import { getMockedCard } from './mock';
-import { useIntersectionObserver, debounce } from '@siberiacancode/reactuse';
-import { useState } from 'react';
-import { Card } from '@/types/card';
+import { useIntersectionObserver } from '@siberiacancode/reactuse';
+import { useEffect, useState } from 'react';
 import { Flex, Input, Select, Spin } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
 import { Sort } from '@/types';
+import { formReset, useDeleteFormMutation, useGetFormListQuery } from '@/redux/form';
+import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
+import { store } from '@/redux/store';
 
+const { Search } = Input;
 const sortOptions: DefaultOptionType[] = [
   {
     value: Sort.DESC,
@@ -18,28 +20,46 @@ const sortOptions: DefaultOptionType[] = [
   },
 ];
 
-const CARDS_PER_PAGE = 30;
+// TODO: Change to 30
+const CARDS_PER_PAGE = 9;
 
 export const Home = () => {
-  const { Search } = Input;
-
-  const [list, setList] = useState<Card[]>([]);
   const [search, setSearch] = useState<string>('');
   const [order, setOrder] = useState<Sort>(Sort.DESC);
   const [page, setPage] = useState<number>(0);
+  const [lastVisible, setLastVisible] =
+    useState<QueryDocumentSnapshot<DocumentData, DocumentData>>();
 
-  const [hasNext, setHasNext] = useState(true);
+  const {
+    data: res,
+    isLoading,
+    isError,
+  } = useGetFormListQuery({
+    search,
+    sort: order,
+    limit: CARDS_PER_PAGE,
+    lastVisible,
+    page,
+  });
+  const [deleteForm] = useDeleteFormMutation();
+
+  useEffect(() => {
+    const newLastVisible = res?.lastVisible;
+
+    if (newLastVisible) {
+      setLastVisible(newLastVisible);
+    }
+  }, [res]);
 
   const onDelete = (id: string) => {
-    setList((prev) => prev.filter((item) => item.id !== id));
-
-    // TODO: Add response to backend
+    clearData();
+    deleteForm(id);
   };
 
-  const onSearch = debounce((value: string) => {
+  const onSearch = (value: string) => {
     setSearch(value);
     clearData();
-  }, 300);
+  };
 
   const onChangeSort = (value: Sort) => {
     setOrder(value);
@@ -47,37 +67,15 @@ export const Home = () => {
   };
 
   const clearData = () => {
-    setList([]);
+    setLastVisible(undefined);
+    store.dispatch(formReset());
     setPage(0);
-    setHasNext(true);
   };
-
-  const loadData = async (page: number) => {
-    setPage(page);
-
-    if (!hasNext) return;
-
-    const newData = await getMockedCard(
-      { offset: (page - 1) * CARDS_PER_PAGE, limit: page * CARDS_PER_PAGE },
-      order,
-      search
-    );
-
-    if (newData.length < CARDS_PER_PAGE) {
-      setHasNext(false);
-    }
-
-    setList((prev) => prev.concat(newData));
-  };
-
-  const debouncedLoadData = debounce((page: number) => {
-    loadData(page);
-  }, 400);
 
   const { ref } = useIntersectionObserver<HTMLDivElement>({
     threshold: 1,
     onChange: (entry) => {
-      if (entry.isIntersecting) debouncedLoadData(page + 1);
+      if (entry.isIntersecting) setPage((prev) => prev + 1);
     },
   });
 
@@ -93,9 +91,9 @@ export const Home = () => {
         />
       </Flex>
 
-      <HomeList items={list} onDelete={onDelete} />
+      {res?.data && <HomeList items={res.data} onDelete={onDelete} />}
 
-      {hasNext && (
+      {!isError && !isLoading && (
         <div ref={ref} className="mt-4">
           <Spin />
         </div>
