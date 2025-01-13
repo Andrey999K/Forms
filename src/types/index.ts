@@ -7,8 +7,8 @@ import {
 } from './constructor';
 
 export enum Sort {
-  ASC = 'ASC',
-  DESC = 'DESC',
+  ASC = 'asc',
+  DESC = 'desc',
 }
 
 export type Slice = {
