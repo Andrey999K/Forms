@@ -12,9 +12,9 @@ type Settings = {
 };
 
 const defaultSettings: Settings = {
-  blur: 10,
+  blur: 0.5,
   color: 'rgb(249, 115, 22)',
-  opacity: 0.5,
+  opacity: 0.7,
 };
 
 type Position = { x: number; y: number };
@@ -57,8 +57,6 @@ export const ShapeWrapper: FC<Props> = ({ children, settings }) => {
       const distance = Math.sqrt(
         Math.pow(newCircle.x - circle.x, 2) + Math.pow(newCircle.y - circle.y, 2)
       );
-      console.log(distance, minDistance);
-
       return distance < minDistance;
     });
   };
@@ -101,7 +99,7 @@ export const ShapeWrapper: FC<Props> = ({ children, settings }) => {
       setCircles((prev) => [...prev, ...newCircles]);
       setProcessedViewports((prev) => new Set(prev).add(currentViewportIndex));
 
-      const timeoutId = setTimeout(() => {
+      setTimeout(() => {
         setCircles((prev) =>
           prev.map((circle) =>
             newCircles.some((newCircle) => newCircle.x === circle.x && newCircle.y === circle.y)
@@ -110,8 +108,6 @@ export const ShapeWrapper: FC<Props> = ({ children, settings }) => {
           )
         );
       }, 100);
-
-      return () => clearTimeout(timeoutId);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -140,11 +136,9 @@ export const ShapeWrapper: FC<Props> = ({ children, settings }) => {
       setCircles(initialCircles.map((pos, index) => ({ ...pos, id: index, visible: false })));
       setProcessedViewports((prev) => new Set(prev).add(0));
 
-      const timeoutId = setTimeout(() => {
+      setTimeout(() => {
         setCircles((prev) => prev.map((circle) => ({ ...circle, visible: true })));
       }, 100);
-
-      return () => clearTimeout(timeoutId);
     }
 
     window.addEventListener('scroll', handleScroll);
@@ -162,7 +156,7 @@ export const ShapeWrapper: FC<Props> = ({ children, settings }) => {
       {circles.map((circle) => (
         <div
           key={circle.id}
-          className={`absolute rounded-full z-[99] transition-all duration-1000 ease-in-out ${circle.visible ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`}
+          className={`absolute rounded-full -z-[99] transition-all duration-1000 ease-in-out ${circle.visible ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`}
           style={{
             width: `${circle.size}px`,
             height: `${circle.size}px`,

@@ -1,7 +1,7 @@
+import { ConstructorField } from '@/types';
 import { CloseOutlined, HolderOutlined } from '@ant-design/icons';
 import { Button, Input, Switch, Tooltip } from 'antd';
 import { FC, ReactNode } from 'react';
-import { ConstructorField } from '@/types';
 
 type Props = {
   children: ReactNode;
@@ -15,7 +15,7 @@ type Props = {
 export const ConstructorFieldWrapper: FC<Props> = (props) => {
   const { field, children, dragRef, onRemoveField, onUpdateField, className = '' } = props;
   return (
-    <div className={`relative flex ${className}`}>
+    <div className={`relative w-full flex ${className}`}>
       <div className="w-full flex flex-col">
         <button ref={dragRef} className={`w-full cursor-move hover:text-blue-500`}>
           <HolderOutlined className="rotate-90" />
