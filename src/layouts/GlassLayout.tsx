@@ -12,9 +12,9 @@ type Settings = {
 };
 
 const defaultSettings: Settings = {
-  blur: 5,
+  blur: 0.5,
   color: 'rgb(249, 115, 22)',
-  opacity: 0.5,
+  opacity: 0.7,
 };
 
 type Position = { x: number; y: number };
