@@ -3,6 +3,8 @@ import { PageLayout } from '@/layouts/PageLayout';
 import { lazy, Suspense } from 'react';
 import { Routes } from '@/utils/routesConfig';
 import { ProtectedRoute } from './ProtectedRoute';
+import { NotFoundPage } from '@/pages/NotFoundPage/Page';
+import { ErrorBoundary, Loader } from '@/components/common';
 
 const Home = lazy(() => import('@/pages/home/Page').then((module) => ({ default: module.Home })));
 const Me = lazy(() => import('@/pages/me/Page').then((module) => ({ default: module.Me })));
@@ -31,11 +33,15 @@ const Signup = lazy(() =>
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <PageLayout />,
+    element: (
+      <ErrorBoundary>
+        <PageLayout />
+      </ErrorBoundary>
+    ),
     children: [
       {
         element: (
-          <Suspense fallback={<div>Загрузка маршрутов...</div>}>
+          <Suspense fallback={<Loader />}>
             <ProtectedRoute />
           </Suspense>
         ),
@@ -68,6 +74,10 @@ export const router = createBrowserRouter([
             path: Routes.FORM_RESPONSE,
             element: <FormResponse />,
           },
+          {
+            path: '*',
+            element: <NotFoundPage />,
+          },
         ],
       },
     ],
@@ -75,17 +85,21 @@ export const router = createBrowserRouter([
   {
     path: Routes.LOGIN,
     element: (
-      <Suspense fallback={<div>Загрузка маршрутов...</div>}>
-        <Login />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<Loader />}>
+          <Login />
+        </Suspense>
+      </ErrorBoundary>
     ),
   },
   {
     path: Routes.SIGNUP,
     element: (
-      <Suspense fallback={<div>Загрузка страницы...</div>}>
-        <Signup />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<Loader />}>
+          <Signup />
+        </Suspense>
+      </ErrorBoundary>
     ),
   },
 ]);

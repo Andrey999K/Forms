@@ -4,17 +4,15 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { MdMail, MdPerson, MdPersonAddAlt1, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { RiLockFill } from 'react-icons/ri';
 import { useState } from 'react';
-import { Routes } from '../../utils/routesConfig';
-import { AuthValidationRules } from '../../utils/validation';
-import { AuthFormInput } from '../../components/auth/AuthFormInput';
-import { AuthSubmitButton } from '../../components/auth/AuthSubmitButton';
-import { AuthTextLink } from '../../components/auth/AuthTextLink';
-import { AuthFormValues } from '../../types';
-import { AuthClearFormButton } from '../../components/auth/AuthClearFormButton';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterMutation } from '@/redux/auth';
-import { toast } from 'react-toastify';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { AuthClearFormButton } from '@/components/auth/AuthClearFormButton';
+import { AuthFormInput } from '@/components/auth/AuthFormInput';
+import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
+import { AuthTextLink } from '@/components/auth/AuthTextLink';
+import { AuthFormValues } from '@/types';
+import { AuthValidationRules } from '@/utils/validation';
+import { Routes } from '@/utils/routesConfig';
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -32,25 +30,16 @@ export const Signup = () => {
   const password = watch('password');
 
   const onSubmit: SubmitHandler<AuthFormValues> = async (data) => {
-    try {
-      await register(data).unwrap();
-      toast.success('Вы успешно зарегистрировались');
-      navigate(Routes.HOME);
-    } catch (err: unknown) {
-      console.log('####: ', err);
-      const error = err as FetchBaseQueryError;
-      const errorMessage =
-        typeof error.data === 'string' ? error.data : 'Произошла ошибка регистрации';
-      toast.error(errorMessage);
-    }
+    await register(data).unwrap();
+    navigate(Routes.HOME);
   };
 
   return (
-    <Layout className="min-h-screen bg-authImg bg-cover bg-center">
-      <Content className="flex justify-center  items-center h-screen">
-        <div className="bg-white bg-opacity-20 backdrop-blur-sm absolute p-8 rounded-2xl shadow-lg max-w-sm w-full">
+    <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">
+      <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
+        <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
           <div className="mb-6">
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-2">
               <div className="w-14 h-14 flex items-center justify-center bg-[#EEF5F8] rounded-2xl shadow-lg">
                 <MdPersonAddAlt1 size={30} color="#808897" />
               </div>

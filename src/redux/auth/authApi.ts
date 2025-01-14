@@ -9,6 +9,8 @@ import {
 import { auth, db } from '@/utils/firebase/firebaseConfig';
 import { validateAuthError } from '@/utils/errors/validateAuthError';
 import { setDoc, doc } from 'firebase/firestore';
+import { toast } from 'react-toastify';
+import { FirebaseError } from 'firebase/app';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -18,11 +20,21 @@ export const authApi = createApi({
     login: builder.mutation<{ uid: string; email: string | null }, AuthFormValues>({
       queryFn: async ({ email, password }) => {
         try {
+          if (!auth.currentUser) {
+            await new Promise((resolve) => setTimeout(resolve, 500)); //
+          }
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           const user = userCredential.user;
+          toast.success('Вы успешно авторизовались');
           return { data: { uid: user.uid, email: user.email } };
-        } catch (error: any) {
-          return { error: validateAuthError(error.message) };
+        } catch (error: unknown) {
+          const firebaseError = error as FirebaseError;
+          const validatedError = validateAuthError(firebaseError.message);
+          toast.error(
+            (validatedError.data as string) ||
+              'Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже.'
+          );
+          return { error: validatedError };
         }
       },
       invalidatesTags: ['auth'],
@@ -38,9 +50,16 @@ export const authApi = createApi({
             email: email,
             createdAt: new Date().toISOString(),
           });
+          toast.success('Вы успешно зарегистрировались');
           return { data: { uid: user.uid, email: user.email, name } };
-        } catch (error: any) {
-          return { error: validateAuthError(error.message) };
+        } catch (error: unknown) {
+          const firebaseError = error as FirebaseError;
+          const validatedError = validateAuthError(firebaseError.message);
+          toast.error(
+            (validatedError.data as string) ||
+              'Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже.'
+          );
+          return { error: validatedError };
         }
       },
       invalidatesTags: ['auth'],
@@ -61,6 +80,7 @@ export const authApi = createApi({
       queryFn: () => {
         return new Promise((resolve) => {
           const unsubscribe = onAuthStateChanged(auth, (user) => {
+            console.log('Current user:', user);
             if (user) {
               resolve({ data: { uid: user.uid, email: user.email } });
             } else {

@@ -42,7 +42,7 @@ export const AuthFormInput = ({ name, control, rules, ...props }: Props) => {
               outline: 'none',
               transition: 'none',
             }}
-            className="py-2 px-4 rounded-xl bg-[#EFF2F6] placeholder-[#4a4b4d] focus:!outline-none focus:!ring-0 focus:!border-transparent focus:!transition-none !transition-none"
+            className="py-1.5 px-4 rounded-lg bg-[#EFF2F6] placeholder-[#4a4b4d] focus:!outline-none focus:!ring-0 focus:!border-transparent focus:!transition-none !transition-none"
           />
         </Form.Item>
       )}

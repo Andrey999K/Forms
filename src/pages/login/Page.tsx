@@ -11,11 +11,9 @@ import { AuthFormInput } from '@/components/auth/AuthFormInput';
 import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
 import { AuthTextLink } from '@/components/auth/AuthTextLink';
 import { Routes } from '@/utils/routesConfig';
-import { AuthFormValues } from '../../types';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/redux/auth';
-import { toast } from 'react-toastify';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { AuthFormValues } from '@/types';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -29,24 +27,16 @@ export const Login = () => {
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   const onSubmit: SubmitHandler<AuthFormValues> = async (data) => {
-    try {
-      await login(data).unwrap();
-      toast.success('Вы успешно авторизовались');
-      navigate(Routes.HOME);
-    } catch (err: unknown) {
-      const error = err as FetchBaseQueryError;
-      const errorMessage =
-        typeof error.data === 'string' ? error.data : 'Произошла ошибка авторизации';
-      toast.error(errorMessage);
-    }
+    await login(data).unwrap();
+    navigate(Routes.HOME);
   };
 
   return (
-    <Layout className="min-h-screen bg-authImg bg-cover bg-center">
-      <Content className="flex justify-center  items-center h-screen">
-        <div className="bg-white bg-opacity-20 backdrop-blur-sm absolute p-8 rounded-2xl shadow-lg max-w-sm w-full">
+    <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">
+      <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
+        <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
           <div className="mb-6">
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-2">
               <div className="w-14 h-14 flex items-center justify-center bg-[#EEF5F8] rounded-2xl shadow-lg">
                 <FiLogIn size={30} color="#808897" />
               </div>
