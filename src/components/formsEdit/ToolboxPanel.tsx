@@ -9,31 +9,35 @@ import {
 } from '@ant-design/icons';
 import { ToolboxDraggableItem } from './ToolboxDraggableItem';
 import { FieldTypes } from '@/types';
+import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 
 type Props = {
   onSaveConstructor: () => void;
   onRemoveConstructor: () => void;
+  isUpdating: boolean;
+  isDeleting: boolean;
+  isEmptyFields: boolean;
 };
 
 export const ToolboxPanel: FC<Props> = (props) => {
-  const { onSaveConstructor, onRemoveConstructor } = props;
+  const { onSaveConstructor, onRemoveConstructor, isUpdating, isDeleting, isEmptyFields } = props;
   return (
-    <div className="w-64 border rounded-lg bg-white shadow-sm">
+    <GlassWrapper className="w-80">
       <div className="p-4">
         <h3 className="text-base font-medium mb-4">Элементы формы</h3>
         <div className="flex flex-col gap-2">
           <ToolboxDraggableItem type={FieldTypes.INPUT}>
-            <FormOutlined className="mr-2" />
+            <FormOutlined />
             Однострочный текст
           </ToolboxDraggableItem>
 
           <ToolboxDraggableItem type={FieldTypes.TEXTAREA}>
-            <AlignLeftOutlined className="mr-2" />
+            <AlignLeftOutlined />
             Многострочный текст
           </ToolboxDraggableItem>
 
           <ToolboxDraggableItem type={FieldTypes.RADIO}>
-            <CheckCircleOutlined className="mr-2" />
+            <CheckCircleOutlined />
             Список выбора
           </ToolboxDraggableItem>
         </div>
@@ -45,19 +49,29 @@ export const ToolboxPanel: FC<Props> = (props) => {
         <h3 className="text-base font-medium mb-4">Действия</h3>
         <div className="flex flex-col gap-2">
           <Button
-            type="primary"
-            icon={<SaveOutlined />}
+            color="default"
+            variant="solid"
             className="w-full"
+            icon={<SaveOutlined />}
+            loading={isUpdating}
+            disabled={isEmptyFields || isDeleting}
             onClick={onSaveConstructor}
           >
             Сохранить форму
           </Button>
-
-          <Button danger icon={<DeleteOutlined />} className="w-full" onClick={onRemoveConstructor}>
+          <Button
+            color="danger"
+            variant="filled"
+            className="w-full"
+            icon={<DeleteOutlined />}
+            loading={isDeleting}
+            disabled={isUpdating}
+            onClick={onRemoveConstructor}
+          >
             Удалить форму
           </Button>
         </div>
       </div>
-    </div>
+    </GlassWrapper>
   );
 };

@@ -1,11 +1,15 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-import { ConstructorFormBuilder } from '@/components/formsEdit/ConstructorFormBuilder';
-import { ConstructorField, ConstructorForm, FieldType } from '@/types';
-import { toast } from 'react-toastify';
-import { useGetFormQuery, useUpdateFormMutation, useDeleteFormMutation } from '@/redux/form';
 import { Spin } from 'antd';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { toast } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid';
+import { ConstructorHeader } from '@/components/formsEdit/ConstructorHeader';
+import { ConstructorWorkArea } from '@/components/formsEdit/ConstructorWorkArea';
+import { ToolboxPanel } from '@/components/formsEdit/ToolboxPanel';
+import { useDeleteFormMutation, useGetFormQuery, useUpdateFormMutation } from '@/redux/form';
+import { ConstructorField, ConstructorForm, FieldType, FieldTypes } from '@/types';
 
 export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -25,18 +29,18 @@ export const FormsEdit: FC = () => {
     setConstructor((prev) => {
       if (!prev) return prev;
       const { fields } = prev;
+      const isTypeRadio = type === FieldTypes.RADIO;
+      const options = isTypeRadio ? { options: [{ id: uuidv4(), label: 'Вариант 1' }] } : {};
       const newField: ConstructorField = {
         id: uuidv4(),
         type,
         question: '',
         require: false,
+        ...options,
       };
       const newFields = [...fields];
-      if (index !== undefined) {
-        newFields.splice(index, 0, newField);
-      } else {
-        newFields.push(newField);
-      }
+      if (index !== undefined) newFields.splice(index, 0, newField);
+      else newFields.push(newField);
       return { ...prev, fields: newFields };
     });
   };
@@ -119,16 +123,27 @@ export const FormsEdit: FC = () => {
   }
 
   return (
-    <ConstructorFormBuilder
-      constructor={constructor}
-      onSaveConstructor={handleSaveForms}
-      onRemoveConstructor={handleRemoveForms}
-      onDropField={handleDropField}
-      onMoveField={moveField}
-      onRemoveField={removeField}
-      onUpdateField={updateField}
-      onChangeForm={handleChangeForm}
-      isLoading={isUpdating || isDeleting}
-    />
+    <DndProvider backend={HTML5Backend}>
+      <div className="flex gap-4 items-start">
+        <ToolboxPanel
+          onSaveConstructor={handleSaveForms}
+          onRemoveConstructor={handleRemoveForms}
+          isUpdating={isUpdating}
+          isDeleting={isDeleting}
+          isEmptyFields={constructor.fields.length === 0}
+        />
+        <div className="flex flex-col w-full relative gap-4">
+          <ConstructorHeader constructor={constructor} onChangeForm={handleChangeForm} />
+          <ConstructorWorkArea
+            constructor={constructor}
+            onDropField={handleDropField}
+            onMoveField={moveField}
+            onRemoveField={removeField}
+            onUpdateField={updateField}
+            onChangeForm={handleChangeForm}
+          />
+        </div>
+      </div>
+    </DndProvider>
   );
 };

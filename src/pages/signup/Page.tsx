@@ -41,7 +41,6 @@ export const Signup = () => {
       const error = err as FetchBaseQueryError;
       const errorMessage =
         typeof error.data === 'string' ? error.data : 'Произошла ошибка регистрации';
-      console.log('####: ', errorMessage);
       toast.error(errorMessage);
     }
   };

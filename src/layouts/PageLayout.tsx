@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Routes } from '../utils/routesConfig.js';
 import { UserOutlined } from '@ant-design/icons';
 import { Button, Dropdown, MenuProps } from 'antd';
+import { Routes } from '../utils/routesConfig.ts';
 import { ToastContainer } from 'react-toastify';
 import { ShapeWrapper } from './GlassLayout.js';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.js';

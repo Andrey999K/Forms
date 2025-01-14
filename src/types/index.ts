@@ -1,5 +1,5 @@
 import {
-  FieldExists,
+  FIELD_EXISTS,
   FieldTypes,
   FieldType,
   ConstructorField,
@@ -7,8 +7,8 @@ import {
 } from './constructor';
 
 export enum Sort {
-  ASC = 'ASC',
-  DESC = 'DESC',
+  ASC = 'asc',
+  DESC = 'desc',
 }
 
 export type Slice = {
@@ -25,4 +25,4 @@ export type AuthFormValues = {
 };
 
 export type { FieldType, ConstructorField, ConstructorForm };
-export { FieldExists, FieldTypes };
+export { FIELD_EXISTS, FieldTypes };
