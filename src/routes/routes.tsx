@@ -5,6 +5,7 @@ import { Routes } from '@/utils/routesConfig';
 import { ProtectedRoute } from './ProtectedRoute';
 import { NotFoundPage } from '@/pages/NotFoundPage/Page';
 import { ErrorBoundary, Loader } from '@/components/common';
+import { GuestRoute } from './GuestRoute';
 
 const Home = lazy(() => import('@/pages/home/Page').then((module) => ({ default: module.Home })));
 const Me = lazy(() => import('@/pages/me/Page').then((module) => ({ default: module.Me })));
@@ -75,7 +76,7 @@ export const router = createBrowserRouter([
             element: <FormResponse />,
           },
           {
-            path: '*',
+            path: Routes.NOT_FOUND,
             element: <NotFoundPage />,
           },
         ],
@@ -86,9 +87,11 @@ export const router = createBrowserRouter([
     path: Routes.LOGIN,
     element: (
       <ErrorBoundary>
-        <Suspense fallback={<Loader />}>
-          <Login />
-        </Suspense>
+        <GuestRoute>
+          <Suspense fallback={<Loader />}>
+            <Login />
+          </Suspense>
+        </GuestRoute>
       </ErrorBoundary>
     ),
   },
@@ -96,9 +99,11 @@ export const router = createBrowserRouter([
     path: Routes.SIGNUP,
     element: (
       <ErrorBoundary>
-        <Suspense fallback={<Loader />}>
-          <Signup />
-        </Suspense>
+        <GuestRoute>
+          <Suspense fallback={<Loader />}>
+            <Signup />
+          </Suspense>
+        </GuestRoute>
       </ErrorBoundary>
     ),
   },

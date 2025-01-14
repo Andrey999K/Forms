@@ -74,8 +74,8 @@ export const authApi = createApi({
           return { error: { status: 500, data: error } };
         }
       },
+      invalidatesTags: ['auth'],
     }),
-
     getCurrentUser: builder.query<{ uid: string | null; email: string | null } | null, void>({
       queryFn: () => {
         return new Promise((resolve) => {
@@ -87,7 +87,6 @@ export const authApi = createApi({
               resolve({ data: null });
             }
           });
-
           return () => unsubscribe();
         });
       },
