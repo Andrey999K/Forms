@@ -12,8 +12,7 @@ export const FormsNew: FC = () => {
     const initForm = async () => {
       try {
         await createForm({}).unwrap();
-      } catch (error) {
-        console.log('Error', error);
+      } catch {
         toast.error('Ошибка при создании формы');
         navigate('/');
       }

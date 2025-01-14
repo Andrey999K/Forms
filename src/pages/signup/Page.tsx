@@ -1,27 +1,20 @@
-//Ant Design
 import { Form, Layout, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-//React Hook Form
 import { SubmitHandler, useForm } from 'react-hook-form';
-//React Icons
 import { MdMail, MdPerson, MdPersonAddAlt1, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { RiLockFill } from 'react-icons/ri';
-//React
 import { useState } from 'react';
-//Custom Routes
 import { Routes } from '../../utils/routesConfig';
-//Services
-import { authService } from '../../services/auth.service';
-//Validation
 import { AuthValidationRules } from '../../utils/validation';
-//Custom Components
 import { AuthFormInput } from '../../components/auth/AuthFormInput';
 import { AuthSubmitButton } from '../../components/auth/AuthSubmitButton';
 import { AuthTextLink } from '../../components/auth/AuthTextLink';
-//Types
 import { AuthFormValues } from '../../types';
 import { AuthClearFormButton } from '../../components/auth/AuthClearFormButton';
 import { useNavigate } from 'react-router-dom';
+import { useRegisterMutation } from '@/redux/auth';
+import { toast } from 'react-toastify';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -29,6 +22,8 @@ export const Signup = () => {
   const { control, handleSubmit, watch, reset } = useForm<AuthFormValues>({
     mode: 'onChange',
   });
+  const [register, { isLoading }] = useRegisterMutation();
+
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
@@ -37,9 +32,17 @@ export const Signup = () => {
   const password = watch('password');
 
   const onSubmit: SubmitHandler<AuthFormValues> = async (data) => {
-    const isRegistered = await authService.register(data);
-    if (isRegistered) {
+    try {
+      await register(data).unwrap();
+      toast.success('Вы успешно зарегистрировались');
       navigate(Routes.HOME);
+    } catch (err: unknown) {
+      console.log('####: ', err);
+      const error = err as FetchBaseQueryError;
+      const errorMessage =
+        typeof error.data === 'string' ? error.data : 'Произошла ошибка регистрации';
+      console.log('####: ', errorMessage);
+      toast.error(errorMessage);
     }
   };
 
@@ -59,7 +62,7 @@ export const Signup = () => {
                 marginBottom: '0.5rem',
               }}
             >
-              Register
+              Регистрация
             </Typography.Title>
             <Typography.Title
               level={5}
@@ -126,7 +129,7 @@ export const Signup = () => {
                 </span>
               }
             />
-            <AuthSubmitButton>Зарегистрироваться</AuthSubmitButton>
+            <AuthSubmitButton disabled={isLoading}>Зарегистрироваться</AuthSubmitButton>
             <div className="flex items-center justify-between">
               <AuthClearFormButton reset={reset} />
               <AuthTextLink text="Есть аккаунт?" linkText="Войти" linkTo={Routes.LOGIN} />

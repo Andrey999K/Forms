@@ -5,6 +5,7 @@ import { Button, Dropdown, MenuProps } from 'antd';
 import { ToastContainer } from 'react-toastify';
 import { ShapeWrapper } from './GlassLayout.js';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.js';
+import { useLogoutMutation } from '@/redux/auth/authApi.js';
 
 const pages = [
   {
@@ -20,7 +21,10 @@ const pages = [
 export const PageLayout = () => {
   const navigate = useNavigate();
 
-  const handleExit = () => {
+  const [logout] = useLogoutMutation();
+
+  const handleExit = async () => {
+    await logout().unwrap();
     navigate(Routes.LOGIN);
   };
 

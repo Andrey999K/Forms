@@ -1,42 +1,43 @@
-//Ant Design
-import { Form, Layout, Typography } from 'antd';
+import { Form, Layout, Spin, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-//React Hook Form
 import { SubmitHandler, useForm } from 'react-hook-form';
-//React Icons
 import { FiLogIn } from 'react-icons/fi';
 import { MdMail } from 'react-icons/md';
 import { RiLockFill } from 'react-icons/ri';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
-//React
 import { useState } from 'react';
-//Validation
-import { AuthValidationRules } from '../../utils/validation';
-//Custom Components
-import { AuthFormInput } from '../../components/auth/AuthFormInput';
-import { AuthSubmitButton } from '../../components/auth/AuthSubmitButton';
-import { AuthTextLink } from '../../components/auth/AuthTextLink';
-//Custom Routes
-import { Routes } from '../../utils/routesConfig';
-//Types
+import { AuthValidationRules } from '@/utils/validation';
+import { AuthFormInput } from '@/components/auth/AuthFormInput';
+import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
+import { AuthTextLink } from '@/components/auth/AuthTextLink';
+import { Routes } from '@/utils/routesConfig';
 import { AuthFormValues } from '../../types';
-import { authService } from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
+import { useLoginMutation } from '@/redux/auth';
+import { toast } from 'react-toastify';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const { control, handleSubmit } = useForm<AuthFormValues>({
     mode: 'onChange',
   });
+  const [login, { isLoading }] = useLoginMutation();
 
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   const onSubmit: SubmitHandler<AuthFormValues> = async (data) => {
-    const isRegistered = await authService.login(data);
-    if (isRegistered) {
+    try {
+      await login(data).unwrap();
+      toast.success('Вы успешно авторизовались');
       navigate(Routes.HOME);
+    } catch (err: unknown) {
+      const error = err as FetchBaseQueryError;
+      const errorMessage =
+        typeof error.data === 'string' ? error.data : 'Произошла ошибка авторизации';
+      toast.error(errorMessage);
     }
   };
 
@@ -56,7 +57,7 @@ export const Login = () => {
                 marginBottom: '0.5rem',
               }}
             >
-              Login
+              Авторизация
             </Typography.Title>
             <Typography.Title
               level={5}
@@ -92,7 +93,9 @@ export const Login = () => {
                 </span>
               }
             />
-            <AuthSubmitButton>Войти</AuthSubmitButton>
+            <AuthSubmitButton disabled={isLoading}>
+              {isLoading ? <Spin size="small" /> : 'Войти'}
+            </AuthSubmitButton>
             <AuthTextLink
               text="Нет аккаунта?"
               linkText="Зарегистрироваться"

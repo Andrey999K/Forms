@@ -14,10 +14,9 @@ export const formApi = createApi({
       queryFn: async (id) => {
         try {
           const result = await firestoreService.get(COLLECTION, id);
-
           return { data: result as ConstructorForm };
-        } catch (error) {
-          return { error: getFirebaseError(error) };
+        } catch (error: any) {
+          return { error: getFirebaseError(error.message) };
         }
       },
       providesTags: ['form'],
