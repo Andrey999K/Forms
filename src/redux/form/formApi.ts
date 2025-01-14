@@ -15,8 +15,8 @@ export const formApi = createApi({
         try {
           const result = await firestoreService.get(COLLECTION, id);
           return { data: result as ConstructorForm };
-        } catch (error: any) {
-          return { error: getFirebaseError(error.message) };
+        } catch (error) {
+          return { error: getFirebaseError(error) };
         }
       },
       providesTags: ['form'],
