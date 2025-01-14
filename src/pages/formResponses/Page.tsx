@@ -3,8 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import { Card, DatePicker, Select } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import { mockResponses } from './mockData.ts';
-import { sortDates } from '../../utils/sortDates.ts';
-import { SortType } from '../../utils/types.ts';
+import { sortDates } from '@/utils/sortDates.ts';
+import { SortType } from '@/utils/types.ts';
 import { Sort } from '@/types/index.ts';
 
 const { RangePicker } = DatePicker;
