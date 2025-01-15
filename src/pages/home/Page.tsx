@@ -1,11 +1,11 @@
 import { HomeList } from '@/components/Home/HomeList/HomeList';
 import { useDeleteFormMutation, useGetFormListQuery } from '@/redux/form';
-import { Sort } from '@/types';
+import { Card, Sort } from '@/types';
 import { useIntersectionObserver } from '@siberiacancode/reactuse';
 import { Flex, Input, Select, Spin } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const { Search } = Input;
 const sortOptions: DefaultOptionType[] = [
@@ -27,11 +27,14 @@ export const Home = () => {
   const [page, setPage] = useState<number>(0);
   const [lastVisible, setLastVisible] =
     useState<QueryDocumentSnapshot<DocumentData, DocumentData>>();
-  const isFetching = useRef(false);
+  const [removedIndices, setRemovedIndices] = useState<string[]>([]);
+  const [filteredList, setFilteredList] = useState<Card[]>([]);
+
   const {
     data: res,
     isLoading,
     isError,
+    isFetching,
   } = useGetFormListQuery({
     search,
     sort: order,
@@ -40,15 +43,13 @@ export const Home = () => {
     page,
   });
   const [deleteForm] = useDeleteFormMutation();
+
   const { ref: intersectionRef } = useIntersectionObserver<HTMLDivElement>({
     threshold: 1,
 
     onChange: async (entry) => {
-      if (entry.isIntersecting && !isFetching.current) {
-        isFetching.current = true;
+      if (entry.isIntersecting && !isFetching) {
         setPage((prev) => prev + 1);
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        isFetching.current = false;
       }
     },
   });
@@ -56,6 +57,7 @@ export const Home = () => {
   const onDelete = async (id: string) => {
     try {
       await deleteForm(id).unwrap();
+      setRemovedIndices((prev) => [...prev, id]);
     } catch (error) {
       console.error('Ошибка удаления:', error);
     }
@@ -70,12 +72,24 @@ export const Home = () => {
   };
 
   useEffect(() => {
+    setPage(0);
+  }, [order, search]);
+
+  useEffect(() => {
     if ((res?.data?.length ?? 0) < CARDS_PER_PAGE) {
       setLastVisible(undefined);
     } else if (res?.lastVisible) {
       setLastVisible(res.lastVisible);
     }
-  }, [res?.lastVisible]);
+  }, [res]);
+
+  useEffect(() => {
+    if (res?.data?.length) {
+      setFilteredList(res.data.filter((item) => !removedIndices.includes(item.id)));
+    } else {
+      setFilteredList([]);
+    }
+  }, [res?.data, removedIndices]);
 
   return (
     <div>
@@ -91,8 +105,8 @@ export const Home = () => {
 
       {isLoading && <Spin />}
 
-      {res?.data && res.data.length > 0 ? (
-        <HomeList items={res.data.filter((item) => item !== null)} onDelete={onDelete} />
+      {filteredList.length > 0 ? (
+        <HomeList items={filteredList.filter((item) => item !== null)} onDelete={onDelete} />
       ) : (
         !isLoading && <div>Нет доступных форм.</div>
       )}
