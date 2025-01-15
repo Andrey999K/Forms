@@ -41,7 +41,7 @@ export const ConstructorDropZone: FC<Props> = (props) => {
           isOverNewItem ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <div className="w-full h-0.5 bg-blue-500" />
+        <div className="w-full h-0.5 bg-orange-500" />
       </div>
       {children}
     </div>

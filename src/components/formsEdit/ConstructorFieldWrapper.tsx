@@ -17,7 +17,7 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
   return (
     <div className={`relative w-full flex ${className}`}>
       <div className="w-full flex flex-col">
-        <button ref={dragRef} className={`w-full cursor-move hover:text-blue-500`}>
+        <button ref={dragRef} className={`w-full cursor-move hover:text-orange-500`}>
           <HolderOutlined className="rotate-90" />
         </button>
         <div className="w-full px-4 pb-4 flex flex-col gap-2 items-start">
