@@ -1,9 +1,16 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { firestoreService } from '@/services/firestore.service';
-import { ConstructorForm, FormListOptions, FormListResponse } from '@/types';
+import { ConstructorForm, FormListOptions, FormListResponse, Sort } from '@/types';
 import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 
 export const COLLECTION = 'form';
+
+const defaultOptions: FormListOptions = {
+  search: '',
+  sort: Sort.DESC,
+  limit: 9,
+  page: 0,
+};
 
 export const formApi = createApi({
   reducerPath: 'formApi',
@@ -24,16 +31,31 @@ export const formApi = createApi({
       serializeQueryArgs: ({ endpointName }) => {
         return endpointName;
       },
-      merge(currentCacheData, responseData) {
-        if (currentCacheData.lastVisible.id !== responseData.lastVisible.id) {
-          currentCacheData.data.push(...responseData.data);
-          currentCacheData.lastVisible = responseData.lastVisible;
-        }
+      merge(currentCache, newItems, { arg }) {
+        console.log(currentCache, newItems, { arg });
+
+        if (arg.page === 0) return newItems;
+
+        const existingIds = new Set(currentCache?.data?.map((item) => item.id) || []);
+        const uniqueNewItems = newItems.data.filter((item) => !existingIds.has(item.id));
+
+        return {
+          data: [...(currentCache?.data || []).filter(Boolean), ...uniqueNewItems],
+          lastVisible: newItems.lastVisible,
+        };
       },
       forceRefetch({ currentArg, previousArg }) {
+        console.log('forceRefetch', { currentArg, previousArg });
+
         return currentArg?.page !== previousArg?.page;
       },
-      providesTags: ['form'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map(({ id }) => ({ type: 'form' as const, id })),
+              { type: 'form', id: 'LIST' },
+            ]
+          : [{ type: 'form', id: 'LIST' }],
     }),
 
     getForm: builder.query<ConstructorForm, string>({
@@ -89,7 +111,21 @@ export const formApi = createApi({
           return { error: getFirebaseError(error) };
         }
       },
-      invalidatesTags: ['form'],
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          formApi.util.updateQueryData('getFormList', defaultOptions, (draft) => {
+            if (draft?.data) {
+              draft.data = draft.data.filter((item) => item.id !== id);
+            }
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+      invalidatesTags: (result, error, id) => [{ type: 'form', id }],
     }),
   }),
 });
