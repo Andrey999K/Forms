@@ -143,8 +143,7 @@ export const FormResponses = () => {
             onChange={handleEditDates}
             className="max-w-[30ch]"
             format={dateFormat}
-
-            // maxDate={dayjs()}
+            maxDate={dayjs()}
           />
         </div>
         <div className="flex flex-col gap-2 mt-2">
