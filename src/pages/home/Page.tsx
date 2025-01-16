@@ -4,6 +4,7 @@ import { Card, Sort } from '@/types';
 import { useIntersectionObserver } from '@siberiacancode/reactuse';
 import { Flex, Input, Select, Spin } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
+import Title from 'antd/es/typography/Title';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
@@ -111,7 +112,7 @@ export const Home = () => {
       {filteredList.length > 0 ? (
         <HomeList items={filteredList.filter((item) => item !== null)} onDelete={onDelete} />
       ) : (
-        !isFetching && <div>Нет доступных форм.</div>
+        !isFetching && isError && <Title level={2}>Нет доступных форм.</Title>
       )}
 
       {isFetching && (
