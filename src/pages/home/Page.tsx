@@ -33,7 +33,6 @@ export const Home = () => {
 
   const {
     data: res,
-    isLoading,
     isError,
     isFetching,
   } = useGetFormListQuery({
@@ -73,6 +72,7 @@ export const Home = () => {
   };
 
   useEffect(() => {
+    setFilteredList([]);
     setPage(0);
   }, [order, search]);
 
@@ -94,7 +94,7 @@ export const Home = () => {
     }
   }, [res?.data, removedIndices]);
 
-  const showLoader = !isLoading && !isError && hasNext;
+  const showTriggerLoader = !isFetching && !isError && hasNext;
 
   return (
     <div>
@@ -108,19 +108,21 @@ export const Home = () => {
         />
       </Flex>
 
-      {isLoading && <Spin />}
-
       {filteredList.length > 0 ? (
         <HomeList items={filteredList.filter((item) => item !== null)} onDelete={onDelete} />
       ) : (
-        !isLoading && !showLoader && <div>Нет доступных форм.</div>
+        !isFetching && <div>Нет доступных форм.</div>
       )}
 
-      {showLoader && (
-        <div className="mb-5">
-          <div ref={intersectionRef} className="mt-4">
-            <Spin />
-          </div>
+      {isFetching && (
+        <div className="mb-5 mt-4">
+          <Spin />
+        </div>
+      )}
+
+      {showTriggerLoader && (
+        <div ref={intersectionRef} className="mt-4 mb-5">
+          <Spin />
         </div>
       )}
     </div>

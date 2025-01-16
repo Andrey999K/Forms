@@ -52,7 +52,11 @@ export const formApi = createApi({
         currentCacheData.lastVisible = responseData.lastVisible;
       },
       forceRefetch({ currentArg, previousArg }) {
-        if (currentArg?.page === previousArg?.page) {
+        if (
+          currentArg?.page === previousArg?.page &&
+          currentArg?.search === previousArg?.search &&
+          currentArg?.sort === previousArg?.sort
+        ) {
           return false;
         }
 
