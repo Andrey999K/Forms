@@ -1,12 +1,14 @@
 import { HomeList } from '@/components/Home/HomeList/HomeList';
-import { getMockedCard } from './mock';
-import { useIntersectionObserver, debounce } from '@siberiacancode/reactuse';
-import { useState } from 'react';
-import { Card } from '@/types/card';
+import { useDeleteFormMutation, useGetFormListQuery } from '@/redux/form';
+import { Card, Sort } from '@/types';
+import { useIntersectionObserver } from '@siberiacancode/reactuse';
 import { Flex, Input, Select, Spin } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
-import { Sort } from '@/types';
+import Title from 'antd/es/typography/Title';
+import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 
+const { Search } = Input;
 const sortOptions: DefaultOptionType[] = [
   {
     value: Sort.DESC,
@@ -21,65 +23,79 @@ const sortOptions: DefaultOptionType[] = [
 const CARDS_PER_PAGE = 30;
 
 export const Home = () => {
-  const { Search } = Input;
-
-  const [list, setList] = useState<Card[]>([]);
   const [search, setSearch] = useState<string>('');
   const [order, setOrder] = useState<Sort>(Sort.DESC);
   const [page, setPage] = useState<number>(0);
+  const [lastVisible, setLastVisible] =
+    useState<QueryDocumentSnapshot<DocumentData, DocumentData>>();
+  const [removedIndices, setRemovedIndices] = useState<string[]>([]);
+  const [filteredList, setFilteredList] = useState<Card[]>([]);
+  const [hasNext, setHasNext] = useState<boolean>(true);
 
-  const [hasNext, setHasNext] = useState(true);
+  const {
+    data: res,
+    isError,
+    isFetching,
+  } = useGetFormListQuery({
+    search,
+    sort: order,
+    limit: CARDS_PER_PAGE,
+    lastVisible,
+    page,
+  });
+  const [deleteForm] = useDeleteFormMutation();
 
-  const onDelete = (id: string) => {
-    setList((prev) => prev.filter((item) => item.id !== id));
+  const { ref: intersectionRef } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 1,
 
-    // TODO: Add response to backend
+    onChange: async (entry) => {
+      if (entry.isIntersecting && !isFetching) {
+        setPage((prev) => prev + 1);
+      }
+    },
+  });
+
+  const onDelete = async (id: string) => {
+    try {
+      await deleteForm(id).unwrap();
+      setRemovedIndices((prev) => [...prev, id]);
+    } catch (error) {
+      console.error('Ошибка удаления:', error);
+    }
   };
 
-  const onSearch = debounce((value: string) => {
+  const onSearch = (value: string) => {
     setSearch(value);
-    clearData();
-  }, 300);
+  };
 
   const onChangeSort = (value: Sort) => {
     setOrder(value);
-    clearData();
   };
 
-  const clearData = () => {
-    setList([]);
+  useEffect(() => {
+    setFilteredList([]);
     setPage(0);
-    setHasNext(true);
-  };
+  }, [order, search]);
 
-  const loadData = async (page: number) => {
-    setPage(page);
-
-    if (!hasNext) return;
-
-    const newData = await getMockedCard(
-      { offset: (page - 1) * CARDS_PER_PAGE, limit: page * CARDS_PER_PAGE },
-      order,
-      search
-    );
-
-    if (newData.length < CARDS_PER_PAGE) {
+  useEffect(() => {
+    if ((res?.data?.length ?? 0) < CARDS_PER_PAGE) {
       setHasNext(false);
+      setLastVisible(undefined);
+    } else if (res?.lastVisible) {
+      setHasNext(true);
+      setLastVisible(res.lastVisible);
     }
+  }, [res]);
 
-    setList((prev) => prev.concat(newData));
-  };
+  useEffect(() => {
+    if (res?.data?.length) {
+      setFilteredList(res.data.filter((item) => !removedIndices.includes(item.id)));
+    } else {
+      setFilteredList([]);
+    }
+  }, [res?.data, removedIndices]);
 
-  const debouncedLoadData = debounce((page: number) => {
-    loadData(page);
-  }, 400);
-
-  const { ref } = useIntersectionObserver<HTMLDivElement>({
-    threshold: 1,
-    onChange: (entry) => {
-      if (entry.isIntersecting) debouncedLoadData(page + 1);
-    },
-  });
+  const showTriggerLoader = !isFetching && !isError && hasNext;
 
   return (
     <div>
@@ -93,10 +109,20 @@ export const Home = () => {
         />
       </Flex>
 
-      <HomeList items={list} onDelete={onDelete} />
+      {filteredList.length > 0 ? (
+        <HomeList items={filteredList.filter((item) => item !== null)} onDelete={onDelete} />
+      ) : (
+        !isFetching && isError && <Title level={2}>Нет доступных форм.</Title>
+      )}
 
-      {hasNext && (
-        <div ref={ref} className="mt-4">
+      {isFetching && (
+        <div className="mb-5 mt-4">
+          <Spin />
+        </div>
+      )}
+
+      {showTriggerLoader && (
+        <div ref={intersectionRef} className="mt-4 mb-5">
           <Spin />
         </div>
       )}

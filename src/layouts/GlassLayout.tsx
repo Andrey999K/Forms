@@ -57,6 +57,7 @@ export const ShapeWrapper: FC<Props> = ({ children, settings }) => {
       const distance = Math.sqrt(
         Math.pow(newCircle.x - circle.x, 2) + Math.pow(newCircle.y - circle.y, 2)
       );
+
       return distance < minDistance;
     });
   };

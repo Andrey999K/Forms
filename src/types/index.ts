@@ -5,24 +5,22 @@ import {
   ConstructorField,
   ConstructorForm,
 } from './constructor';
+import { Sort, Slice } from './base';
+import { AuthFormValues } from './auth';
+import { FormListOptions, FormListResponse } from './firebase';
+import { Card } from './card';
+import { FormResponse } from './response';
 
-export enum Sort {
-  ASC = 'asc',
-  DESC = 'desc',
-}
-
-export type Slice = {
-  offset: number;
-  limit: number;
+export type {
+  Card,
+  FieldType,
+  ConstructorField,
+  ConstructorForm,
+  Slice,
+  AuthFormValues,
+  FormListOptions,
+  FormListResponse,
+  FormResponse,
 };
 
-export type AuthFormValues = {
-  name?: string;
-  surname?: string;
-  email: string;
-  password: string;
-  copyPassword?: string;
-};
-
-export type { FieldType, ConstructorField, ConstructorForm };
-export { FIELD_EXISTS, FieldTypes };
+export { FIELD_EXISTS, FieldTypes, Sort };
