@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Card as CardType } from '@/types/card';
-import { Card } from 'antd';
-import { MdOutlineEdit, MdOutlineDelete } from 'react-icons/md';
+import { Badge, Card } from 'antd';
+import { MdOutlineEdit, MdOutlineDelete, MdOutlineQuestionAnswer } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
 type Props = {
@@ -17,6 +17,17 @@ export const HomeCard = (props: Props) => {
   };
 
   const actions: ReactNode[] = [
+    <Link key="response" to={`/forms/${item.id}/responses`}>
+      <Badge
+        count={item.responseCount ?? 0}
+        showZero
+        size="small"
+        styles={{ indicator: { fontSize: 10 } }}
+        offset={[2, -2]}
+      >
+        <MdOutlineQuestionAnswer />
+      </Badge>
+    </Link>,
     <Link key="edit" to={`/forms/${item.id}/edit`}>
       <MdOutlineEdit size={16} style={{ margin: '0 auto' }} href={`/forms/${item.id}/edit`} />
     </Link>,
@@ -29,8 +40,6 @@ export const HomeCard = (props: Props) => {
     </div>,
   ];
 
-  const responseText = item.responseCount ? `Отклики: ${item.responseCount}` : 'Откликов нет';
-
   return (
     <Card
       title={item.title}
@@ -42,7 +51,7 @@ export const HomeCard = (props: Props) => {
         header: { borderColor: '#ffe2cb' },
       }}
     >
-      {responseText}
+      {item.description}
     </Card>
   );
 };

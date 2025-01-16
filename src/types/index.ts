@@ -9,6 +9,7 @@ import { Sort, Slice } from './base';
 import { AuthFormValues } from './auth';
 import { FormListOptions, FormListResponse } from './firebase';
 import { Card } from './card';
+import { FormResponse } from './response';
 
 export type {
   Card,
@@ -19,6 +20,7 @@ export type {
   AuthFormValues,
   FormListOptions,
   FormListResponse,
+  FormResponse,
 };
 
 export { FIELD_EXISTS, FieldTypes, Sort };

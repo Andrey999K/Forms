@@ -46,20 +46,37 @@ export const firestoreService = {
     return convertFirestoreData(docSnap);
   },
 
-  getAll: async (collectionName: string, options: FormListOptions): Promise<FormListResponse> => {
+  getAll: async <T>(
+    collectionName: string,
+    options: FormListOptions,
+    canEmpty?: boolean
+  ): Promise<FormListResponse<T>> => {
     const collectionRef = collection(db, collectionName);
 
-    const constrains: QueryConstraint[] = [
-      orderBy('updatedAt', options.sort),
-      limit(options.limit),
-    ];
+    const constrains: QueryConstraint[] = [];
+
+    if (options.sort) {
+      constrains.push(orderBy('updatedAt', options.sort));
+    }
+
+    if (options.limit) {
+      constrains.push(limit(options.limit));
+    }
 
     if (options.lastVisible) {
       constrains.push(startAfter(options.lastVisible));
     }
 
-    if (options.search?.length) {
-      constrains.push(where('title', '==', options.search));
+    if (
+      (typeof options.search === 'string' && options.search.length) ||
+      typeof options.search === 'object'
+    ) {
+      constrains.push(where(options.searchKey ?? 'title', '==', options.search));
+    }
+
+    if (options.reference) {
+      const reference = doc(db, options.reference.collectionName, options.reference.id);
+      constrains.push(where(options.reference.key, '==', reference));
     }
 
     const q = query(collectionRef, ...constrains);
@@ -68,8 +85,15 @@ export const firestoreService = {
 
     if (!docSnap.empty) {
       return {
-        data: docSnap.docs.map((doc) => convertFirestoreData(doc)),
+        data: docSnap.docs.map((doc) => convertFirestoreData(doc)) as T,
         lastVisible: docSnap.docs[docSnap.docs.length - 1],
+      };
+    }
+
+    if (canEmpty) {
+      return {
+        data: [] as T,
+        lastVisible: undefined,
       };
     }
 
