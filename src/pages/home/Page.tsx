@@ -1,6 +1,6 @@
 import { HomeList } from '@/components/Home/HomeList/HomeList';
 import { useDeleteFormMutation, useGetFormListQuery } from '@/redux/form';
-import { Card, Sort } from '@/types';
+import { CardWithCount, Sort } from '@/types';
 import { useIntersectionObserver } from '@siberiacancode/reactuse';
 import { Flex, Input, Select, Spin } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
@@ -31,7 +31,7 @@ export const Home = () => {
   const [lastVisible, setLastVisible] =
     useState<QueryDocumentSnapshot<DocumentData, DocumentData>>();
   const [removedIndices, setRemovedIndices] = useState<string[]>([]);
-  const [filteredList, setFilteredList] = useState<Card[]>([]);
+  const [filteredList, setFilteredList] = useState<CardWithCount[]>([]);
   const [hasNext, setHasNext] = useState<boolean>(true);
 
   const {

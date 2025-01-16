@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
-import { Card as CardType } from '@/types/card';
+import { CardWithCount } from '@/types/card';
 import { Badge, Card } from 'antd';
 import { MdOutlineEdit, MdOutlineDelete, MdOutlineQuestionAnswer } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
 type Props = {
-  item: CardType;
+  item: CardWithCount;
   onDelete: (id: string) => void;
 };
 
