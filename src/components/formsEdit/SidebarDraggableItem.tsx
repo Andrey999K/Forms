@@ -8,7 +8,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const ToolboxDraggableItem: FC<Props> = (props) => {
+export const SidebarDraggableItem: FC<Props> = (props) => {
   const { type, children } = props;
   const [{ isDragging }, drag] = useDrag(() => ({
     type,

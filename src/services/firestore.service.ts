@@ -1,5 +1,4 @@
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -8,6 +7,7 @@ import {
   getDoc,
   getDocs,
   serverTimestamp,
+  setDoc,
   Timestamp,
   updateDoc,
 } from 'firebase/firestore';
@@ -32,10 +32,14 @@ const convertFirestoreData = (doc: DocumentSnapshot<DocumentData>) => {
 };
 
 export const firestoreService = {
-  create: async (collectionName: string, payload: object) => {
-    const data = { ...payload, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
-    const docRef = await addDoc(collection(db, collectionName), data);
+  create: async (collectionName: string, payload: { id: string; [key: string]: unknown }) => {
+    const { id, ...rest } = payload;
+    const data = { ...rest, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+    const docRef = doc(collection(db, collectionName), id);
+    await setDoc(docRef, data);
     const docSnap = await getDoc(docRef);
+    console.log({ payload, data, docRef, docSnap }, docRef.id);
+
     return convertFirestoreData(docSnap);
   },
 
@@ -47,7 +51,7 @@ export const firestoreService = {
       return docSnap.docs.map((doc) => convertFirestoreData(doc));
     }
 
-    throw new Error('Not found');
+    throw new Error('Id not found');
   },
 
   get: async (collectionName: string, id: string) => {
@@ -58,7 +62,7 @@ export const firestoreService = {
       return convertFirestoreData(docSnap);
     }
 
-    throw new Error('Not found');
+    throw new Error('Id not found');
   },
 
   update: async (
@@ -70,11 +74,13 @@ export const firestoreService = {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      await updateDoc(docRef, { ...updateData, updatedAt: serverTimestamp() });
+      const data = await updateDoc(docRef, { ...updateData, updatedAt: serverTimestamp() });
+      console.log(data);
+
       return payload;
     }
 
-    throw new Error('Not found');
+    throw new Error('Id not found');
   },
 
   delete: async (collectionName: string, id: string): Promise<boolean> => {

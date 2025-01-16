@@ -1,8 +1,8 @@
 import { ConstructorField, FieldTypes } from '@/types';
+import { getUUID } from '@/utils/getUUID';
 import { MinusCircleOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Input, Radio, Select, Tooltip } from 'antd';
 import { FC } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 type Props = {
   field: ConstructorField;
@@ -14,7 +14,7 @@ export const RadioEditor: FC<Props> = (props) => {
 
   const handleAdd = () => {
     const options = field?.options || [];
-    const id = uuidv4();
+    const id = getUUID();
     onUpdateField(field.id, { options: [...options, { id, label: '' }] });
   };
 

@@ -4,7 +4,9 @@ import {
   FieldType,
   ConstructorField,
   ConstructorForm,
-} from './constructor';
+  FormData,
+  NEW_FORM,
+} from './form';
 
 export enum Sort {
   ASC = 'asc',
@@ -24,5 +26,7 @@ export type AuthFormValues = {
   copyPassword?: string;
 };
 
-export type { FieldType, ConstructorField, ConstructorForm };
-export { FIELD_EXISTS, FieldTypes };
+export type HandleChangeForm = { name: string; value: unknown };
+
+export type { FieldType, ConstructorField, ConstructorForm, FormData };
+export { FIELD_EXISTS, FieldTypes, NEW_FORM };
