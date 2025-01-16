@@ -39,7 +39,7 @@ const convertFirestoreData = <T>(doc: DocumentSnapshot<DocumentData>) => {
 };
 
 export const firestoreService = {
-  create: async (collectionName: string, payload: object) => {
+  create: async <T>(collectionName: string, payload: object): Promise<T> => {
     const data = { ...payload, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
     const docRef = await addDoc(collection(db, collectionName), data);
     const docSnap = await getDoc(docRef);
@@ -71,6 +71,14 @@ export const firestoreService = {
       constrains.push(where(options.search.key ?? 'title', '==', options.search.value));
     }
 
+    if (options.filters?.length) {
+      options.filters.forEach((filter) => {
+        constrains.push(where(filter.key, filter.operator, filter.value));
+      });
+    }
+
+    console.log(constrains);
+
     if (options.reference) {
       const reference = doc(db, options.reference.collectionName, options.reference.id);
       constrains.push(where(options.reference.key, '==', reference));
@@ -97,7 +105,7 @@ export const firestoreService = {
     throw new Error('Not found');
   },
 
-  get: async (collectionName: string, id: string) => {
+  get: async <T>(collectionName: string, id: string): Promise<T> => {
     const docRef = doc(db, collectionName, id);
     const docSnap = await getDoc(docRef);
 

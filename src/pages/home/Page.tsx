@@ -21,7 +21,7 @@ const sortOptions: DefaultOptionType[] = [
   },
 ];
 
-const CARDS_PER_PAGE = 30;
+const CARDS_PER_PAGE = 6;
 
 export const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,7 +39,7 @@ export const Home = () => {
     isError,
     isFetching,
   } = useGetFormListQuery({
-    search,
+    search: search.length ? { key: 'title', value: search } : undefined,
     sort: order,
     limit: CARDS_PER_PAGE,
     lastVisible,
@@ -67,16 +67,20 @@ export const Home = () => {
   };
 
   const onSearch = (value: string) => {
+    setLastVisible(undefined);
+    setFilteredList([]);
+    setPage(0);
     setSearch(value);
   };
 
   const onChangeSort = (value: Sort) => {
+    setLastVisible(undefined);
+    setFilteredList([]);
+    setPage(0);
     setOrder(value);
   };
 
   useEffect(() => {
-    setFilteredList([]);
-    setPage(0);
     const query: { order: Sort; search?: string } = { order };
     if (search.length) {
       query.search = search;
