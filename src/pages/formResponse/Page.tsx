@@ -1,6 +1,7 @@
 import { mockAnswers } from '@/pages/formResponse/mock.tsx';
-import { Button, Card } from 'antd';
+import { Button } from 'antd';
 import { Link, useParams } from 'react-router-dom';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
 
 export const FormResponse = () => {
   const { formId } = useParams();
@@ -10,14 +11,14 @@ export const FormResponse = () => {
       <h2 className="font-semibold">Название формы — Форма №1</h2>
       <div className="flex flex-col gap-2 mt-4">
         {mockAnswers.map((answer) => (
-          <Card key={answer.id} className="bg-white/20 border-gray/20">
+          <GlassWrapper key={answer.id} className="p-5">
             <div className="flex flex-col items-start gap-1">
               <h3 className="font-semibold">{answer.question}</h3>
-              <p className="text-start">{answer.answer}</p>
+              <p className="text-start text-sm">{answer.answer}</p>
             </div>
-          </Card>
+          </GlassWrapper>
         ))}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mt-4">
           <Button type="primary">
             <Link to={`/forms/${formId}`}>Перейти к форме</Link>
           </Button>
