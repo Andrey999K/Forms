@@ -25,18 +25,18 @@ export const HomeCard = (props: Props) => {
         styles={{ indicator: { fontSize: 10 } }}
         offset={[2, -2]}
       >
-        <MdOutlineQuestionAnswer />
+        <MdOutlineQuestionAnswer size={18} />
       </Badge>
     </Link>,
     <Link key="edit" to={`/forms/${item.id}/edit`}>
-      <MdOutlineEdit size={16} style={{ margin: '0 auto' }} href={`/forms/${item.id}/edit`} />
+      <MdOutlineEdit size={18} style={{ margin: '0 auto' }} href={`/forms/${item.id}/edit`} />
     </Link>,
     <div
       key="delete"
       className="text-red-600 hover:text-red-400 transition-all duration-200 ease-in-out"
       onClick={handleDeleteClick}
     >
-      <MdOutlineDelete size={16} style={{ margin: '0 auto' }} />
+      <MdOutlineDelete size={18} style={{ margin: '0 auto' }} />
     </div>,
   ];
 
