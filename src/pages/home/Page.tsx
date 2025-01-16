@@ -7,6 +7,7 @@ import { DefaultOptionType } from 'antd/es/select';
 import Title from 'antd/es/typography/Title';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 const { Search } = Input;
 const sortOptions: DefaultOptionType[] = [
@@ -23,8 +24,9 @@ const sortOptions: DefaultOptionType[] = [
 const CARDS_PER_PAGE = 30;
 
 export const Home = () => {
-  const [search, setSearch] = useState<string>('');
-  const [order, setOrder] = useState<Sort>(Sort.DESC);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState<string>(searchParams.get('search') ?? '');
+  const [order, setOrder] = useState<Sort>((searchParams.get('order') as Sort) ?? Sort.DESC);
   const [page, setPage] = useState<number>(0);
   const [lastVisible, setLastVisible] =
     useState<QueryDocumentSnapshot<DocumentData, DocumentData>>();
@@ -75,7 +77,12 @@ export const Home = () => {
   useEffect(() => {
     setFilteredList([]);
     setPage(0);
-  }, [order, search]);
+    const query: { order: Sort; search?: string } = { order };
+    if (search.length) {
+      query.search = search;
+    }
+    setSearchParams(query);
+  }, [order, search, setSearchParams]);
 
   useEffect(() => {
     if ((res?.data?.length ?? 0) < CARDS_PER_PAGE) {
@@ -100,7 +107,7 @@ export const Home = () => {
   return (
     <div>
       <Flex justify="space-between" gap={24} className="mb-8">
-        <Search onSearch={onSearch} style={{ width: 300 }} />
+        <Search defaultValue={search} onSearch={onSearch} style={{ width: 300 }} />
         <Select
           value={order}
           options={sortOptions}
