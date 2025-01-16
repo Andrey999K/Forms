@@ -7,26 +7,15 @@ import {
   FormData,
   NEW_FORM,
 } from './form';
+import { Sort, Slice } from './base';
+import { AuthFormValues } from './auth';
+import { FormListOptions, FormListResponse } from './firebase';
+import { Card } from './card';
+import { FormResponse } from './response';
 
-export enum Sort {
-  ASC = 'asc',
-  DESC = 'desc',
-}
-
-export type Slice = {
-  offset: number;
-  limit: number;
-};
-
-export type AuthFormValues = {
-  name?: string;
-  surname?: string;
-  email: string;
-  password: string;
-  copyPassword?: string;
-};
+export type { Card, Slice, AuthFormValues, FormListOptions, FormListResponse, FormResponse };
 
 export type HandleChangeForm = { name: string; value: unknown };
 
 export type { FieldType, ConstructorField, ConstructorForm, FormData };
-export { FIELD_EXISTS, FieldTypes, NEW_FORM };
+export { FIELD_EXISTS, FieldTypes, NEW_FORM, Sort };

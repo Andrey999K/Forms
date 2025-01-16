@@ -18,6 +18,7 @@ import { ToastContainer } from 'react-toastify';
 import { toastConfig } from './utils/toast.config.ts';
 import { store } from './redux/store.ts';
 import './App.css';
+import { ConfigProvider } from 'antd';
 
 const router = createBrowserRouter([
   {
@@ -66,10 +67,21 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <Provider store={store}>
-      <RouterProvider router={router} />
-      <ToastContainer {...toastConfig} />
-    </Provider>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#fa9145',
+          colorTextBase: '#885028',
+          colorBgBase: '#fdf8f4',
+        },
+        cssVar: true,
+      }}
+    >
+      <Provider store={store}>
+        <RouterProvider router={router} />
+        <ToastContainer {...toastConfig} />
+      </Provider>
+    </ConfigProvider>
   );
 }
 

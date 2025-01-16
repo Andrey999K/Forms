@@ -6,12 +6,19 @@ import {
   DocumentSnapshot,
   getDoc,
   getDocs,
+  limit,
+  orderBy,
+  query,
+  QueryConstraint,
   serverTimestamp,
   setDoc,
+  startAfter,
   Timestamp,
   updateDoc,
+  where,
 } from 'firebase/firestore';
-import { db } from '../utils/firebase/firebaseConfig';
+import { db } from '@/utils/firebase/firebaseConfig';
+import { FormListOptions, FormListResponse } from '@/types';
 
 const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | number): number => {
   if (typeof timestamp !== 'number') {
@@ -21,14 +28,14 @@ const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | numb
   }
 };
 
-const convertFirestoreData = (doc: DocumentSnapshot<DocumentData>) => {
+const convertFirestoreData = <T>(doc: DocumentSnapshot<DocumentData>) => {
   const data = doc.data();
   return {
     id: doc.id,
     ...data,
     createdAt: convertTimestampToNumber(data?.createdAt),
     updatedAt: convertTimestampToNumber(data?.updatedAt),
-  };
+  } as T;
 };
 
 export const firestoreService = {
@@ -43,12 +50,55 @@ export const firestoreService = {
     return convertFirestoreData(docSnap);
   },
 
-  getAll: async (collectionName: string) => {
+  getAll: async <T>(
+    collectionName: string,
+    options: FormListOptions,
+    canEmpty?: boolean
+  ): Promise<FormListResponse<T>> => {
     const collectionRef = collection(db, collectionName);
-    const docSnap = await getDocs(collectionRef);
+
+    const constrains: QueryConstraint[] = [];
+
+    if (options.sort) {
+      constrains.push(orderBy('updatedAt', options.sort));
+    }
+
+    if (options.limit) {
+      constrains.push(limit(options.limit));
+    }
+
+    if (options.lastVisible) {
+      constrains.push(startAfter(options.lastVisible));
+    }
+
+    if (
+      (typeof options.search === 'string' && options.search.length) ||
+      typeof options.search === 'object'
+    ) {
+      constrains.push(where(options.searchKey ?? 'title', '==', options.search));
+    }
+
+    if (options.reference) {
+      const reference = doc(db, options.reference.collectionName, options.reference.id);
+      constrains.push(where(options.reference.key, '==', reference));
+    }
+
+    const q = query(collectionRef, ...constrains);
+
+    const docSnap = await getDocs(q);
 
     if (!docSnap.empty) {
-      return docSnap.docs.map((doc) => convertFirestoreData(doc));
+      return {
+        data: docSnap.docs.map((doc) => convertFirestoreData(doc)) as T,
+        lastVisible: docSnap.docs[docSnap.docs.length - 1],
+      };
+    }
+
+    if (canEmpty) {
+      return {
+        data: [] as T,
+        lastVisible: undefined,
+      };
     }
 
     throw new Error('Id not found');
