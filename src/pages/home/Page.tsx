@@ -19,7 +19,7 @@ const sortOptions: DefaultOptionType[] = [
   },
 ];
 
-const CARDS_PER_PAGE = 60;
+const CARDS_PER_PAGE = 30;
 
 export const Home = () => {
   const [search, setSearch] = useState<string>('');
