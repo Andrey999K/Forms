@@ -67,11 +67,8 @@ export const firestoreService = {
       constrains.push(startAfter(options.lastVisible));
     }
 
-    if (
-      (typeof options.search === 'string' && options.search.length) ||
-      typeof options.search === 'object'
-    ) {
-      constrains.push(where(options.searchKey ?? 'title', '==', options.search));
+    if (options.search) {
+      constrains.push(where(options.search.key ?? 'title', '==', options.search.value));
     }
 
     if (options.reference) {
