@@ -52,8 +52,17 @@ export const formApi = createApi({
         currentCacheData.lastVisible = responseData.lastVisible;
       },
       forceRefetch({ currentArg, previousArg }) {
-        return currentArg?.page !== previousArg?.page;
+        if (currentArg?.page === previousArg?.page) {
+          return false;
+        }
+
+        if (currentArg?.page && currentArg.page > 0 && !currentArg?.lastVisible) {
+          return false;
+        }
+
+        return true;
       },
+      providesTags: ['form'],
     }),
 
     getForm: builder.query<ConstructorForm, string>({

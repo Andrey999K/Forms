@@ -19,7 +19,7 @@ const sortOptions: DefaultOptionType[] = [
   },
 ];
 
-const CARDS_PER_PAGE = 9;
+const CARDS_PER_PAGE = 60;
 
 export const Home = () => {
   const [search, setSearch] = useState<string>('');
@@ -29,6 +29,7 @@ export const Home = () => {
     useState<QueryDocumentSnapshot<DocumentData, DocumentData>>();
   const [removedIndices, setRemovedIndices] = useState<string[]>([]);
   const [filteredList, setFilteredList] = useState<Card[]>([]);
+  const [hasNext, setHasNext] = useState<boolean>(true);
 
   const {
     data: res,
@@ -77,8 +78,10 @@ export const Home = () => {
 
   useEffect(() => {
     if ((res?.data?.length ?? 0) < CARDS_PER_PAGE) {
+      setHasNext(false);
       setLastVisible(undefined);
     } else if (res?.lastVisible) {
+      setHasNext(true);
       setLastVisible(res.lastVisible);
     }
   }, [res]);
@@ -90,6 +93,8 @@ export const Home = () => {
       setFilteredList([]);
     }
   }, [res?.data, removedIndices]);
+
+  const showLoader = !isLoading && !isError && hasNext;
 
   return (
     <div>
@@ -108,10 +113,10 @@ export const Home = () => {
       {filteredList.length > 0 ? (
         <HomeList items={filteredList.filter((item) => item !== null)} onDelete={onDelete} />
       ) : (
-        !isLoading && <div>Нет доступных форм.</div>
+        !isLoading && !showLoader && <div>Нет доступных форм.</div>
       )}
 
-      {!isError && !isLoading && (
+      {showLoader && (
         <div className="mb-5">
           <div ref={intersectionRef} className="mt-4">
             <Spin />
