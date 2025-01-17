@@ -1,15 +1,53 @@
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
 import { useGetFormQuery } from '@/redux/form';
 import { Loader } from '@/components/ui/Loader';
+import { Button, Checkbox, Form, Input, Radio } from 'antd';
+import { ConstructorField } from '@/types';
 
 export const FormPage = () => {
   const { formId } = useParams();
   const { data: formData, isLoading } = useGetFormQuery(formId || '');
+  const [form] = Form.useForm();
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+  const renderField = (field: ConstructorField) => {
+    const { type } = field;
+    switch (type) {
+      case 'input':
+        return <Input key={field.id} />;
+      case 'textarea':
+        return <Input.TextArea />;
+      case 'radio':
+        return (
+          <Radio.Group className="flex justify-start">
+            {field.options?.map((option) => (
+              <Radio key={option.id} value={option.id}>
+                {option.label}
+              </Radio>
+            ))}
+          </Radio.Group>
+        );
+      case 'checkbox':
+        return (
+          <Checkbox.Group className="flex justify-start">
+            {field.options?.map((option) => (
+              <Checkbox key={option.id} value={option.id}>
+                {option.label}
+              </Checkbox>
+            ))}
+          </Checkbox.Group>
+        );
+    }
+  };
+
+  const onFinish = (values: { [key: string]: string }) => {
+    const answersData = Object.keys(values).map((field) => {
+      const questionData = formData?.fields.find((currentField) => currentField.id === field);
+      return questionData
+        ? { id: questionData.id, question: questionData.question, answer: values[field] }
+        : {};
+    });
+    console.log(answersData);
+  };
 
   if (!formId) {
     return <h2>Форма не найдена!</h2>;
@@ -27,7 +65,27 @@ export const FormPage = () => {
     <div className="pt-5">
       <h2 className="font-semibold text-lg">{formData.title}</h2>
       <p className="mt-3">{formData.description}</p>
-      <div className="flex flex-col gap-3"></div>
+      <Form form={form} onFinish={onFinish} className="mt-3 custom-form" layout="vertical">
+        {formData.fields.map((field) => (
+          <Form.Item
+            key={field.id}
+            label={field.question}
+            name={field.id}
+            rules={
+              field.require ? [{ required: true, message: 'Поле обязательно к заполнению!' }] : []
+            }
+          >
+            {renderField(field)}
+          </Form.Item>
+        ))}
+        <Form.Item>
+          <div className="flex justify-start">
+            <Button type="primary" htmlType="submit" className="">
+              Отправить форму
+            </Button>
+          </div>
+        </Form.Item>
+      </Form>
     </div>
   );
 };
