@@ -20,6 +20,7 @@ export const responseApi = createApi({
             data: result,
           };
         } catch (error) {
+          console.log(error);
           return { error: getFirebaseError(error) };
         }
       },

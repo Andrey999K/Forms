@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
+import typography from 'antd/es/typography';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Card, DatePicker, Select, Spin } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
-import { FormListOptions, Sort } from '@/types/index.ts';
+import { FormListOptions, FormResponse, Sort } from '@/types/index.ts';
 import { useGetResponseListQuery } from '@/redux/response/index.ts';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { useIntersectionObserver } from '@siberiacancode/reactuse';
 import { useGetFormQuery } from '@/redux/form';
-import Title from 'antd/es/typography/Title';
+
+const { Text, Title } = typography;
 
 type RangeValue = Parameters<
   NonNullable<React.ComponentProps<typeof DatePicker.RangePicker>['onChange']>
@@ -29,6 +31,7 @@ export const FormResponses = () => {
 
   const { data: form } = useGetFormQuery(formId ?? '');
 
+  const [list, setList] = useState<FormResponse[]>([]);
   const [sort, setSort] = useState<Sort>((searchParams.get('sort') as Sort) ?? Sort.DESC);
   const [dates, setDates] = useState<Dates>({
     start: searchParams.get('start') ? dayjs.unix(Number(searchParams.get('start'))) : null,
@@ -51,10 +54,13 @@ export const FormResponses = () => {
     }
 
     if (dates.end) {
+      let copyEnd = dates.end.clone();
+      copyEnd = copyEnd.add(1, 'day');
+
       newFilters?.push({
         key: 'updatedAt',
         operator: '<=',
-        value: new Date(dayjs(dates.end).toDate()),
+        value: new Date(copyEnd.toDate()),
       });
     }
 
@@ -85,6 +91,7 @@ export const FormResponses = () => {
   });
 
   useEffect(() => {
+    setList(res?.data ?? []);
     if ((res?.data?.length ?? 0) < CARDS_PER_PAGE) {
       setHasNext(false);
       setLastVisible(undefined);
@@ -109,12 +116,14 @@ export const FormResponses = () => {
 
   const handleChangeSort = (value: Sort) => {
     setLastVisible(undefined);
+    setList([]);
     setPage(0);
     setSort(value);
   };
 
   const handleEditDates = (_dates: RangeValue, dateString: [string, string]) => {
     setLastVisible(undefined);
+    setList([]);
     setPage(0);
     setDates({
       start: dateString[0] ? dayjs(dateString[0]) : null,
@@ -124,52 +133,53 @@ export const FormResponses = () => {
 
   return (
     <div>
-      <Title level={2} className="font-bold">
+      <Title level={1} className="mt-10">
         Отклики на — Форма {form?.title}
       </Title>
-      <div className="mt-4">
-        <div className="flex items-center justify-end w-full gap-2">
-          <Select
-            defaultValue={sort}
-            onChange={handleChangeSort}
-            options={[
-              { value: Sort.DESC, label: 'Сначала новые' },
-              { value: Sort.ASC, label: 'Сначала старые' },
-            ]}
-            className="min-w-[20ch] text-left"
-          />
-          <RangePicker
-            defaultValue={[dates.start, dates.end]}
-            onChange={handleEditDates}
-            className="max-w-[30ch]"
-            format={dateFormat}
-            maxDate={dayjs()}
-          />
-        </div>
-        <div className="flex flex-col gap-2 mt-2">
-          {res?.data.map((response, index) => (
-            <Link to={`/forms/${formId}/responses/${response.id}`} key={response.id}>
-              <Card>
-                <div className="flex items-center justify-between gap-5">
-                  #{index + 1}
-                  <p className="text-gray-500 text-sm">{dayjs(response.updatedAt).toString()}</p>
-                </div>
-              </Card>
-            </Link>
-          ))}
-        </div>
-        {isFetching && (
-          <div className="mb-5 mt-4">
-            <Spin />
-          </div>
-        )}
-
-        {showTriggerLoader && (
-          <div ref={intersectionRef} className="mt-4 mb-5">
-            <Spin />
-          </div>
-        )}
+      <div className="flex items-center justify-end w-full gap-2 mt-10">
+        <Select
+          defaultValue={sort}
+          onChange={handleChangeSort}
+          options={[
+            { value: Sort.DESC, label: 'Сначала новые' },
+            { value: Sort.ASC, label: 'Сначала старые' },
+          ]}
+          className="min-w-[20ch] text-left"
+        />
+        <RangePicker
+          defaultValue={[dates.start, dates.end]}
+          onChange={handleEditDates}
+          className="max-w-[30ch]"
+          format={dateFormat}
+          maxDate={dayjs()}
+        />
       </div>
+      <div className="flex flex-col gap-4 my-6">
+        {!isFetching && isError && !list.length && <Title level={2}>Нет доступных форм.</Title>}
+        {list.map((response, index) => (
+          <Link to={`/forms/${formId}/responses/${response.id}`} key={response.id}>
+            <Card className="bg-[#fdf8f4]/85 backdrop-blur-sm hover:backdrop-blur-sm hover:bg-[#fdf8f4] hover:-translate-y-1 hover:shadow-lg transition duration-200 ease-in-out">
+              <div className="flex items-center justify-between gap-5">
+                <Title italic level={5} style={{ margin: 0 }}>
+                  Отклик #{index + 1}
+                </Title>
+                <Text>{dayjs(response.updatedAt).toString()}</Text>
+              </div>
+            </Card>
+          </Link>
+        ))}
+      </div>
+      {isFetching && (
+        <div className="mb-5 mt-4">
+          <Spin />
+        </div>
+      )}
+
+      {showTriggerLoader && (
+        <div ref={intersectionRef} className="mt-4 mb-5">
+          <Spin />
+        </div>
+      )}
     </div>
   );
 };

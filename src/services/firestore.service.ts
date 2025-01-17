@@ -48,7 +48,6 @@ export const firestoreService = {
     const docRef = doc(collection(db, collectionName), id);
     await setDoc(docRef, data);
     const docSnap = await getDoc(docRef);
-    console.log({ payload, data, docRef, docSnap }, docRef.id);
 
     return convertFirestoreData<T>(docSnap);
   },
@@ -130,8 +129,7 @@ export const firestoreService = {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      const data = await updateDoc(docRef, { ...updateData, updatedAt: serverTimestamp() });
-      console.log(data);
+      await updateDoc(docRef, { ...updateData, updatedAt: serverTimestamp() });
 
       return payload;
     }
