@@ -4,12 +4,16 @@ import {
   FieldType,
   ConstructorField,
   ConstructorForm,
-} from './constructor';
+  FormData,
+  NEW_FORM,
+} from './form';
 import { Sort, Slice } from './base';
 import { AuthFormValues } from './auth';
 import { FormListOptions, FormListResponse } from './firebase';
 import { Card, CardWithCount } from './card';
 import { FormResponse } from './response';
+
+type HandleChangeForm = { name: string; value: unknown };
 
 export type {
   Card,
@@ -22,6 +26,8 @@ export type {
   FormListResponse,
   FormResponse,
   CardWithCount,
+  FormData,
+  HandleChangeForm,
 };
 
-export { FIELD_EXISTS, FieldTypes, Sort };
+export { FIELD_EXISTS, FieldTypes, Sort, NEW_FORM };

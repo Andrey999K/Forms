@@ -1,5 +1,4 @@
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -12,6 +11,7 @@ import {
   query,
   QueryConstraint,
   serverTimestamp,
+  setDoc,
   startAfter,
   Timestamp,
   updateDoc,
@@ -39,11 +39,18 @@ const convertFirestoreData = <T>(doc: DocumentSnapshot<DocumentData>) => {
 };
 
 export const firestoreService = {
-  create: async <T>(collectionName: string, payload: object): Promise<T> => {
-    const data = { ...payload, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
-    const docRef = await addDoc(collection(db, collectionName), data);
+  create: async <T>(
+    collectionName: string,
+    payload: { id: string; [key: string]: unknown }
+  ): Promise<T> => {
+    const { id, ...rest } = payload;
+    const data = { ...rest, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+    const docRef = doc(collection(db, collectionName), id);
+    await setDoc(docRef, data);
     const docSnap = await getDoc(docRef);
-    return convertFirestoreData(docSnap);
+    console.log({ payload, data, docRef, docSnap }, docRef.id);
+
+    return convertFirestoreData<T>(docSnap);
   },
 
   getAll: async <T>(
@@ -100,7 +107,7 @@ export const firestoreService = {
       };
     }
 
-    throw new Error('Not found');
+    throw new Error('Id not found');
   },
 
   get: async <T>(collectionName: string, id: string): Promise<T> => {
@@ -111,7 +118,7 @@ export const firestoreService = {
       return convertFirestoreData(docSnap);
     }
 
-    throw new Error('Not found');
+    throw new Error('Id not found');
   },
 
   update: async (
@@ -123,11 +130,13 @@ export const firestoreService = {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      await updateDoc(docRef, { ...updateData, updatedAt: serverTimestamp() });
+      const data = await updateDoc(docRef, { ...updateData, updatedAt: serverTimestamp() });
+      console.log(data);
+
       return payload;
     }
 
-    throw new Error('Not found');
+    throw new Error('Id not found');
   },
 
   delete: async (collectionName: string, id: string): Promise<boolean> => {

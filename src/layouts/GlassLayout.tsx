@@ -110,8 +110,6 @@ export const ShapeWrapper: FC<Props> = ({ children, settings }) => {
         );
       }, 100);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [circles, processedViewports, calculateCircleSize]);
 
   // Обработка события изменения размера окна для переноса кругов
@@ -149,7 +147,6 @@ export const ShapeWrapper: FC<Props> = ({ children, settings }) => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [calculateCircleSize, processedViewports, handleScroll, handleResize]);
 
   return (

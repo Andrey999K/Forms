@@ -1,6 +1,5 @@
 import { firestoreService } from '@/services/firestore.service';
 import { FormListOptions, FormListResponse, FormResponse } from '@/types';
-import { FormResponseRequest } from '@/types/response';
 import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { isEqual } from 'lodash';
@@ -69,7 +68,7 @@ export const responseApi = createApi({
       providesTags: ['response'],
     }),
 
-    createResponse: builder.mutation<FormResponse, FormResponseRequest>({
+    createResponse: builder.mutation<FormResponse, { id: string; [key: string]: unknown }>({
       queryFn: async (response) => {
         try {
           const result = await firestoreService.create<FormResponse>(COLLECTION, response);
