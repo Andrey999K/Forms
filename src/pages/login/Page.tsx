@@ -14,6 +14,8 @@ import { Routes } from '@/utils/routesConfig';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/redux/auth';
 import { SignInFormValues } from '@/types/auth';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '@/redux/user/userSlice';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -22,16 +24,20 @@ export const Login = () => {
   });
   const [login, { isLoading }] = useLoginMutation();
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
+    dispatch(setLoading(true));
     try {
       await login(data).unwrap();
       navigate(Routes.HOME);
     } catch (error) {
       console.error('Ошибка авторизации:', error);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 

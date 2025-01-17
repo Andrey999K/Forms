@@ -1,4 +1,4 @@
-import { DocumentData, DocumentReference, QueryDocumentSnapshot } from 'firebase/firestore';
+import { DocumentData, QueryDocumentSnapshot, WhereFilterOp } from 'firebase/firestore';
 import { Sort } from './base';
 
 export type FormListReferenceOption = {
@@ -10,8 +10,15 @@ export type FormListReferenceOption = {
 export type FormListOptions = {
   limit?: number;
   page?: number;
-  searchKey?: string;
-  search?: string | DocumentReference<DocumentData, DocumentData>;
+  search?: {
+    key: string;
+    value: string;
+  };
+  filters?: {
+    key: string;
+    value: string | Date;
+    operator: WhereFilterOp;
+  }[];
   sort?: Sort;
   lastVisible?: QueryDocumentSnapshot<DocumentData, DocumentData>;
   reference?: FormListReferenceOption;

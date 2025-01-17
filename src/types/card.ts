@@ -4,5 +4,8 @@ export type Card = {
   description: string;
   createdAt: number;
   updatedAt: number;
-  responseCount: number;
 };
+
+export interface CardWithCount extends Card {
+  responseCount: number;
+}

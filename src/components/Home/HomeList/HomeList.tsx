@@ -1,9 +1,9 @@
-import { Card } from '@/types/card';
+import { CardWithCount } from '@/types/card';
 import { Row, Col } from 'antd';
 import { HomeCard } from '../HomeCard/HomeCard';
 
 type Props = {
-  items: Card[];
+  items: CardWithCount[];
   onDelete: (id: string) => void;
 };
 

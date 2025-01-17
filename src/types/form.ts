@@ -19,15 +19,29 @@ export type ConstructorField = {
   }[];
 };
 
-export type ConstructorForm = {
-  id: string;
+type Form = {
   title: string;
   description: string;
-  createdAt: number;
-  updatedAt: number;
+  settings: { timer: string; timerActive: false };
   fields: ConstructorField[];
 };
+
+export type StoreDates = {
+  createdAt: number;
+  updatedAt: number;
+};
+
+export type FormData = { id: string } & Form & StoreDates;
+
+export type ConstructorForm = { id: string } & Form & Partial<StoreDates>;
 
 // --- CONSTANTS ---
 
 export const FIELD_EXISTS = 'exists';
+
+export const NEW_FORM: Form = {
+  fields: [],
+  title: 'Название формы',
+  description: 'Описание формы',
+  settings: { timer: '', timerActive: false },
+};

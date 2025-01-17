@@ -13,6 +13,8 @@ import { AuthTextLink } from '@/components/auth/AuthTextLink';
 import { AuthValidationRules } from '@/utils/validation';
 import { Routes } from '@/utils/routesConfig';
 import { SignUpFormValues } from '@/types/auth';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '@/redux/user/userSlice';
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -22,6 +24,7 @@ export const Signup = () => {
   });
   const [register, { isLoading }] = useRegisterMutation();
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
@@ -30,11 +33,14 @@ export const Signup = () => {
   const password = watch('password');
 
   const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
+    dispatch(setLoading(true));
     try {
       await register(data).unwrap();
       navigate(Routes.HOME);
     } catch (error) {
       console.error('Ошибка авторизации:', error);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 

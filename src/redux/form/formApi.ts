@@ -1,7 +1,14 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { firestoreService } from '@/services/firestore.service';
-import { Card, ConstructorForm, FormListOptions, FormListResponse, FormResponse } from '@/types';
+import {
+  CardWithCount,
+  ConstructorForm,
+  FormListOptions,
+  FormListResponse,
+  FormResponse,
+  FormData,
+} from '@/types';
 import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const COLLECTION = 'form';
 export const RESPONSE_COLLECTION = 'response';
@@ -11,10 +18,10 @@ export const formApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   tagTypes: ['form'],
   endpoints: (builder) => ({
-    getFormList: builder.query<FormListResponse<Card[]>, FormListOptions>({
+    getFormList: builder.query<FormListResponse<CardWithCount[]>, FormListOptions>({
       queryFn: async (options: FormListOptions) => {
         try {
-          const cards = await firestoreService.getAll<Card[]>(COLLECTION, options);
+          const cards = await firestoreService.getAll<CardWithCount[]>(COLLECTION, options);
 
           for (const card of cards.data) {
             const responses = await firestoreService.getAll<FormResponse[]>(
@@ -73,7 +80,7 @@ export const formApi = createApi({
       queryFn: async (id) => {
         try {
           const result = await firestoreService.get(COLLECTION, id);
-          return { data: result as ConstructorForm };
+          return { data: result as FormData };
         } catch (error) {
           return { error: getFirebaseError(error) };
         }
@@ -81,16 +88,11 @@ export const formApi = createApi({
       providesTags: ['form'],
     }),
 
-    createForm: builder.mutation<ConstructorForm, Partial<ConstructorForm>>({
+    createForm: builder.mutation<ConstructorForm, ConstructorForm>({
       queryFn: async (form) => {
-        const newForm = {
-          fields: [],
-          title: form.title || 'Название формы',
-          description: form.description || 'Описание формы',
-        };
         try {
-          const result = await firestoreService.create(COLLECTION, newForm);
-          return { data: result as ConstructorForm };
+          const result = await firestoreService.create(COLLECTION, form);
+          return { data: result as FormData };
         } catch (error) {
           return { error: getFirebaseError(error) };
         }
@@ -103,8 +105,7 @@ export const formApi = createApi({
         try {
           const { id, ...updateData } = form;
           const result = await firestoreService.update(COLLECTION, { id, ...updateData });
-
-          return { data: result as ConstructorForm };
+          return { data: result as FormData };
         } catch (error) {
           return { error: getFirebaseError(error) };
         }
