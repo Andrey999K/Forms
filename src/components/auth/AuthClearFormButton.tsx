@@ -1,8 +1,7 @@
-import { AuthFormValues } from '@/types';
 import { Button, Form } from 'antd';
 import { UseFormReset } from 'react-hook-form';
 
-export const AuthClearFormButton = ({ reset }: { reset: UseFormReset<AuthFormValues> }) => {
+export const AuthClearFormButton = ({ reset }: { reset: UseFormReset<any> }) => {
   return (
     <Form.Item className="flex justify-end ml-1">
       <Button

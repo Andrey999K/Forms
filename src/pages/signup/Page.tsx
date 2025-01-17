@@ -10,14 +10,14 @@ import { AuthClearFormButton } from '@/components/auth/AuthClearFormButton';
 import { AuthFormInput } from '@/components/auth/AuthFormInput';
 import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
 import { AuthTextLink } from '@/components/auth/AuthTextLink';
-import { AuthFormValues } from '@/types';
 import { AuthValidationRules } from '@/utils/validation';
 import { Routes } from '@/utils/routesConfig';
+import { SignUpFormValues } from '@/types';
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showCopyPassword, setShowCopyPassword] = useState<boolean>(false);
-  const { control, handleSubmit, watch, reset } = useForm<AuthFormValues>({
+  const { control, handleSubmit, watch, reset } = useForm<SignUpFormValues>({
     mode: 'onChange',
   });
   const [register, { isLoading }] = useRegisterMutation();
@@ -29,9 +29,13 @@ export const Signup = () => {
 
   const password = watch('password');
 
-  const onSubmit: SubmitHandler<AuthFormValues> = async (data) => {
-    await register(data).unwrap();
-    navigate(Routes.HOME);
+  const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
+    try {
+      await register(data).unwrap();
+      navigate(Routes.HOME);
+    } catch (error) {
+      console.error('Ошибка авторизации:', error);
+    }
   };
 
   return (

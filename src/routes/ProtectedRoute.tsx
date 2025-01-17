@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { Routes } from '@/utils/routesConfig';
-import { useGetCurrentUserQuery } from '@/redux/auth';
 import { Loader } from '@/components/common';
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
 
 export const ProtectedRoute = () => {
-  const { data: user, isLoading: loading } = useGetCurrentUserQuery();
+  const { currentUser, isAuthLoading } = useFirebaseAuth();
 
-  if (loading) return <Loader />;
-  return user ? <Outlet /> : <Navigate to={Routes.LOGIN} replace />;
+  if (isAuthLoading) return <Loader />;
+  return currentUser ? <Outlet /> : <Navigate to={Routes.LOGIN} replace />;
 };

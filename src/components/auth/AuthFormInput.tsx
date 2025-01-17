@@ -1,19 +1,23 @@
-import { AuthFormValues } from '@/types';
 import { Typography, Input, Form } from 'antd';
 import { ReactNode } from 'react';
-import { Control, Controller, RegisterOptions } from 'react-hook-form';
+import { Control, Controller, RegisterOptions, FieldValues, Path } from 'react-hook-form';
 
-type Props = {
-  name: keyof AuthFormValues;
-  control: Control<AuthFormValues>;
-  rules: RegisterOptions<AuthFormValues>;
+type Props<T extends FieldValues> = {
+  name: Path<T>;
+  control: Control<T>;
+  rules: RegisterOptions<T>;
   type?: 'text' | 'password';
   placeholder: 'Email' | 'Пароль' | 'Имя' | 'Фамилия';
   prefix?: ReactNode;
   suffix?: ReactNode;
 };
 
-export const AuthFormInput = ({ name, control, rules, ...props }: Props) => {
+export const AuthFormInput = <T extends FieldValues>({
+  name,
+  control,
+  rules,
+  ...props
+}: Props<T>) => {
   return (
     <Controller
       name={name}
@@ -21,7 +25,7 @@ export const AuthFormInput = ({ name, control, rules, ...props }: Props) => {
       rules={rules}
       render={({ field, fieldState }) => (
         <Form.Item
-          validateStatus={fieldState.error && 'error'}
+          validateStatus={fieldState.error ? 'error' : undefined}
           help={
             fieldState.error && (
               <Typography.Text

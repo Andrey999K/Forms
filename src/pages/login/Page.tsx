@@ -13,11 +13,11 @@ import { AuthTextLink } from '@/components/auth/AuthTextLink';
 import { Routes } from '@/utils/routesConfig';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/redux/auth';
-import { AuthFormValues } from '@/types';
+import { SignInFormValues } from '@/types';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const { control, handleSubmit } = useForm<AuthFormValues>({
+  const { control, handleSubmit } = useForm<SignInFormValues>({
     mode: 'onChange',
   });
   const [login, { isLoading }] = useLoginMutation();
@@ -26,9 +26,13 @@ export const Login = () => {
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
-  const onSubmit: SubmitHandler<AuthFormValues> = async (data) => {
-    await login(data).unwrap();
-    navigate(Routes.HOME);
+  const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
+    try {
+      await login(data).unwrap();
+      navigate(Routes.HOME);
+    } catch (error) {
+      console.error('Ошибка авторизации:', error);
+    }
   };
 
   return (

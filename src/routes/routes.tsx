@@ -1,11 +1,12 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { PageLayout } from '@/layouts/PageLayout';
 import { lazy, Suspense } from 'react';
 import { Routes } from '@/utils/routesConfig';
 import { ProtectedRoute } from './ProtectedRoute';
-import { NotFoundPage } from '@/pages/NotFoundPage/Page';
 import { ErrorBoundary, Loader } from '@/components/common';
-import { GuestRoute } from './GuestRoute';
+import { toastConfig } from '@/utils/toast.config';
+import { ToastContainer } from 'react-toastify';
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
 
 const Home = lazy(() => import('@/pages/home/Page').then((module) => ({ default: module.Home })));
 const Me = lazy(() => import('@/pages/me/Page').then((module) => ({ default: module.Me })));
@@ -31,80 +32,118 @@ const Signup = lazy(() =>
   import('@/pages/signup/Page').then((module) => ({ default: module.Signup }))
 );
 
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: (
-      <ErrorBoundary>
-        <PageLayout />
-      </ErrorBoundary>
-    ),
-    children: [
-      {
-        element: (
-          <Suspense fallback={<Loader />}>
-            <ProtectedRoute />
-          </Suspense>
-        ),
-        children: [
-          {
-            path: Routes.HOME,
-            element: <Home />,
-          },
-          {
-            path: Routes.ME,
-            element: <Me />,
-          },
-          {
-            path: Routes.FORMS_NEW,
-            element: <FormsNew />,
-          },
-          {
-            path: Routes.FORMS_EDIT,
-            element: <FormsEdit />,
-          },
-          {
-            path: Routes.FORM_PAGE,
-            element: <FormPage />,
-          },
-          {
-            path: Routes.FORM_RESPONSES,
-            element: <FormResponses />,
-          },
-          {
-            path: Routes.FORM_RESPONSE,
-            element: <FormResponse />,
-          },
-          {
-            path: Routes.NOT_FOUND,
-            element: <NotFoundPage />,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    path: Routes.LOGIN,
-    element: (
-      <ErrorBoundary>
-        <GuestRoute>
-          <Suspense fallback={<Loader />}>
-            <Login />
-          </Suspense>
-        </GuestRoute>
-      </ErrorBoundary>
-    ),
-  },
-  {
-    path: Routes.SIGNUP,
-    element: (
-      <ErrorBoundary>
-        <GuestRoute>
-          <Suspense fallback={<Loader />}>
-            <Signup />
-          </Suspense>
-        </GuestRoute>
-      </ErrorBoundary>
-    ),
-  },
-]);
+const NotFoundPage = lazy(() =>
+  import('@/pages/notFoundPage/Page').then((module) => ({ default: module.NotFound }))
+);
+
+export const AppRouter = () => {
+  const { currentUser, isAuthLoading } = useFirebaseAuth();
+
+  if (isAuthLoading) {
+    return <Loader />;
+  }
+
+  const authorizedRoutes = [
+    {
+      element: (
+        <ErrorBoundary>
+          <PageLayout />
+        </ErrorBoundary>
+      ),
+      children: [
+        {
+          element: (
+            <Suspense fallback={<Loader />}>
+              <ProtectedRoute />
+            </Suspense>
+          ),
+          children: [
+            {
+              path: Routes.HOME,
+              element: <Home />,
+            },
+            {
+              path: Routes.ME,
+              element: <Me />,
+            },
+            {
+              path: Routes.FORMS_NEW,
+              element: <FormsNew />,
+            },
+            {
+              path: Routes.FORMS_EDIT,
+              element: <FormsEdit />,
+            },
+            {
+              path: Routes.FORM_PAGE,
+              element: <FormPage />,
+            },
+            {
+              path: Routes.FORM_RESPONSES,
+              element: <FormResponses />,
+            },
+            {
+              path: Routes.FORM_RESPONSE,
+              element: <FormResponse />,
+            },
+            {
+              path: Routes.NOT_FOUND,
+              element: <NotFoundPage />,
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
+  const unauthorizedRoutes = [
+    {
+      path: Routes.HOME,
+      element: (
+        <>
+          <ToastContainer {...toastConfig} />
+          <ErrorBoundary>
+            <Suspense fallback={<Loader />}>
+              <Login />
+            </Suspense>
+          </ErrorBoundary>
+        </>
+      ),
+    },
+    {
+      path: Routes.LOGIN,
+      element: (
+        <>
+          <ToastContainer {...toastConfig} />
+          <ErrorBoundary>
+            <Suspense fallback={<Loader />}>
+              <Login />
+            </Suspense>
+          </ErrorBoundary>
+        </>
+      ),
+    },
+    {
+      path: Routes.SIGNUP,
+      element: (
+        <>
+          <ToastContainer {...toastConfig} />
+          <ErrorBoundary>
+            <Suspense fallback={<Loader />}>
+              <Signup />
+            </Suspense>
+          </ErrorBoundary>
+        </>
+      ),
+    },
+    {
+      path: Routes.NOT_FOUND,
+      element: <NotFoundPage />,
+    },
+  ];
+
+  const routes = currentUser ? authorizedRoutes : unauthorizedRoutes;
+  const router = createBrowserRouter(routes);
+
+  return <RouterProvider router={router} />;
+};
