@@ -77,8 +77,6 @@ export const firestoreService = {
       });
     }
 
-    console.log(constrains);
-
     if (options.reference) {
       const reference = doc(db, options.reference.collectionName, options.reference.id);
       constrains.push(where(options.reference.key, '==', reference));

@@ -28,12 +28,9 @@ export const responseApi = createApi({
         return endpointName;
       },
       merge(currentCacheData, responseData, { arg }) {
-        console.log('currentPage', arg.page);
         if (arg.page === 0) {
-          console.log('ASSIGN');
           currentCacheData.data = responseData.data;
         } else {
-          console.log('CONCAT');
           currentCacheData.data.push(...responseData.data);
         }
 
@@ -47,9 +44,6 @@ export const responseApi = createApi({
         ) {
           return false;
         }
-        console.log('CHECK PAGE', currentArg?.page === previousArg?.page);
-        console.log('CHECK FILTERS', isEqual(currentArg?.filters, previousArg?.filters));
-        console.log('CHECK SORT', isEqual(currentArg?.sort, previousArg?.sort));
 
         if (currentArg?.page && currentArg.page > 0 && !currentArg?.lastVisible) {
           return false;
