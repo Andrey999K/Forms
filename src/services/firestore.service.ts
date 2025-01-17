@@ -39,15 +39,17 @@ const convertFirestoreData = <T>(doc: DocumentSnapshot<DocumentData>) => {
 };
 
 export const firestoreService = {
-  create: async (collectionName: string, payload: { id: string; [key: string]: unknown }) => {
+  create: async <T>(
+    collectionName: string,
+    payload: { id: string; [key: string]: unknown }
+  ): Promise<T> => {
     const { id, ...rest } = payload;
     const data = { ...rest, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
     const docRef = doc(collection(db, collectionName), id);
     await setDoc(docRef, data);
     const docSnap = await getDoc(docRef);
-    console.log({ payload, data, docRef, docSnap }, docRef.id);
 
-    return convertFirestoreData(docSnap);
+    return convertFirestoreData<T>(docSnap);
   },
 
   getAll: async <T>(
@@ -71,11 +73,14 @@ export const firestoreService = {
       constrains.push(startAfter(options.lastVisible));
     }
 
-    if (
-      (typeof options.search === 'string' && options.search.length) ||
-      typeof options.search === 'object'
-    ) {
-      constrains.push(where(options.searchKey ?? 'title', '==', options.search));
+    if (options.search) {
+      constrains.push(where(options.search.key ?? 'title', '==', options.search.value));
+    }
+
+    if (options.filters?.length) {
+      options.filters.forEach((filter) => {
+        constrains.push(where(filter.key, filter.operator, filter.value));
+      });
     }
 
     if (options.reference) {
@@ -104,7 +109,7 @@ export const firestoreService = {
     throw new Error('Id not found');
   },
 
-  get: async (collectionName: string, id: string) => {
+  get: async <T>(collectionName: string, id: string): Promise<T> => {
     const docRef = doc(db, collectionName, id);
     const docSnap = await getDoc(docRef);
 
@@ -124,8 +129,7 @@ export const firestoreService = {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      const data = await updateDoc(docRef, { ...updateData, updatedAt: serverTimestamp() });
-      console.log(data);
+      await updateDoc(docRef, { ...updateData, updatedAt: serverTimestamp() });
 
       return payload;
     }
