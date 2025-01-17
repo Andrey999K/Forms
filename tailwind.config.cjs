@@ -6,6 +6,9 @@ module.exports = {
       backgroundImage: {
         authImg: "url('/sky.jpg')",
       },
+      spacing: {
+        'page-layout-offset': '93px',
+      },
     },
   },
   plugins: [],

@@ -17,7 +17,8 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { db } from '@/utils/firebase/firebaseConfig';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { db, auth } from '@/utils/firebase/firebaseConfig';
 import { FormListOptions, FormListResponse } from '@/types';
 
 const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | number): number => {
@@ -140,6 +141,42 @@ export const firestoreService = {
   delete: async (collectionName: string, id: string): Promise<boolean> => {
     const docRef = doc(db, collectionName, id);
     await deleteDoc(docRef);
+    return true;
+  },
+
+  login: async (email: string, password: string) => {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    return { data: { uid: user.uid, email: user.email } };
+  },
+
+  register: async (
+    collectionName: string,
+    email: string,
+    password: string,
+    name: string,
+    surname: string
+  ) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    const docRef = doc(db, collectionName, user.uid);
+    await setDoc(docRef, {
+      uid: user.uid,
+      firstName: name,
+      lastName: surname,
+      email,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+
+    return {
+      uid: user.uid,
+      email: user.email,
+    };
+  },
+
+  logout: async () => {
+    await signOut(auth);
     return true;
   },
 };
