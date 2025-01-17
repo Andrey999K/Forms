@@ -2,10 +2,12 @@ import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { formMiddleware, formReducer, formReducerPath } from './form';
 import { authMiddleware, authReducer, authReducerPath } from './auth';
+import { userReducer } from './user/userSlice';
 
 const rootReducer = combineReducers({
   [formReducerPath]: formReducer,
   [authReducerPath]: authReducer,
+  user: userReducer,
 });
 
 export const store = configureStore({

@@ -1,4 +1,4 @@
-import { Form, Layout, Typography } from 'antd';
+import { Form, Layout, Spin, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { MdMail, MdPerson, MdPersonAddAlt1, MdVisibility, MdVisibilityOff } from 'react-icons/md';
@@ -121,7 +121,9 @@ export const Signup = () => {
                 </span>
               }
             />
-            <AuthSubmitButton disabled={isLoading}>Зарегистрироваться</AuthSubmitButton>
+            <AuthSubmitButton disabled={isLoading}>
+              {isLoading ? <Spin size="small" /> : 'Зарегистрироваться'}
+            </AuthSubmitButton>
             <div className="flex items-center justify-between">
               <AuthClearFormButton reset={reset} />
               <AuthTextLink text="Есть аккаунт?" linkText="Войти" linkTo={Routes.LOGIN} />

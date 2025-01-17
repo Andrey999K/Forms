@@ -150,7 +150,6 @@ export const firestoreService = {
   ) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-
     const docRef = doc(db, collectionName, user.uid);
     await setDoc(docRef, {
       uid: user.uid,

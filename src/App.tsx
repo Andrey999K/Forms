@@ -1,8 +1,7 @@
 import { Suspense } from 'react';
-import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import { AppRouter } from './routes/routes.tsx';
-import { store } from './redux/store.ts';
+import { useFirebaseAuth } from './hooks/useFirebaseAuth.ts';
 import { toastConfig } from './utils/toast.config.ts';
 import { ConfigProvider } from 'antd';
 import { Loader } from './components/common/Loader.tsx';
@@ -10,6 +9,8 @@ import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+  useFirebaseAuth();
+
   return (
     <>
       <ToastContainer {...toastConfig} />
@@ -23,11 +24,9 @@ function App() {
           cssVar: true,
         }}
       >
-        <Provider store={store}>
-          <Suspense fallback={<Loader />}>
-            <AppRouter />
-          </Suspense>
-        </Provider>
+        <Suspense fallback={<Loader />}>
+          <AppRouter />
+        </Suspense>
       </ConfigProvider>
     </>
   );

@@ -1,20 +1,16 @@
-import { Loader } from '@/components/common';
-import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
+import { RootState } from '@/redux/store';
 import { Button, Typography } from 'antd';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 export const NotFound = () => {
-  const { currentUser, isAuthLoading } = useFirebaseAuth();
+  const user = useSelector((state: RootState) => state.user.user);
   const navigate = useNavigate();
-
-  if (isAuthLoading) {
-    return <Loader />;
-  }
 
   return (
     <div
       className={`flex items-center justify-center ${
-        currentUser ? 'min-h-[calc(100vh-theme(spacing.page-layout-offset))]' : 'min-h-screen'
+        user ? 'min-h-[calc(100vh-theme(spacing.page-layout-offset))]' : 'min-h-screen'
       }`}
     >
       <div className="w-[300px] flex flex-col items-center text-center space-y-4">
@@ -24,9 +20,9 @@ export const NotFound = () => {
           size="large"
           block
           className="bg-[#2A2B34] text-white rounded-lg hover:!bg-[#4C4D5E] hover:!text-slate-200 h-[35.81px] !border-none"
-          onClick={() => navigate(currentUser ? '/' : '/login')}
+          onClick={() => navigate(user ? '/' : '/login')}
         >
-          {currentUser ? 'На главную' : 'На страницу входа'}
+          {user ? 'На главную' : 'На страницу входа'}
         </Button>
       </div>
     </div>

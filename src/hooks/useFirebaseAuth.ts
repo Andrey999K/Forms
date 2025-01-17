@@ -1,20 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { onAuthStateChanged } from 'firebase/auth';
+import { setIsUserReady, setUser } from '@/redux/user/userSlice';
 import { auth } from '@/utils/firebase/firebaseConfig';
-import { AuthUser } from '@/types/auth';
 
 export const useFirebaseAuth = () => {
-  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
-  const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user ? { uid: user.uid, email: user.email } : null);
-      setIsAuthLoading(false);
+      dispatch(setUser(user));
+      dispatch(setIsUserReady(true));
     });
 
     return () => unsubscribe();
   }, []);
-
-  return { currentUser, isAuthLoading };
 };

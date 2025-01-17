@@ -6,7 +6,8 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { ErrorBoundary, Loader } from '@/components/common';
 import { toastConfig } from '@/utils/toast.config';
 import { ToastContainer } from 'react-toastify';
-import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 const Home = lazy(() => import('@/pages/home/Page').then((module) => ({ default: module.Home })));
 const Me = lazy(() => import('@/pages/me/Page').then((module) => ({ default: module.Me })));
@@ -37,13 +38,16 @@ const NotFoundPage = lazy(() =>
 );
 
 export const AppRouter = () => {
-  const { currentUser, isAuthLoading } = useFirebaseAuth();
+  const user = useSelector((state: RootState) => state.user.user);
 
-  if (isAuthLoading) {
+  const isLoading = useSelector((state: RootState) => state.user.isLoading);
+  const isUserReady = useSelector((state: RootState) => state.user.isUserReady);
+
+  if (isLoading || !isUserReady) {
     return <Loader />;
   }
 
-  const authorizedRoutes = [
+  const authRoutes = [
     {
       element: (
         <ErrorBoundary>
@@ -96,7 +100,7 @@ export const AppRouter = () => {
     },
   ];
 
-  const unauthorizedRoutes = [
+  const notAuthRoutes = [
     {
       path: Routes.HOME,
       element: (
@@ -142,7 +146,7 @@ export const AppRouter = () => {
     },
   ];
 
-  const routes = currentUser ? authorizedRoutes : unauthorizedRoutes;
+  const routes = user ? authRoutes : notAuthRoutes;
   const router = createBrowserRouter(routes);
 
   return <RouterProvider router={router} />;
