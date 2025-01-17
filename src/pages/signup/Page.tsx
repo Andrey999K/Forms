@@ -12,7 +12,7 @@ import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
 import { AuthTextLink } from '@/components/auth/AuthTextLink';
 import { AuthValidationRules } from '@/utils/validation';
 import { Routes } from '@/utils/routesConfig';
-import { SignUpFormValues } from '@/types';
+import { SignUpFormValues } from '@/types/auth';
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);

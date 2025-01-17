@@ -13,7 +13,7 @@ import { AuthTextLink } from '@/components/auth/AuthTextLink';
 import { Routes } from '@/utils/routesConfig';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/redux/auth';
-import { SignInFormValues } from '@/types';
+import { SignInFormValues } from '@/types/auth';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);

@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { AuthUser, SignInFormValues, SignUpFormValues } from '@/types';
 import { validateAuthError } from '@/utils/errors/validateAuthError';
 import { toast } from 'react-toastify';
 import { FirebaseError } from 'firebase/app';
 import { firestoreService } from '@/services/firestore.service';
+import { AuthUser, SignInFormValues, SignUpFormValues } from '@/types/auth';
 
 const COLLECTION = 'users';
 

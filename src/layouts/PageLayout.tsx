@@ -50,7 +50,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
           <div className="flex items-center gap-5">
             {pages.map((page) => (
               <NavLink
-                className={({ isActive }) => (isActive ? 'text-blue-500' : '')}
+                className={({ isActive }) => (isActive ? 'text-orange-500' : '')}
                 to={page.href}
                 key={page.href}
               >
@@ -59,7 +59,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
             ))}
           </div>
           <Dropdown menu={{ items }} placement="bottomLeft">
-            <div className="flex justify-center items-center p-2 rounded-full bg-blue-400 cursor-pointer text-white">
+            <div className="flex justify-center items-center p-2 rounded-full bg-orange-400 cursor-pointer text-white">
               <UserOutlined />
             </div>
           </Dropdown>

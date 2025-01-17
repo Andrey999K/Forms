@@ -11,7 +11,7 @@ const rootReducer = combineReducers({
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(formMiddleware, authMiddleware),
+    getDefaultMiddleware({ serializableCheck: false }).concat(formMiddleware, authMiddleware),
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
