@@ -1,9 +1,16 @@
 import { firestoreService } from '@/services/firestore.service';
-import { FormResponse } from '@/types';
-import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { FormResponse, ConstructorForm } from '@/types';
+import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import { getUUID } from '@/utils/getUUID.ts';
 
-const COLLECTION = 'response';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+export const COLLECTION = 'response';
 
 export const responseApi = createApi({
   reducerPath: 'responseApi',
@@ -45,6 +52,26 @@ export const responseApi = createApi({
         }
       },
       invalidatesTags: ['response'],
+    }),
+
+    createResponseForm: builder.mutation<
+      ConstructorForm,
+      { formId: string; fields: FormResponse[] }
+    >({
+      queryFn: async (answersData) => {
+        const newResponse = {
+          id: getUUID(),
+          fields: answersData.fields,
+          formId: `form/${answersData.formId}`,
+          createdAt: Date.now(),
+        };
+        try {
+          const result = await firestoreService.create(COLLECTION, newResponse);
+          return { data: result as ConstructorForm };
+        } catch (error) {
+          return { error: getFirebaseError(error) };
+        }
+      },
     }),
   }),
 });

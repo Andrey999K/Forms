@@ -3,10 +3,12 @@ import { useGetFormQuery } from '@/redux/form';
 import { Loader } from '@/components/ui/Loader';
 import { Button, Checkbox, Form, Input, Radio } from 'antd';
 import { ConstructorField } from '@/types';
+import { useCreateResponseFormMutation } from '@/redux/response';
 
 export const FormPage = () => {
   const { formId } = useParams();
   const { data: formData, isLoading } = useGetFormQuery(formId || '');
+  const [createFormResponse] = useCreateResponseFormMutation();
   const [form] = Form.useForm();
 
   const renderField = (field: ConstructorField) => {
@@ -39,14 +41,25 @@ export const FormPage = () => {
     }
   };
 
-  const onFinish = (values: { [key: string]: string }) => {
-    const answersData = Object.keys(values).map((field) => {
-      const questionData = formData?.fields.find((currentField) => currentField.id === field);
-      return questionData
-        ? { id: questionData.id, question: questionData.question, answer: values[field] }
-        : {};
-    });
-    console.log(answersData);
+  const onFinish = async (values: { [key: string]: string }) => {
+    console.log('values', values);
+    const answers = Object.keys(values)
+      .map((field) => {
+        const questionData = formData?.fields.find((currentField) => currentField.id === field);
+        return questionData
+          ? { id: questionData.id, question: questionData.question, answer: values[field] }
+          : false;
+      })
+      .filter((item) => item !== false);
+    if (formId) {
+      const answersData = {
+        fields: answers,
+        formId,
+      };
+      console.log(answersData);
+      const result = await createFormResponse(answersData).unwrap();
+      console.log(result);
+    }
   };
 
   if (!formId) {
