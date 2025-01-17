@@ -1,7 +1,7 @@
 import { ConstructorField } from '@/types';
 import { CloseOutlined, HolderOutlined } from '@ant-design/icons';
-import { Button, Input, Switch, Tooltip } from 'antd';
-import { FC, ReactNode } from 'react';
+import { Button, Input, InputRef, Switch, Tooltip } from 'antd';
+import { FC, ReactNode, useEffect, useRef } from 'react';
 
 type Props = {
   children: ReactNode;
@@ -14,6 +14,14 @@ type Props = {
 
 export const ConstructorFieldWrapper: FC<Props> = (props) => {
   const { field, children, dragRef, onRemoveField, onUpdateField, className = '' } = props;
+  const inputRef = useRef<InputRef>(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
   return (
     <div className={`relative w-full flex ${className}`}>
       <div className="w-full flex flex-col">
@@ -23,6 +31,7 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
         <div className="w-full px-4 pb-4 flex flex-col gap-2 items-start">
           <div className="w-full flex gap-2 items-center">
             <Input
+              ref={inputRef}
               placeholder="Вопрос"
               value={field.question}
               onChange={(e) => onUpdateField(field.id, { question: e.target.value })}

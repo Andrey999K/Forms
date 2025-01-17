@@ -101,10 +101,10 @@ export const FormsEdit: FC = () => {
     try {
       if ('createAt' in constructor) {
         await updateForm(constructor).unwrap();
-        toast.success('Обновлено успешно');
+        toast.success('Форма успешно обновлена ');
       } else {
         await createForm(constructor).unwrap();
-        toast.success('Сохранено успешно');
+        toast.success('Форма успешно сохранена');
       }
     } catch (error) {
       console.log('Error', error);
@@ -116,7 +116,7 @@ export const FormsEdit: FC = () => {
     try {
       if (formId) {
         await deleteForm(formId).unwrap();
-        toast.success('Удалено успешно');
+        toast.success('Форма удалена');
         navigate('/');
       }
     } catch (error) {
@@ -155,7 +155,7 @@ export const FormsEdit: FC = () => {
           onRemoveConstructor={handleRemoveForms}
           onChangeForm={handleChangeForm}
         />
-        <div className="flex flex-col w-full relative gap-4 p-4 pl-0">
+        <div className="flex flex-col w-full relative gap-4 ">
           <ConstructorHeader constructor={constructor} onChangeForm={handleChangeForm} />
           <ConstructorWorkArea
             constructor={constructor}

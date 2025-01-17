@@ -2,6 +2,7 @@ import { ConstructorField, ConstructorForm, FieldType } from '@/types';
 import { FC, Fragment, useRef } from 'react';
 import { ConstructorDraggableField } from './ConstructorDraggableField';
 import { ConstructorDropZone } from './ConstructorDropZone';
+import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 
 type Props = {
   constructor: ConstructorForm;
@@ -23,9 +24,9 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
   };
 
   return (
-    <div
+    <GlassWrapper
       ref={workspaceRef}
-      className="flex flex-col border border-dashed rounded-2xl border-gray-300"
+      className="flex flex-col border border-dashed rounded-2xl border-orange-400 px-4"
     >
       {constructor.fields.length === 0 ? (
         <ConstructorDropZone
@@ -59,6 +60,6 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
           ))}
         </>
       )}
-    </div>
+    </GlassWrapper>
   );
 };

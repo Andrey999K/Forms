@@ -1,4 +1,5 @@
-import { useState, useEffect, FC, useCallback, useMemo, ReactNode } from 'react';
+import { useState, useEffect, useCallback, ReactNode, useRef } from 'react';
+import { getUUID } from '@/utils/getUUID';
 
 type Props = {
   children: ReactNode;
@@ -6,167 +7,237 @@ type Props = {
 };
 
 type Settings = {
-  blur: number;
   color: string;
-  opacity: number;
+  minSize: number;
+  numberCirclesInDirections: number;
+  spacing: number;
 };
 
 const defaultSettings: Settings = {
-  blur: 0.5,
-  color: 'rgb(249, 115, 22)',
-  opacity: 0.7,
+  color: 'rgb(229, 229, 229, 0.5)',
+  minSize: 5,
+  numberCirclesInDirections: 5,
+  spacing: 1,
 };
 
-type Position = { x: number; y: number };
-type Circle = { id: number; visible: boolean; size: number } & Position;
+type Circle = {
+  id: string;
+  x: number;
+  y: number;
+  size: number;
+};
 
-export const ShapeWrapper: FC<Props> = ({ children, settings }) => {
-  const [processedViewports, setProcessedViewports] = useState<Set<number>>(new Set());
+type PageSize = {
+  width: number;
+  height: number;
+};
+
+export const ShapeWrapper = ({ children, settings }: Props) => {
   const [circles, setCircles] = useState<Circle[]>([]);
-  const CONFIG: Settings = { ...defaultSettings, ...settings };
+  const pageSize = useRef<PageSize>({
+    width: typeof window !== 'undefined' ? window.innerWidth : 1000,
+    height: typeof window !== 'undefined' ? window.innerHeight : 1000,
+  });
+  const currentInterval = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const CONFIG = { ...defaultSettings, ...settings };
 
-  // Рассчитываем размер круга в зависимости от размеров экрана
-  const calculateCircleSize = useMemo(() => {
-    const numCirclesInRow = 2.5;
-    const numCirclesInColumn = 2.5;
-    const sizeWidth = window.innerWidth / numCirclesInRow;
-    const sizeHeight = window.innerHeight / numCirclesInColumn;
-    return Math.min(sizeWidth, sizeHeight);
-  }, []);
+  const generateRandomSize = useCallback(() => {
+    const maxSize = Math.min(
+      window.innerWidth / CONFIG.numberCirclesInDirections,
+      window.innerHeight / CONFIG.numberCirclesInDirections
+    );
+    return Math.floor(Math.random() * (maxSize - CONFIG.minSize) + CONFIG.minSize);
+  }, [CONFIG.numberCirclesInDirections, CONFIG.minSize]);
 
-  // Генерация случайной позиции внутри экрана
-  const generatePosition = useCallback(
-    (scrollY: number) => {
-      const maxX = window.innerWidth - calculateCircleSize;
-      const viewportHeight = window.innerHeight - calculateCircleSize;
-      const x = Math.max(0, Math.floor(Math.random() * maxX));
-      const randomOffset = Math.random() * viewportHeight;
-      const y = scrollY + randomOffset;
-      return { x, y, size: calculateCircleSize };
+  const isCircleOverlapping = useCallback(
+    (newCircle: Circle, existingCircles: Circle[]) => {
+      return existingCircles.some((circle) => {
+        const center1 = {
+          x: newCircle.x + newCircle.size / 2,
+          y: newCircle.y + newCircle.size / 2,
+        };
+        const center2 = {
+          x: circle.x + circle.size / 2,
+          y: circle.y + circle.size / 2,
+        };
+
+        const distance = Math.sqrt(
+          Math.pow(center1.x - center2.x, 2) + Math.pow(center1.y - center2.y, 2)
+        );
+
+        const minDistance = (newCircle.size + circle.size) / 2 + CONFIG.spacing;
+
+        return distance < minDistance;
+      });
     },
-    [calculateCircleSize]
+    [CONFIG.spacing]
   );
 
-  // Проверка, является ли новая позиция круга валидной
-  const isPositionValid = (
-    newCircle: Position,
-    existingCircles: Position[],
-    minDistance: number
-  ) => {
-    return !existingCircles.some((circle) => {
-      const distance = Math.sqrt(
-        Math.pow(newCircle.x - circle.x, 2) + Math.pow(newCircle.y - circle.y, 2)
+  const isCircleInBounds = useCallback(
+    (circle: Circle) => {
+      return (
+        circle.x + circle.size + CONFIG.spacing <= pageSize.current.width &&
+        circle.y + circle.size + CONFIG.spacing <= pageSize.current.height &&
+        circle.x >= CONFIG.spacing &&
+        circle.y >= CONFIG.spacing
       );
+    },
+    [CONFIG.spacing]
+  );
 
-      return distance < minDistance;
-    });
-  };
+  const generateNewCircle = useCallback(
+    (startX: number = 0, startY: number = 0) => {
+      let currentSize = generateRandomSize();
+      let sizeReductionAttempts = 0;
+      const maxSizeReductionAttempts = 3;
+      const maxAttemptsPerSize = 10;
+      let newCircle = { x: 0, y: 0, size: 0, id: getUUID() };
 
-  // Генерация валидной позиции с несколькими попытками
-  const generateValidPosition = (
-    scrollY: number,
-    existingCircles: Position[],
-    minDistance: number,
-    maxAttempts: number = 10
-  ) => {
-    let newCircle;
-    let attempts = 0;
-    do {
-      newCircle = generatePosition(scrollY);
-      attempts++;
-      if (attempts >= maxAttempts) return newCircle;
-    } while (!isPositionValid(newCircle, existingCircles, minDistance));
+      while (sizeReductionAttempts < maxSizeReductionAttempts) {
+        let attempts = 0;
 
-    return newCircle;
-  };
+        while (attempts < maxAttemptsPerSize) {
+          const x = Math.floor(
+            Math.random() * (pageSize.current.width - currentSize - CONFIG.spacing * 2) +
+              startX +
+              CONFIG.spacing
+          );
+          const y = Math.floor(
+            Math.random() * (pageSize.current.height - currentSize - CONFIG.spacing * 2) +
+              startY +
+              CONFIG.spacing
+          );
 
-  // Обработка события прокрутки для добавления новых кругов
-  const handleScroll = useCallback(() => {
-    const scrollY = window.scrollY;
-    const viewportHeight = window.innerHeight;
-    const currentViewportIndex = Math.floor(scrollY / viewportHeight);
+          newCircle = { ...newCircle, x, y, size: currentSize };
 
-    if (!processedViewports.has(currentViewportIndex)) {
-      const newCircles: Circle[] = [];
-      for (let i = 0; i < 2; i++) {
-        const newCircle = generateValidPosition(
-          currentViewportIndex * viewportHeight,
-          circles,
-          calculateCircleSize
-        );
-        newCircles.push({ ...newCircle, id: Date.now() + Math.random(), visible: false });
+          if (!isCircleOverlapping(newCircle, circles) && isCircleInBounds(newCircle)) {
+            return { ...newCircle, id: getUUID() };
+          }
+
+          attempts++;
+        }
+
+        currentSize = Math.max(currentSize / 3, CONFIG.minSize);
+        sizeReductionAttempts++;
+
+        if (currentSize <= CONFIG.minSize) {
+          break;
+        }
       }
 
-      setCircles((prev) => [...prev, ...newCircles]);
-      setProcessedViewports((prev) => new Set(prev).add(currentViewportIndex));
+      return null;
+    },
+    [
+      circles,
+      generateRandomSize,
+      isCircleOverlapping,
+      isCircleInBounds,
+      CONFIG.spacing,
+      CONFIG.minSize,
+    ]
+  );
 
-      setTimeout(() => {
-        setCircles((prev) =>
-          prev.map((circle) =>
-            newCircles.some((newCircle) => newCircle.x === circle.x && newCircle.y === circle.y)
-              ? { ...circle, visible: true }
-              : circle
-          )
-        );
-      }, 100);
-    }
-  }, [circles, processedViewports, calculateCircleSize]);
+  const addCircle = useCallback(
+    (startX: number = 0, startY: number = 0) => {
+      const newCircle = generateNewCircle(startX, startY);
+      if (newCircle) {
+        setCircles((prev) => [...prev, newCircle]);
+        return true;
+      }
+      return false;
+    },
+    [generateNewCircle]
+  );
 
-  // Обработка события изменения размера окна для переноса кругов
-  const handleResize = useCallback(() => {
-    setCircles((prev) => {
-      const viewportHeight = window.innerHeight;
-      return prev.map(({ y, id }) => {
-        const position = generatePosition(Math.floor(y / viewportHeight) * viewportHeight);
-        return { ...position, id, visible: true };
-      });
-    });
-  }, [generatePosition]);
+  const startGeneratingCircles = useCallback(
+    (startX: number = 0, startY: number = 0) => {
+      if (currentInterval.current) {
+        clearInterval(currentInterval.current);
+      }
 
-  // Инициализация кругов при первом рендере и добавление обработчиков событий
+      const interval = setInterval(() => {
+        const wasAdded = addCircle(startX, startY);
+        if (!wasAdded) {
+          clearInterval(interval);
+        }
+      }, 0);
+
+      currentInterval.current = interval;
+      return interval;
+    },
+    [addCircle]
+  );
+
   useEffect(() => {
-    if (!processedViewports.has(0)) {
-      const initialCircles = [];
-      for (let i = 0; i < 2; i++) {
-        const newCircle = generateValidPosition(0, initialCircles, calculateCircleSize);
-        initialCircles.push(newCircle);
+    const interval = startGeneratingCircles();
+    return () => clearInterval(interval);
+  }, [startGeneratingCircles]);
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const documentHeight = document.documentElement.scrollHeight;
+
+      if (documentHeight > pageSize.current.height) {
+        const startY = pageSize.current.height;
+        startGeneratingCircles(0, startY);
       }
 
-      setCircles(initialCircles.map((pos, index) => ({ ...pos, id: index, visible: false })));
-      setProcessedViewports((prev) => new Set(prev).add(0));
+      pageSize.current.height = documentHeight;
+    });
 
-      setTimeout(() => {
-        setCircles((prev) => prev.map((circle) => ({ ...circle, visible: true })));
-      }, 100);
-    }
-
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleResize);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
+      observer.disconnect();
     };
-  }, [calculateCircleSize, processedViewports, handleScroll, handleResize]);
+  }, [startGeneratingCircles]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+
+      debounceTimeout.current = setTimeout(() => {
+        const documentWidth = window.innerWidth;
+
+        if (documentWidth > pageSize.current.width) {
+          const startX = pageSize.current.width;
+          startGeneratingCircles(startX, 0);
+        }
+
+        pageSize.current.width = documentWidth;
+      }, 200);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [startGeneratingCircles]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {circles.map((circle) => (
-        <div
-          key={circle.id}
-          className={`absolute rounded-full -z-[99] transition-all duration-1000 ease-in-out ${circle.visible ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`}
-          style={{
-            width: `${circle.size}px`,
-            height: `${circle.size}px`,
-            left: `${circle.x}px`,
-            top: `${circle.y}px`,
-            backgroundColor: CONFIG.color,
-            opacity: CONFIG.opacity,
-            filter: `blur(${CONFIG.blur}rem)`,
-          }}
-        />
-      ))}
+    <div className="relative min-h-screen">
+      <div className="absolute inset-0 overflow-hidden">
+        {circles.map((circle) => (
+          <div
+            key={circle.id}
+            className="absolute rounded-full -z-[99] animate-scaleUp"
+            style={{
+              width: `${circle.size}px`,
+              height: `${circle.size}px`,
+              left: `${circle.x}px`,
+              top: `${circle.y}px`,
+              border: `3px solid ${CONFIG.color}`,
+            }}
+          />
+        ))}
+      </div>
       {children}
     </div>
   );
 };
+
+export default ShapeWrapper;

@@ -1,7 +1,7 @@
 import { ConstructorForm, HandleChangeForm } from '@/types';
 import { DeleteOutlined, HomeOutlined, SaveOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Divider, Tabs } from 'antd';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 import { ConstructorTab } from './ConstructorTab';
 import { SettingsTab } from './SettingsTab';
@@ -26,7 +26,7 @@ export const Sidebar: FC<Props> = (props) => {
     onRemoveConstructor,
     onChangeForm,
   } = props;
-
+  const [isSticky, setIsSticky] = useState(false);
   const TABS_ITEMS = [
     {
       key: 'constructor',
@@ -48,8 +48,22 @@ export const Sidebar: FC<Props> = (props) => {
     },
   ];
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const sidebarTop = -10;
+      setIsSticky(scrollTop >= sidebarTop);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <GlassWrapper className="w-96 px-5 pb-5">
+    <GlassWrapper
+      className={`w-96 px-5 pb-5 ${isSticky ? 'sticky top-4' : ''}`}
+      style={{ zIndex: 10 }}
+    >
       <Tabs defaultActiveKey="constructor" items={TABS_ITEMS} />
       <Divider className="my-4" />
       <div>
