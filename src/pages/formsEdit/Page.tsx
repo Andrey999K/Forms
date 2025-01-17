@@ -1,28 +1,50 @@
-import { FC, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Spin } from 'antd';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { toast } from 'react-toastify';
-import { v4 as uuidv4 } from 'uuid';
 import { ConstructorHeader } from '@/components/formsEdit/ConstructorHeader';
 import { ConstructorWorkArea } from '@/components/formsEdit/ConstructorWorkArea';
-import { ToolboxPanel } from '@/components/formsEdit/ToolboxPanel';
-import { useDeleteFormMutation, useGetFormQuery, useUpdateFormMutation } from '@/redux/form';
-import { ConstructorField, ConstructorForm, FieldType, FieldTypes } from '@/types';
+import { Sidebar } from '@/components/formsEdit/Sidebar';
+import {
+  useCreateFormMutation,
+  useDeleteFormMutation,
+  useGetFormQuery,
+  useUpdateFormMutation,
+} from '@/redux/form';
+import {
+  ConstructorField,
+  ConstructorForm,
+  FieldType,
+  FieldTypes,
+  HandleChangeForm,
+  NEW_FORM,
+} from '@/types';
+import { getUUID } from '@/utils/getUUID';
+import { Spin } from 'antd';
+import { FC, useEffect, useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const newFormId: string = location.state?.id;
   const [constructor, setConstructor] = useState<ConstructorForm | null>(null);
   const { data: formData, isLoading: isLoadingForm } = useGetFormQuery(formId || '', {
     skip: !formId,
   });
+  const [createForm, { isLoading: isCreating }] = useCreateFormMutation();
   const [updateForm, { isLoading: isUpdating }] = useUpdateFormMutation();
   const [deleteForm, { isLoading: isDeleting }] = useDeleteFormMutation();
 
   useEffect(() => {
-    if (formData) setConstructor(() => formData);
+    if (formData) {
+      setConstructor(() => formData);
+    } else if (newFormId) {
+      setConstructor(() => ({
+        id: newFormId,
+        ...NEW_FORM,
+      }));
+    }
   }, [formData]);
 
   const handleDropField = (type: FieldType, index?: number) => {
@@ -30,9 +52,9 @@ export const FormsEdit: FC = () => {
       if (!prev) return prev;
       const { fields } = prev;
       const isTypeRadio = type === FieldTypes.RADIO;
-      const options = isTypeRadio ? { options: [{ id: uuidv4(), label: 'Вариант 1' }] } : {};
+      const options = isTypeRadio ? { options: [{ id: getUUID(), label: 'Вариант 1' }] } : {};
       const newField: ConstructorField = {
-        id: uuidv4(),
+        id: getUUID(),
         type,
         question: '',
         require: false,
@@ -77,8 +99,13 @@ export const FormsEdit: FC = () => {
   const handleSaveForms = async () => {
     if (!constructor) return;
     try {
-      await updateForm(constructor).unwrap();
-      toast.success('Сохранено успешно');
+      if ('createAt' in constructor) {
+        await updateForm(constructor).unwrap();
+        toast.success('Обновлено успешно');
+      } else {
+        await createForm(constructor).unwrap();
+        toast.success('Сохранено успешно');
+      }
     } catch (error) {
       console.log('Error', error);
       toast.error('Ошибка сохранения');
@@ -98,7 +125,7 @@ export const FormsEdit: FC = () => {
     }
   };
 
-  const handleChangeForm = ({ value, name }: { value: string; name: string }) => {
+  const handleChangeForm = ({ value, name }: HandleChangeForm) => {
     setConstructor((prev) => {
       if (!prev) return prev;
       return { ...prev, [name]: value };
@@ -113,26 +140,22 @@ export const FormsEdit: FC = () => {
     );
   }
 
-  if (!formData) {
-    toast.error('Ошибка загрузки');
-    navigate('/');
-    return;
-  }
-  if (!constructor) {
-    return;
-  }
+  if (!formData && !newFormId) return <div>Страница не найдена.</div>;
+  if (!constructor) return <div>Ошибка при создании конструктора.</div>;
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex gap-4 items-start">
-        <ToolboxPanel
-          onSaveConstructor={handleSaveForms}
-          onRemoveConstructor={handleRemoveForms}
+      <div className="flex gap-4 items-start p-4">
+        <Sidebar
+          constructor={constructor}
+          isCreating={isCreating}
           isUpdating={isUpdating}
           isDeleting={isDeleting}
-          isEmptyFields={constructor.fields.length === 0}
+          onSaveConstructor={handleSaveForms}
+          onRemoveConstructor={handleRemoveForms}
+          onChangeForm={handleChangeForm}
         />
-        <div className="flex flex-col w-full relative gap-4">
+        <div className="flex flex-col w-full relative gap-4 p-4 pl-0">
           <ConstructorHeader constructor={constructor} onChangeForm={handleChangeForm} />
           <ConstructorWorkArea
             constructor={constructor}
