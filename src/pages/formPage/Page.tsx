@@ -4,9 +4,11 @@ import { Loader } from '@/components/ui/Loader';
 import { Button, Checkbox, Form, Input, Radio } from 'antd';
 import { ConstructorField } from '@/types';
 import { useCreateResponseFormMutation } from '@/redux/response';
+import { useEffect } from 'react';
 
 export const FormPage = () => {
   const { formId } = useParams();
+  console.log('formId', formId);
   const { data: formData, isLoading } = useGetFormQuery(formId || '');
   const [createFormResponse] = useCreateResponseFormMutation();
   const [form] = Form.useForm();
@@ -61,6 +63,10 @@ export const FormPage = () => {
       console.log(result);
     }
   };
+
+  useEffect(() => {
+    console.log('formData', formData);
+  }, [formData]);
 
   if (!formId) {
     return <h2>Форма не найдена!</h2>;

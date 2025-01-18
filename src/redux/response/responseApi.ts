@@ -54,10 +54,7 @@ export const responseApi = createApi({
       invalidatesTags: ['response'],
     }),
 
-    createResponseForm: builder.mutation<
-      ConstructorForm,
-      { formId: string; fields: FormResponse[] }
-    >({
+    createResponseForm: builder.mutation<ConstructorForm, Omit<FormResponse, 'id' | 'createdAt'>>({
       queryFn: async (answersData) => {
         const newResponse = {
           id: getUUID(),
