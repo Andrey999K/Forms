@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
-import typography from 'antd/es/typography';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Card, DatePicker, Select, Spin } from 'antd';
-import dayjs, { Dayjs } from 'dayjs';
-import { FormListOptions, FormResponse, Sort } from '@/types/index.ts';
-import { useGetResponseListQuery } from '@/redux/response/index.ts';
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
+import typography from 'antd/es/typography';
 import { useIntersectionObserver } from '@siberiacancode/reactuse';
+import dayjs, { Dayjs } from 'dayjs';
+
+import { fetchResponseSlice, resetStore } from '@/redux/response';
 import { useGetFormQuery } from '@/redux/form';
+import { AppDispatch, RootState } from '@/redux/store';
+import { FormListOptions, FormResponse, Sort } from '@/types';
 
 const { Text, Title } = typography;
 
@@ -26,6 +28,11 @@ const dateFormat = 'YYYY-MM-DD';
 const CARDS_PER_PAGE = 4;
 
 export const FormResponses = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const status = useSelector<RootState, 'pending' | 'success' | 'rejected' | null>(
+    (state) => state.responseSlice.status
+  );
+
   const [searchParams, setSearchParams] = useSearchParams();
   const { formId } = useParams<{ formId: string }>();
 
@@ -37,9 +44,6 @@ export const FormResponses = () => {
     start: searchParams.get('start') ? dayjs.unix(Number(searchParams.get('start'))) : null,
     end: searchParams.get('end') ? dayjs.unix(Number(searchParams.get('end'))) : null,
   });
-  const [page, setPage] = useState<number>(0);
-  const [lastVisible, setLastVisible] =
-    useState<QueryDocumentSnapshot<DocumentData, DocumentData>>();
   const [hasNext, setHasNext] = useState<boolean>(true);
 
   const filters: FormListOptions['filters'] = (() => {
@@ -67,39 +71,15 @@ export const FormResponses = () => {
     return newFilters;
   })();
 
-  const {
-    data: res,
-    isError,
-    isFetching,
-  } = useGetResponseListQuery({
-    limit: CARDS_PER_PAGE,
-    lastVisible,
-    page,
-    reference: { collectionName: 'form', id: formId ?? '', key: 'formId' },
-    filters,
-    sort,
-  });
-
   const { ref: intersectionRef } = useIntersectionObserver<HTMLDivElement>({
     threshold: 1,
 
     onChange: async (entry) => {
-      if (entry.isIntersecting && !isFetching) {
-        setPage((prev) => prev + 1);
+      if (entry.isIntersecting && status !== 'pending') {
+        handleLoadMore();
       }
     },
   });
-
-  useEffect(() => {
-    setList(res?.data ?? []);
-    if ((res?.data?.length ?? 0) < CARDS_PER_PAGE) {
-      setHasNext(false);
-      setLastVisible(undefined);
-    } else if (res?.lastVisible) {
-      setHasNext(true);
-      setLastVisible(res.lastVisible);
-    }
-  }, [res]);
 
   useEffect(() => {
     const query: { sort: Sort; start?: string; end?: string } = { sort };
@@ -112,24 +92,46 @@ export const FormResponses = () => {
     setSearchParams(query);
   }, [sort, dates, setSearchParams]);
 
-  const showTriggerLoader = !isFetching && !isError && hasNext;
-
   const handleChangeSort = (value: Sort) => {
-    setLastVisible(undefined);
-    setList([]);
-    setPage(0);
+    resetLocalState();
     setSort(value);
   };
 
   const handleEditDates = (_dates: RangeValue, dateString: [string, string]) => {
-    setLastVisible(undefined);
-    setList([]);
-    setPage(0);
+    resetLocalState();
     setDates({
       start: dateString[0] ? dayjs(dateString[0]) : null,
       end: dateString[0] ? dayjs(dateString[1]) : null,
     });
   };
+
+  const handleLoadMore = () => {
+    dispatch(
+      fetchResponseSlice({
+        limit: CARDS_PER_PAGE,
+        reference: { collectionName: 'form', id: formId ?? '', key: 'formId' },
+        filters,
+        sort,
+      })
+    )
+      .unwrap()
+      .then((res) => {
+        const data = res.data.data ?? [];
+        if (!data.length) {
+          setHasNext(false);
+          return;
+        }
+        setList((prev) => [...prev, ...data]);
+      });
+  };
+
+  const resetLocalState = () => {
+    dispatch(resetStore());
+    setHasNext(true);
+    setList([]);
+  };
+
+  const showTrigger = (status === 'success' || status === null) && hasNext;
 
   return (
     <div>
@@ -155,30 +157,33 @@ export const FormResponses = () => {
         />
       </div>
       <div className="flex flex-col gap-4 my-6">
-        {!isFetching && isError && !list.length && <Title level={2}>Нет доступных форм.</Title>}
-        {list.map((response, index) => (
-          <Link to={`/forms/${formId}/responses/${response.id}`} key={response.id}>
-            <Card className="bg-[#fdf8f4]/85 backdrop-blur-sm hover:backdrop-blur-sm hover:bg-[#fdf8f4] hover:-translate-y-1 hover:shadow-lg transition duration-200 ease-in-out">
-              <div className="flex items-center justify-between gap-5">
-                <Title italic level={5} style={{ margin: 0 }}>
-                  Отклик #{index + 1}
-                </Title>
-                <Text>{dayjs(response.updatedAt).toString()}</Text>
-              </div>
-            </Card>
-          </Link>
-        ))}
+        {list.length
+          ? list.map((response, index) => (
+              <Link to={`/forms/${formId}/responses/${response.id}`} key={response.id}>
+                <Card className="bg-[#fdf8f4]/85 backdrop-blur-sm hover:backdrop-blur-sm hover:bg-[#fdf8f4] hover:-translate-y-1 hover:shadow-lg transition duration-200 ease-in-out">
+                  <div className="flex items-center justify-between gap-5">
+                    <Title italic level={5} style={{ margin: 0 }}>
+                      Отклик #{index + 1}
+                    </Title>
+                    <Text>{dayjs(response.updatedAt).toString()}</Text>
+                  </div>
+                </Card>
+              </Link>
+            ))
+          : status !== 'pending' && !showTrigger && <Title level={2}>Нет доступных форм.</Title>}
       </div>
-      {isFetching && (
+      {status === 'pending' && (
         <div className="mb-5 mt-4">
           <Spin />
         </div>
       )}
-
-      {showTriggerLoader && (
+      {showTrigger && (
         <div ref={intersectionRef} className="mt-4 mb-5">
           <Spin />
         </div>
+      )}
+      {status === 'rejected' && !list.length && (
+        <Title level={2}>Произошла ошибка, попробуйте обновить страницу</Title>
       )}
     </div>
   );
