@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, ReactNode, useRef } from 'react';
 import { getUUID } from '@/utils/getUUID';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 type Props = {
   children: ReactNode;
@@ -11,6 +11,7 @@ type Settings = {
   minSize: number;
   numberCirclesInDirections: number;
   spacing: number;
+  maxCircles: number; // Добавляем новую настройку
 };
 
 const defaultSettings: Settings = {
@@ -18,6 +19,7 @@ const defaultSettings: Settings = {
   minSize: 5,
   numberCirclesInDirections: 5,
   spacing: 1,
+  maxCircles: 1000, // Максимальное количество кругов
 };
 
 type Circle = {
@@ -32,15 +34,34 @@ type PageSize = {
   height: number;
 };
 
+// Функция для throttling
+const throttle = <T extends (...args: any[]) => void>(
+  func: T,
+  limit: number
+): ((...args: Parameters<T>) => void) => {
+  let inThrottle = false;
+
+  return (...args: Parameters<T>) => {
+    if (!inThrottle) {
+      func(...args);
+      inThrottle = true;
+      setTimeout(() => {
+        inThrottle = false;
+      }, limit);
+    }
+  };
+};
+
 export const ShapeWrapper = ({ children, settings }: Props) => {
   const [circles, setCircles] = useState<Circle[]>([]);
   const pageSize = useRef<PageSize>({
     width: typeof window !== 'undefined' ? window.innerWidth : 1000,
     height: typeof window !== 'undefined' ? window.innerHeight : 1000,
   });
-  const currentInterval = useRef<NodeJS.Timeout | null>(null);
+  const animationFrameId = useRef<number | null>(null);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const CONFIG = { ...defaultSettings, ...settings };
+  const isGeneratingRef = useRef(false);
 
   const generateRandomSize = useCallback(() => {
     const maxSize = Math.min(
@@ -142,40 +163,52 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
     (startX: number = 0, startY: number = 0) => {
       const newCircle = generateNewCircle(startX, startY);
       if (newCircle) {
-        setCircles((prev) => [...prev, newCircle]);
+        setCircles((prev) => {
+          // Проверяем максимальное количество кругов
+          if (prev.length >= CONFIG.maxCircles) {
+            return [...prev.slice(1), newCircle];
+          }
+          return [...prev, newCircle];
+        });
         return true;
       }
       return false;
     },
-    [generateNewCircle]
+    [generateNewCircle, CONFIG.maxCircles]
   );
 
   const startGeneratingCircles = useCallback(
     (startX: number = 0, startY: number = 0) => {
-      if (currentInterval.current) {
-        clearInterval(currentInterval.current);
-      }
+      if (isGeneratingRef.current) return;
+      isGeneratingRef.current = true;
 
-      const interval = setInterval(() => {
+      const generateFrame = () => {
         const wasAdded = addCircle(startX, startY);
-        if (!wasAdded) {
-          clearInterval(interval);
+        if (wasAdded) {
+          animationFrameId.current = requestAnimationFrame(generateFrame);
+        } else {
+          isGeneratingRef.current = false;
         }
-      }, 0);
+      };
 
-      currentInterval.current = interval;
-      return interval;
+      generateFrame();
     },
     [addCircle]
   );
 
+  // Эффект для начальной генерации кругов
   useEffect(() => {
-    const interval = startGeneratingCircles();
-    return () => clearInterval(interval);
+    startGeneratingCircles();
+    return () => {
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+    };
   }, [startGeneratingCircles]);
 
+  // Эффект для отслеживания изменений высоты документа
   useEffect(() => {
-    const observer = new MutationObserver(() => {
+    const handleDocumentChange = throttle(() => {
       const documentHeight = document.documentElement.scrollHeight;
 
       if (documentHeight > pageSize.current.height) {
@@ -184,7 +217,9 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
       }
 
       pageSize.current.height = documentHeight;
-    });
+    }, 100); // Throttle на 100мс
+
+    const observer = new MutationObserver(handleDocumentChange);
 
     observer.observe(document.body, {
       childList: true,
@@ -196,6 +231,7 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
     };
   }, [startGeneratingCircles]);
 
+  // Эффект для отслеживания изменений размера окна
   useEffect(() => {
     const handleResize = () => {
       if (debounceTimeout.current) {
@@ -224,12 +260,11 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
         {circles.map((circle) => (
           <div
             key={circle.id}
-            className="absolute rounded-full -z-[99] animate-scaleUp"
+            className="absolute rounded-full -z-[99] animate-scaleUp will-change-transform"
             style={{
               width: `${circle.size}px`,
               height: `${circle.size}px`,
-              left: `${circle.x}px`,
-              top: `${circle.y}px`,
+              transform: `translate(${circle.x}px, ${circle.y}px)`, // Используем transform вместо left/top
               border: `3px solid ${CONFIG.color}`,
             }}
           />
