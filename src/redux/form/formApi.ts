@@ -1,12 +1,5 @@
 import { firestoreService } from '@/services/firestore.service';
-import {
-  CardWithCount,
-  ConstructorForm,
-  FormListOptions,
-  FormListResponse,
-  FormResponse,
-  FormData,
-} from '@/types';
+import { ConstructorForm, FormData } from '@/types';
 import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
@@ -18,64 +11,6 @@ export const formApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   tagTypes: ['form'],
   endpoints: (builder) => ({
-    getFormList: builder.query<FormListResponse<CardWithCount[]>, FormListOptions>({
-      queryFn: async (options: FormListOptions) => {
-        try {
-          const cards = await firestoreService.getAll<CardWithCount[]>(COLLECTION, options);
-
-          for (const card of cards.data) {
-            const responses = await firestoreService.getAll<FormResponse[]>(
-              RESPONSE_COLLECTION,
-              {
-                reference: {
-                  key: 'formId',
-                  collectionName: COLLECTION,
-                  id: card.id,
-                },
-              },
-              true
-            );
-
-            card.responseCount = responses.data?.length ?? 0;
-          }
-
-          return {
-            data: cards,
-          };
-        } catch (error) {
-          return { error: getFirebaseError(error) };
-        }
-      },
-      serializeQueryArgs: ({ endpointName }) => {
-        return endpointName;
-      },
-      merge(currentCacheData, responseData, { arg }) {
-        if (arg.page === 0) {
-          currentCacheData.data = responseData.data;
-        } else {
-          currentCacheData.data.push(...responseData.data);
-        }
-
-        currentCacheData.lastVisible = responseData.lastVisible;
-      },
-      forceRefetch({ currentArg, previousArg }) {
-        if (
-          currentArg?.page === previousArg?.page &&
-          currentArg?.search === previousArg?.search &&
-          currentArg?.sort === previousArg?.sort
-        ) {
-          return false;
-        }
-
-        if (currentArg?.page && currentArg.page > 0 && !currentArg?.lastVisible) {
-          return false;
-        }
-
-        return true;
-      },
-      providesTags: ['form'],
-    }),
-
     getForm: builder.query<ConstructorForm, string>({
       queryFn: async (id) => {
         try {
