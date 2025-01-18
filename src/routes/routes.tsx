@@ -49,7 +49,11 @@ export const AppRouter = () => {
 
   const authRoutes = [
     {
-      element: <PageLayout />,
+      element: (
+        <ErrorBoundary>
+          <PageLayout />
+        </ErrorBoundary>
+      ),
       children: [
         {
           element: (

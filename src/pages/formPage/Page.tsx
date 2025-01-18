@@ -4,13 +4,15 @@ import { Loader } from '@/components/ui/Loader';
 import { Button, Checkbox, Form, Input, Radio } from 'antd';
 import { ConstructorField } from '@/types';
 import { useCreateResponseMutation } from '@/redux/response';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 export const FormPage = () => {
   const { formId } = useParams();
   const { data: formData, isLoading } = useGetFormQuery(formId || '');
-  const [createFormResponse] = useCreateResponseMutation();
+  const [createFormResponse, { isLoading: isLoadingCreateResponse }] = useCreateResponseMutation();
   const [form] = Form.useForm();
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const renderField = (field: ConstructorField) => {
     const { type } = field;
@@ -56,10 +58,33 @@ export const FormPage = () => {
         fields: answers,
         formId,
       };
-      console.log(answersData);
-      const result = await createFormResponse(answersData).unwrap();
-      console.log(result);
+      try {
+        const result = await createFormResponse(answersData).unwrap();
+        if (result) {
+          toast.success('Отклик отправлен!');
+        }
+      } catch (error: any) {
+        toast.error('Произошла неизвестная ошибка!');
+        console.error('Error', error.data);
+      }
     }
+  };
+
+  // Обработчик изменения формы
+  const onValuesChange = () => {
+    // Проверяем наличие обязательных полей
+    const requiredFields = formData?.fields.filter((field) => field.require);
+    // Проверяем валидность всех обязательных полей
+    const isValid = !!requiredFields?.every((field) => {
+      const value = form.getFieldValue(field.id);
+      if (field.type === 'checkbox' || field.type === 'radio') {
+        // Для чекбоксов и радио проверяем, что хотя бы одно значение выбрано
+        return Array.isArray(value) && value.length > 0;
+      }
+      // Для остальных типов полей просто проверяем на наличие значения
+      return !!value;
+    });
+    setIsFormValid(isValid);
   };
 
   useEffect(() => {
@@ -70,7 +95,7 @@ export const FormPage = () => {
     return <h2>Форма не найдена!</h2>;
   }
 
-  if (isLoading) {
+  if (isLoading || isLoadingCreateResponse) {
     return <Loader />;
   }
 
@@ -82,7 +107,13 @@ export const FormPage = () => {
     <div className="pt-5">
       <h2 className="font-semibold text-lg">{formData.title}</h2>
       <p className="mt-3">{formData.description}</p>
-      <Form form={form} onFinish={onFinish} className="mt-3 custom-form" layout="vertical">
+      <Form
+        form={form}
+        onFinish={onFinish}
+        className="mt-3 custom-form"
+        layout="vertical"
+        onValuesChange={onValuesChange}
+      >
         {formData.fields.map((field) => (
           <Form.Item
             key={field.id}
@@ -97,7 +128,7 @@ export const FormPage = () => {
         ))}
         <Form.Item>
           <div className="flex justify-start">
-            <Button type="primary" htmlType="submit" className="">
+            <Button type="primary" htmlType="submit" disabled={!isFormValid}>
               Отправить форму
             </Button>
           </div>
