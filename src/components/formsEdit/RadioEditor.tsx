@@ -1,8 +1,8 @@
 import { ConstructorField, FieldTypes } from '@/types';
 import { getUUID } from '@/utils/getUUID';
 import { MinusCircleOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Input, Radio, Select, Tooltip } from 'antd';
-import { FC } from 'react';
+import { Button, Checkbox, Input, InputRef, Radio, Select, Tooltip } from 'antd';
+import { FC, useEffect, useRef, useState } from 'react';
 
 type Props = {
   field: ConstructorField;
@@ -11,10 +11,13 @@ type Props = {
 
 export const RadioEditor: FC<Props> = (props) => {
   const { field, onUpdateField } = props;
+  const [newInputId, setNewInputId] = useState<string | null>(null); // Track the ID of the new input
+  const inputRefs = useRef<{ [key: string]: InputRef | null }>({});
 
   const handleAdd = () => {
     const options = field?.options || [];
     const id = getUUID();
+    setNewInputId(id);
     onUpdateField(field.id, { options: [...options, { id, label: '' }] });
   };
 
@@ -34,6 +37,14 @@ export const RadioEditor: FC<Props> = (props) => {
     onUpdateField(field.id, { type });
   };
 
+  useEffect(() => {
+    if (newInputId && inputRefs.current[newInputId]) {
+      inputRefs.current[newInputId]?.focus({
+        cursor: 'start',
+      });
+    }
+  }, [newInputId]);
+
   return (
     <>
       {field?.options?.map(({ id, label }, i) => (
@@ -44,6 +55,8 @@ export const RadioEditor: FC<Props> = (props) => {
             value={label}
             className="w-full"
             onChange={(e) => handleChange(id, e.target.value)}
+            onFocus={() => console.log('ff')}
+            ref={(el) => el && (inputRefs.current[id] = el)}
           />
           {field?.options && field?.options?.length > 1 && (
             <Tooltip title="Удалить">
@@ -60,11 +73,9 @@ export const RadioEditor: FC<Props> = (props) => {
       <div className="flex gap-2 w-full justify-between">
         <div className="flex items-center gap-2">
           {field.type === 'radio' ? <Radio className="m-0" disabled /> : <Checkbox disabled />}
-          <Tooltip title="Добавить вариант">
-            <Button color="default" variant="filled" onClick={handleAdd}>
-              Добавить
-            </Button>
-          </Tooltip>
+          <Button color="default" variant="filled" onClick={handleAdd}>
+            Добавить
+          </Button>
         </div>
         <Select
           defaultValue={FieldTypes.RADIO}

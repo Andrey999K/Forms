@@ -3,6 +3,7 @@ import { ReactNode, forwardRef } from 'react';
 type Props = {
   children: ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   settings?: Partial<Settings>;
 };
 
@@ -21,7 +22,7 @@ const defaultSettings: Settings = {
 };
 
 export const GlassWrapper = forwardRef<HTMLDivElement, Props>(
-  ({ children, className, settings }, ref) => {
+  ({ children, className, style, settings }, ref) => {
     const CONFIG: Settings = { ...defaultSettings, ...settings };
 
     const wrapperStyle = {
@@ -29,6 +30,7 @@ export const GlassWrapper = forwardRef<HTMLDivElement, Props>(
       boxShadow: CONFIG.shadow,
       backdropFilter: `blur(${CONFIG.backdropBlur}px)`,
       backgroundColor: CONFIG.bgColor,
+      ...style,
     };
 
     return (

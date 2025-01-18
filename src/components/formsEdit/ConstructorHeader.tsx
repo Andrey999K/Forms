@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { ConstructorNameModal } from './ConstructorNameModal';
 import { ConstructorForm } from '@/types';
+import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 
 type Props = {
   constructor: ConstructorForm;
@@ -9,7 +10,7 @@ type Props = {
 
 export const ConstructorHeader: FC<Props> = ({ constructor, onChangeForm }) => {
   return (
-    <div className="flex flex-col gap-2">
+    <GlassWrapper className="flex flex-col gap-2 p-4">
       <ConstructorNameModal
         value={constructor.title}
         name="title"
@@ -26,6 +27,6 @@ export const ConstructorHeader: FC<Props> = ({ constructor, onChangeForm }) => {
       >
         <h2 className="text-sm text-gray-600">{constructor.description}</h2>
       </ConstructorNameModal>
-    </div>
+    </GlassWrapper>
   );
 };
