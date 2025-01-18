@@ -10,12 +10,24 @@ import {
 import { Sort, Slice } from './base';
 import { AuthFormValues } from './auth';
 import { FormListOptions, FormListResponse } from './firebase';
-import { Card } from './card';
+import { Card, CardWithCount } from './card';
 import { FormResponse } from './response';
 
-export type { Card, Slice, AuthFormValues, FormListOptions, FormListResponse, FormResponse };
+type HandleChangeForm = { name: string; value: unknown };
 
-export type HandleChangeForm = { name: string; value: unknown };
+export type {
+  Card,
+  FieldType,
+  ConstructorField,
+  ConstructorForm,
+  Slice,
+  AuthFormValues,
+  FormListOptions,
+  FormListResponse,
+  FormResponse,
+  CardWithCount,
+  FormData,
+  HandleChangeForm,
+};
 
-export type { FieldType, ConstructorField, ConstructorForm, FormData };
-export { FIELD_EXISTS, FieldTypes, NEW_FORM, Sort };
+export { FIELD_EXISTS, FieldTypes, Sort, NEW_FORM };

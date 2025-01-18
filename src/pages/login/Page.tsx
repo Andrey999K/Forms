@@ -1,51 +1,52 @@
-//Ant Design
-import { Form, Layout, Typography } from 'antd';
+import { Form, Layout, Spin, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-//React Hook Form
 import { SubmitHandler, useForm } from 'react-hook-form';
-//React Icons
 import { FiLogIn } from 'react-icons/fi';
 import { MdMail } from 'react-icons/md';
 import { RiLockFill } from 'react-icons/ri';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
-//React
 import { useState } from 'react';
-//Validation
-import { AuthValidationRules } from '../../utils/validation';
-//Custom Components
-import { AuthFormInput } from '../../components/auth/AuthFormInput';
-import { AuthSubmitButton } from '../../components/auth/AuthSubmitButton';
-import { AuthTextLink } from '../../components/auth/AuthTextLink';
-//Custom Routes
-import { Routes } from '../../utils/routesConfig';
-//Types
-import { AuthFormValues } from '../../types';
-import { authService } from '../../services/auth.service';
+import { AuthValidationRules } from '@/utils/validation';
+import { AuthFormInput } from '@/components/auth/AuthFormInput';
+import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
+import { AuthTextLink } from '@/components/auth/AuthTextLink';
+import { Routes } from '@/utils/routesConfig';
 import { useNavigate } from 'react-router-dom';
+import { useLoginMutation } from '@/redux/auth';
+import { SignInFormValues } from '@/types/auth';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '@/redux/user/userSlice';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const { control, handleSubmit } = useForm<AuthFormValues>({
+  const { control, handleSubmit } = useForm<SignInFormValues>({
     mode: 'onChange',
   });
+  const [login, { isLoading }] = useLoginMutation();
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
-  const onSubmit: SubmitHandler<AuthFormValues> = async (data) => {
-    const isRegistered = await authService.login(data);
-    if (isRegistered) {
+  const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
+    dispatch(setLoading(true));
+    try {
+      await login(data).unwrap();
       navigate(Routes.HOME);
+    } catch (error) {
+      console.error('Ошибка авторизации:', error);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   return (
-    <Layout className="min-h-screen bg-authImg bg-cover bg-center">
-      <Content className="flex justify-center  items-center h-screen">
-        <div className="bg-white bg-opacity-20 backdrop-blur-sm absolute p-8 rounded-2xl shadow-lg max-w-sm w-full">
+    <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">
+      <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
+        <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
           <div className="mb-6">
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-2">
               <div className="w-14 h-14 flex items-center justify-center bg-[#EEF5F8] rounded-2xl shadow-lg">
                 <FiLogIn size={30} color="#808897" />
               </div>
@@ -56,7 +57,7 @@ export const Login = () => {
                 marginBottom: '0.5rem',
               }}
             >
-              Login
+              Авторизация
             </Typography.Title>
             <Typography.Title
               level={5}
@@ -92,7 +93,9 @@ export const Login = () => {
                 </span>
               }
             />
-            <AuthSubmitButton>Войти</AuthSubmitButton>
+            <AuthSubmitButton disabled={isLoading}>
+              {isLoading ? <Spin size="small" /> : 'Войти'}
+            </AuthSubmitButton>
             <AuthTextLink
               text="Нет аккаунта?"
               linkText="Зарегистрироваться"

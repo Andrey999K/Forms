@@ -1,6 +1,12 @@
 import { firestoreService } from '@/services/firestore.service';
-import { Card, ConstructorForm, FormListOptions, FormListResponse, FormResponse } from '@/types';
-import { FormData } from '@/types';
+import {
+  CardWithCount,
+  ConstructorForm,
+  FormListOptions,
+  FormListResponse,
+  FormResponse,
+  FormData,
+} from '@/types';
 import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
@@ -12,10 +18,10 @@ export const formApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   tagTypes: ['form'],
   endpoints: (builder) => ({
-    getFormList: builder.query<FormListResponse<Card[]>, FormListOptions>({
+    getFormList: builder.query<FormListResponse<CardWithCount[]>, FormListOptions>({
       queryFn: async (options: FormListOptions) => {
         try {
-          const cards = await firestoreService.getAll<Card[]>(COLLECTION, options);
+          const cards = await firestoreService.getAll<CardWithCount[]>(COLLECTION, options);
 
           for (const card of cards.data) {
             const responses = await firestoreService.getAll<FormResponse[]>(

@@ -1,19 +1,20 @@
 import { Button, Form } from 'antd';
 import { ReactNode } from 'react';
 
-export const AuthSubmitButton = ({ children }: { children: ReactNode }) => {
+export const AuthSubmitButton = ({
+  children,
+  disabled,
+}: {
+  children: ReactNode;
+  disabled?: boolean;
+}) => {
   return (
     <Form.Item className="mb-2">
       <Button
         htmlType="submit"
         block
-        // style={{
-        //   boxShadow: 'none !important',
-        //   borderColor: 'transparent !important',
-        //   outline: 'none !important',
-        //   transition: 'none !important',
-        // }}
-        className="bg-[#2A2B34] text-white rounded-xl hover:!bg-[#4C4D5E] hover:!text-slate-200 h-[39.82px] !border-none focus:!outline-none active:!outline-none active:!shadow-none active:!ring-0"
+        disabled={disabled}
+        className="bg-[#2A2B34] text-white rounded-lg hover:!bg-[#4C4D5E] hover:!text-slate-200 h-[35.81px] !border-none focus:!outline-none active:!outline-none active:!shadow-none active:!ring-0"
       >
         {children}
       </Button>

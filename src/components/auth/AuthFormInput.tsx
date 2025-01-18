@@ -1,19 +1,23 @@
 import { Typography, Input, Form } from 'antd';
 import { ReactNode } from 'react';
-import { Control, Controller, RegisterOptions } from 'react-hook-form';
-import { AuthFormValues } from '../../types';
+import { Control, Controller, RegisterOptions, FieldValues, Path } from 'react-hook-form';
 
-type Props = {
-  name: keyof AuthFormValues;
-  control: Control<AuthFormValues>;
-  rules: RegisterOptions<AuthFormValues>;
+type Props<T extends FieldValues> = {
+  name: Path<T>;
+  control: Control<T>;
+  rules: RegisterOptions<T>;
   type?: 'text' | 'password';
   placeholder: 'Email' | 'Пароль' | 'Имя' | 'Фамилия';
   prefix?: ReactNode;
   suffix?: ReactNode;
 };
 
-export const AuthFormInput = ({ name, control, rules, ...props }: Props) => {
+export const AuthFormInput = <T extends FieldValues>({
+  name,
+  control,
+  rules,
+  ...props
+}: Props<T>) => {
   return (
     <Controller
       name={name}
@@ -21,7 +25,7 @@ export const AuthFormInput = ({ name, control, rules, ...props }: Props) => {
       rules={rules}
       render={({ field, fieldState }) => (
         <Form.Item
-          validateStatus={fieldState.error && 'error'}
+          validateStatus={fieldState.error ? 'error' : undefined}
           help={
             fieldState.error && (
               <Typography.Text
@@ -42,7 +46,7 @@ export const AuthFormInput = ({ name, control, rules, ...props }: Props) => {
               outline: 'none',
               transition: 'none',
             }}
-            className="py-2 px-4 rounded-xl bg-[#EFF2F6] placeholder-[#4a4b4d] focus:!outline-none focus:!ring-0 focus:!border-transparent focus:!transition-none !transition-none"
+            className="py-1.5 px-4 rounded-lg bg-[#EFF2F6] placeholder-[#4a4b4d] focus:!outline-none focus:!ring-0 focus:!border-transparent focus:!transition-none !transition-none"
           />
         </Form.Item>
       )}

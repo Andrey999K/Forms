@@ -5,6 +5,8 @@ import { Routes } from '../utils/routesConfig.ts';
 import { ToastContainer } from 'react-toastify';
 import { ShapeWrapper } from './GlassLayout.js';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.js';
+import { useLogoutMutation } from '@/redux/auth/authApi.js';
+import { ReactNode } from 'react';
 
 const pages = [
   {
@@ -17,10 +19,13 @@ const pages = [
   },
 ];
 
-export const PageLayout = () => {
+export const PageLayout = ({ children }: { children?: ReactNode }) => {
   const navigate = useNavigate();
 
-  const handleExit = () => {
+  const [logout] = useLogoutMutation();
+
+  const handleExit = async () => {
+    await logout().unwrap();
     navigate(Routes.LOGIN);
   };
 
@@ -60,9 +65,7 @@ export const PageLayout = () => {
           </Dropdown>
         </div>
       </GlassWrapper>
-      <div className="mt-5 w-full max-w-screen-lg m-auto">
-        <Outlet />
-      </div>
+      <div className="mt-5 w-full max-w-screen-lg m-auto">{children || <Outlet />}</div>
       <ToastContainer />
     </ShapeWrapper>
   );

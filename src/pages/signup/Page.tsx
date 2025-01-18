@@ -1,34 +1,30 @@
-//Ant Design
-import { Form, Layout, Typography } from 'antd';
+import { Form, Layout, Spin, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-//React Hook Form
 import { SubmitHandler, useForm } from 'react-hook-form';
-//React Icons
 import { MdMail, MdPerson, MdPersonAddAlt1, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { RiLockFill } from 'react-icons/ri';
-//React
 import { useState } from 'react';
-//Custom Routes
-import { Routes } from '../../utils/routesConfig';
-//Services
-import { authService } from '../../services/auth.service';
-//Validation
-import { AuthValidationRules } from '../../utils/validation';
-//Custom Components
-import { AuthFormInput } from '../../components/auth/AuthFormInput';
-import { AuthSubmitButton } from '../../components/auth/AuthSubmitButton';
-import { AuthTextLink } from '../../components/auth/AuthTextLink';
-//Types
-import { AuthFormValues } from '../../types';
-import { AuthClearFormButton } from '../../components/auth/AuthClearFormButton';
 import { useNavigate } from 'react-router-dom';
+import { useRegisterMutation } from '@/redux/auth';
+import { AuthClearFormButton } from '@/components/auth/AuthClearFormButton';
+import { AuthFormInput } from '@/components/auth/AuthFormInput';
+import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
+import { AuthTextLink } from '@/components/auth/AuthTextLink';
+import { AuthValidationRules } from '@/utils/validation';
+import { Routes } from '@/utils/routesConfig';
+import { SignUpFormValues } from '@/types/auth';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '@/redux/user/userSlice';
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showCopyPassword, setShowCopyPassword] = useState<boolean>(false);
-  const { control, handleSubmit, watch, reset } = useForm<AuthFormValues>({
+  const { control, handleSubmit, watch, reset } = useForm<SignUpFormValues>({
     mode: 'onChange',
   });
+  const [register, { isLoading }] = useRegisterMutation();
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
@@ -36,19 +32,24 @@ export const Signup = () => {
 
   const password = watch('password');
 
-  const onSubmit: SubmitHandler<AuthFormValues> = async (data) => {
-    const isRegistered = await authService.register(data);
-    if (isRegistered) {
+  const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
+    dispatch(setLoading(true));
+    try {
+      await register(data).unwrap();
       navigate(Routes.HOME);
+    } catch (error) {
+      console.error('Ошибка авторизации:', error);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   return (
-    <Layout className="min-h-screen bg-authImg bg-cover bg-center">
-      <Content className="flex justify-center  items-center h-screen">
-        <div className="bg-white bg-opacity-20 backdrop-blur-sm absolute p-8 rounded-2xl shadow-lg max-w-sm w-full">
+    <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">
+      <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
+        <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
           <div className="mb-6">
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-2">
               <div className="w-14 h-14 flex items-center justify-center bg-[#EEF5F8] rounded-2xl shadow-lg">
                 <MdPersonAddAlt1 size={30} color="#808897" />
               </div>
@@ -59,7 +60,7 @@ export const Signup = () => {
                 marginBottom: '0.5rem',
               }}
             >
-              Register
+              Регистрация
             </Typography.Title>
             <Typography.Title
               level={5}
@@ -126,7 +127,9 @@ export const Signup = () => {
                 </span>
               }
             />
-            <AuthSubmitButton>Зарегистрироваться</AuthSubmitButton>
+            <AuthSubmitButton disabled={isLoading}>
+              {isLoading ? <Spin size="small" /> : 'Зарегистрироваться'}
+            </AuthSubmitButton>
             <div className="flex items-center justify-between">
               <AuthClearFormButton reset={reset} />
               <AuthTextLink text="Есть аккаунт?" linkText="Войти" linkTo={Routes.LOGIN} />
