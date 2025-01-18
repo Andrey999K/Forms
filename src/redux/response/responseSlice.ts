@@ -23,8 +23,6 @@ export const fetchResponseSlice = createAsyncThunk<
       true
     );
 
-    console.log(result);
-
     return {
       data: result,
     };
