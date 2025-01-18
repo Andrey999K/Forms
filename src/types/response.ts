@@ -8,5 +8,6 @@ export type FormResponse = {
   id: string;
   fields: ResponseField[];
   createdAt: number;
+  updatedAt: number;
   formId: string;
 };

@@ -30,31 +30,10 @@ export const responseApi = createApi({
       providesTags: ['response'],
     }),
 
-    createResponse: builder.mutation<FormResponse, { id: string; [key: string]: unknown }>({
-      queryFn: async (response) => {
-        try {
-          const result = await firestoreService.create<FormResponse>(COLLECTION, response);
-          return { data: result };
-        } catch (error) {
-          return { error: getFirebaseError(error) };
-        }
-      },
-      invalidatesTags: (result) => [{ type: 'response', id: (result?.formId as string) ?? '' }],
-    }),
-
-    deleteResponse: builder.mutation<boolean, string>({
-      queryFn: async (id) => {
-        try {
-          const result = await firestoreService.delete(COLLECTION, id);
-          return { data: result };
-        } catch (error) {
-          return { error: getFirebaseError(error) };
-        }
-      },
-      invalidatesTags: ['response'],
-    }),
-
-    createResponseForm: builder.mutation<ConstructorForm, Omit<FormResponse, 'id' | 'createdAt'>>({
+    createResponse: builder.mutation<
+      ConstructorForm,
+      Omit<FormResponse, 'id' | 'createdAt' | 'updatedAt'>
+    >({
       queryFn: async (answersData) => {
         const newResponse = {
           id: getUUID(),
@@ -69,6 +48,18 @@ export const responseApi = createApi({
           return { error: getFirebaseError(error) };
         }
       },
+    }),
+
+    deleteResponse: builder.mutation<boolean, string>({
+      queryFn: async (id) => {
+        try {
+          const result = await firestoreService.delete(COLLECTION, id);
+          return { data: result };
+        } catch (error) {
+          return { error: getFirebaseError(error) };
+        }
+      },
+      invalidatesTags: ['response'],
     }),
   }),
 });

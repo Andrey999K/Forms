@@ -3,14 +3,13 @@ import { useGetFormQuery } from '@/redux/form';
 import { Loader } from '@/components/ui/Loader';
 import { Button, Checkbox, Form, Input, Radio } from 'antd';
 import { ConstructorField } from '@/types';
-import { useCreateResponseFormMutation } from '@/redux/response';
+import { useCreateResponseMutation } from '@/redux/response';
 import { useEffect } from 'react';
 
 export const FormPage = () => {
   const { formId } = useParams();
-  console.log('formId', formId);
   const { data: formData, isLoading } = useGetFormQuery(formId || '');
-  const [createFormResponse] = useCreateResponseFormMutation();
+  const [createFormResponse] = useCreateResponseMutation();
   const [form] = Form.useForm();
 
   const renderField = (field: ConstructorField) => {
@@ -24,7 +23,7 @@ export const FormPage = () => {
         return (
           <Radio.Group className="flex justify-start">
             {field.options?.map((option) => (
-              <Radio key={option.id} value={option.id}>
+              <Radio key={option.id} value={option.label}>
                 {option.label}
               </Radio>
             ))}
@@ -34,7 +33,7 @@ export const FormPage = () => {
         return (
           <Checkbox.Group className="flex justify-start">
             {field.options?.map((option) => (
-              <Checkbox key={option.id} value={option.id}>
+              <Checkbox key={option.id} value={option.label}>
                 {option.label}
               </Checkbox>
             ))}
@@ -44,12 +43,11 @@ export const FormPage = () => {
   };
 
   const onFinish = async (values: { [key: string]: string }) => {
-    console.log('values', values);
     const answers = Object.keys(values)
       .map((field) => {
         const questionData = formData?.fields.find((currentField) => currentField.id === field);
         return questionData
-          ? { id: questionData.id, question: questionData.question, answer: values[field] }
+          ? { id: questionData.id, question: questionData.question, answer: values[field] || '—' }
           : false;
       })
       .filter((item) => item !== false);
