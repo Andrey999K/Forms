@@ -25,7 +25,7 @@ const sortOptions: DefaultOptionType[] = [
   },
 ];
 
-const CARDS_PER_PAGE = 6;
+const CARDS_PER_PAGE = 30;
 
 export const Home = () => {
   const dispatch = useDispatch<AppDispatch>();

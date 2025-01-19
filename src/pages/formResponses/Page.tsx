@@ -25,7 +25,7 @@ type Dates = {
 };
 
 const dateFormat = 'YYYY-MM-DD';
-const CARDS_PER_PAGE = 4;
+const CARDS_PER_PAGE = 30;
 
 export const FormResponses = () => {
   const dispatch = useDispatch<AppDispatch>();
