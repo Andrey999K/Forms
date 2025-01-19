@@ -4,8 +4,9 @@ import { Loader } from '@/components/ui/Loader';
 import { Button, Checkbox, Form, Input, Radio } from 'antd';
 import { ConstructorField } from '@/types';
 import { useCreateResponseMutation } from '@/redux/response';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { ResponseSendMessage } from '@/components/FormPage';
 
 export const FormPage = () => {
   const { formId } = useParams();
@@ -13,6 +14,7 @@ export const FormPage = () => {
   const [createFormResponse, { isLoading: isLoadingCreateResponse }] = useCreateResponseMutation();
   const [form] = Form.useForm();
   const [isFormValid, setIsFormValid] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const renderField = (field: ConstructorField) => {
     const { type } = field;
@@ -61,7 +63,7 @@ export const FormPage = () => {
       try {
         const result = await createFormResponse(answersData).unwrap();
         if (result) {
-          toast.success('Отклик отправлен!');
+          setFormSubmitted(true);
         }
       } catch (error: any) {
         toast.error('Произошла неизвестная ошибка!');
@@ -77,8 +79,8 @@ export const FormPage = () => {
     // Проверяем валидность всех обязательных полей
     const isValid = !!requiredFields?.every((field) => {
       const value = form.getFieldValue(field.id);
-      if (field.type === 'checkbox' || field.type === 'radio') {
-        // Для чекбоксов и радио проверяем, что хотя бы одно значение выбрано
+      if (field.type === 'checkbox') {
+        // Для чекбоксов проверяем, что хотя бы одно значение выбрано
         return Array.isArray(value) && value.length > 0;
       }
       // Для остальных типов полей просто проверяем на наличие значения
@@ -87,15 +89,11 @@ export const FormPage = () => {
     setIsFormValid(isValid);
   };
 
-  useEffect(() => {
-    console.log('formData', formData);
-  }, [formData]);
-
   if (!formId) {
     return <h2>Форма не найдена!</h2>;
   }
 
-  if (isLoading || isLoadingCreateResponse) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -104,36 +102,49 @@ export const FormPage = () => {
   }
 
   return (
-    <div className="pt-5">
-      <h2 className="font-semibold text-lg">{formData.title}</h2>
-      <p className="mt-3">{formData.description}</p>
-      <Form
-        form={form}
-        onFinish={onFinish}
-        className="mt-3 custom-form"
-        layout="vertical"
-        onValuesChange={onValuesChange}
-      >
-        {formData.fields.map((field) => (
-          <Form.Item
-            key={field.id}
-            label={field.question}
-            name={field.id}
-            rules={
-              field.require ? [{ required: true, message: 'Поле обязательно к заполнению!' }] : []
-            }
+    <div className="pt-5 relative">
+      {isLoadingCreateResponse && (
+        <div className="absolute h-full inset-0 bg-white/90 flex justify-center items-center z-10">
+          <Loader />
+        </div>
+      )}
+      {formSubmitted ? (
+        <ResponseSendMessage />
+      ) : (
+        <>
+          <h2 className="font-semibold text-lg">{formData.title}</h2>
+          <p className="mt-3">{formData.description}</p>
+          <Form
+            form={form}
+            onFinish={onFinish}
+            className="mt-3 custom-form"
+            layout="vertical"
+            onValuesChange={onValuesChange}
           >
-            {renderField(field)}
-          </Form.Item>
-        ))}
-        <Form.Item>
-          <div className="flex justify-start">
-            <Button type="primary" htmlType="submit" disabled={!isFormValid}>
-              Отправить форму
-            </Button>
-          </div>
-        </Form.Item>
-      </Form>
+            {formData.fields.map((field) => (
+              <Form.Item
+                key={field.id}
+                label={field.question}
+                name={field.id}
+                rules={
+                  field.require
+                    ? [{ required: true, message: 'Поле обязательно к заполнению!' }]
+                    : []
+                }
+              >
+                {renderField(field)}
+              </Form.Item>
+            ))}
+            <Form.Item>
+              <div className="flex justify-start">
+                <Button type="primary" htmlType="submit" disabled={!isFormValid}>
+                  Отправить форму
+                </Button>
+              </div>
+            </Form.Item>
+          </Form>
+        </>
+      )}
     </div>
   );
 };

@@ -4,7 +4,6 @@ import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const COLLECTION = 'form';
-export const RESPONSE_COLLECTION = 'response';
 
 export const formApi = createApi({
   reducerPath: 'formApi',
@@ -17,6 +16,7 @@ export const formApi = createApi({
           const result = await firestoreService.get(COLLECTION, id);
           return { data: result as FormData };
         } catch (error) {
+          console.error('Error:', error);
           return { error: getFirebaseError(error) };
         }
       },
