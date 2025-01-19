@@ -1,5 +1,9 @@
-import { Result } from 'antd';
+import { Card, Result } from 'antd';
 
 export const ResponseSendMessage = () => {
-  return <Result status="success" title="Отклик успешно отправлен!" />;
+  return (
+    <Card>
+      <Result status="success" title="Отклик успешно отправлен!" />
+    </Card>
+  );
 };
