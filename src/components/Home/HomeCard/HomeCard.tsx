@@ -22,7 +22,7 @@ export const HomeCard = (props: Props) => {
         count={item.responseCount ?? 0}
         showZero
         size="small"
-        styles={{ indicator: { fontSize: 10 } }}
+        styles={{ indicator: { fontSize: 10 }, root: { color: 'inherit' } }}
         offset={[2, -2]}
       >
         <MdOutlineQuestionAnswer size={18} />
