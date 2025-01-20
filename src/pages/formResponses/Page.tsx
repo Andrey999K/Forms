@@ -73,7 +73,7 @@ export const FormResponses = () => {
 
     if (dates.start) {
       newFilters?.push({
-        key: 'updatedAt',
+        key: 'createdAt',
         operator: '>=',
         value: new Date(dayjs(dates.start).toDate()),
       });
@@ -84,7 +84,7 @@ export const FormResponses = () => {
       copyEnd = copyEnd.add(1, 'day');
 
       newFilters?.push({
-        key: 'updatedAt',
+        key: 'createdAt',
         operator: '<=',
         value: new Date(copyEnd.toDate()),
       });
