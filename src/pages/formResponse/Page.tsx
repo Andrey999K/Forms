@@ -33,9 +33,6 @@ export const FormResponse = () => {
     return;
   }
 
-  console.log('form', form);
-  console.log('response', response);
-
   return (
     <div className="pt-5 pb-20">
       <h2 className="font-semibold">Название формы — {form.title}</h2>
