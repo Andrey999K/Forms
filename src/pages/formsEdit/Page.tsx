@@ -17,14 +17,14 @@ import {
 } from '@/types';
 import { getUUID } from '@/utils/getUUID';
 import { Spin } from 'antd';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ROUTES } from '@/utils/routesConfig.ts';
 
-export const FormsEdit = () => {
+export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -99,6 +99,7 @@ export const FormsEdit = () => {
 
   const handleSaveForms = async () => {
     if (!constructor) return;
+    console.log('constructor', constructor);
     try {
       if ('createAt' in constructor) {
         await updateForm(constructor).unwrap();
@@ -141,7 +142,10 @@ export const FormsEdit = () => {
     );
   }
 
-  if (!formData && !newFormId) return navigate(ROUTES.NOT_FOUND);
+  if (!formData && !newFormId) {
+    navigate(ROUTES.NOT_FOUND);
+    return;
+  }
   if (!constructor) return <div>Ошибка при создании конструктора.</div>;
 
   return (

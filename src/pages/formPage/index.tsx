@@ -7,6 +7,7 @@ import { useCreateResponseMutation } from '@/redux/response';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ResponseSendMessage } from '@/components/FormPage';
+import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
 
 export const FormPage = () => {
   const { formId } = useParams();
@@ -15,6 +16,9 @@ export const FormPage = () => {
   const [form] = Form.useForm();
   const [isFormValid, setIsFormValid] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [timerStart] = useState(false);
+
+  console.log('formData', formData?.settings.timerActive);
 
   const renderField = (field: ConstructorField) => {
     const { type } = field;
@@ -99,6 +103,10 @@ export const FormPage = () => {
 
   if (!formData) {
     return <h2>Нет данных!</h2>;
+  }
+
+  if (!timerStart && formData?.settings.timerActive) {
+    return <StartTimer />;
   }
 
   return (
