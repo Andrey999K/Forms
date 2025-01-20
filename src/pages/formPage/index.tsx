@@ -16,9 +16,11 @@ export const FormPage = () => {
   const [form] = Form.useForm();
   const [isFormValid, setIsFormValid] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [timerStart] = useState(false);
+  const [timerStart, setTimerStart] = useState(false);
 
-  console.log('formData', formData?.settings.timerActive);
+  const startTimer = () => {
+    setTimerStart(true);
+  };
 
   const renderField = (field: ConstructorField) => {
     const { type } = field;
@@ -105,8 +107,8 @@ export const FormPage = () => {
     return <h2>Нет данных!</h2>;
   }
 
-  if (!timerStart && formData?.settings.timerActive) {
-    return <StartTimer />;
+  if (!timerStart && formData?.settings?.timerActive) {
+    return <StartTimer onStart={startTimer} />;
   }
 
   return (
