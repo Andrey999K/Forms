@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, DatePicker, Select, Spin } from 'antd';
@@ -14,7 +14,7 @@ import { FormListOptions, FormResponse, Sort } from '@/types';
 const { Text, Title } = typography;
 
 type RangeValue = Parameters<
-  NonNullable<React.ComponentProps<typeof DatePicker.RangePicker>['onChange']>
+  NonNullable<ComponentProps<typeof DatePicker.RangePicker>['onChange']>
 >[0];
 
 const { RangePicker } = DatePicker;

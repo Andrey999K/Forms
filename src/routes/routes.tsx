@@ -18,7 +18,7 @@ const FormsEdit = lazy(() =>
   import('@/pages/formsEdit/Page').then((module) => ({ default: module.FormsEdit }))
 );
 const FormPage = lazy(() =>
-  import('@/pages/formPage/Page').then((module) => ({ default: module.FormPage }))
+  import('@/pages/formPage').then((module) => ({ default: module.FormPage }))
 );
 const FormResponses = lazy(() =>
   import('@/pages/formResponses/Page').then((module) => ({ default: module.FormResponses }))
@@ -79,16 +79,16 @@ export const AppRouter = () => {
               element: <FormsEdit />,
             },
             {
-              path: Routes.FORM_PAGE,
-              element: <FormPage />,
-            },
-            {
               path: Routes.FORM_RESPONSES,
               element: <FormResponses />,
             },
             {
               path: Routes.FORM_RESPONSE,
               element: <FormResponse />,
+            },
+            {
+              path: Routes.FORM_PAGE,
+              element: <FormPage />,
             },
             {
               path: Routes.NOT_FOUND,

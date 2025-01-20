@@ -10,7 +10,7 @@ type Props<T extends FieldValues> = {
     'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
   >;
   type?: 'text' | 'password';
-  placeholder: string;
+  placeholder?: string;
   prefix?: ReactNode;
   suffix?: ReactNode;
 };
