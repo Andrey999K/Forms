@@ -10,7 +10,7 @@ import { AuthValidationRules } from '@/utils/validation';
 import { AuthFormInput } from '@/components/auth/AuthFormInput';
 import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
 import { AuthTextLink } from '@/components/auth/AuthTextLink';
-import { Routes } from '@/utils/routesConfig';
+import { ROUTES } from '@/utils/routesConfig';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/redux/auth';
 import { SignInFormValues } from '@/types/auth';
@@ -33,7 +33,7 @@ export const Login = () => {
     dispatch(setLoading(true));
     try {
       await login(data).unwrap();
-      navigate(Routes.HOME);
+      navigate(ROUTES.HOME);
     } catch (error) {
       console.error('Ошибка авторизации:', error);
     } finally {
@@ -99,7 +99,7 @@ export const Login = () => {
             <AuthTextLink
               text="Нет аккаунта?"
               linkText="Зарегистрироваться"
-              linkTo={Routes.SIGNUP}
+              linkTo={ROUTES.SIGNUP}
             />
           </Form>
         </div>

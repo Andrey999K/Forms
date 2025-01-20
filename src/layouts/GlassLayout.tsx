@@ -222,7 +222,7 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
 
   return (
     <div className="relative min-h-screen">
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden -z-[99]">
         {circles.map((circle) => (
           <div
             key={circle.id}
