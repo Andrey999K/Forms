@@ -21,7 +21,6 @@ export const responseApi = createApi({
       queryFn: async (id) => {
         try {
           const result = await firestoreService.get<FormResponse>(COLLECTION, id);
-
           return { data: result };
         } catch (error) {
           return { error: getFirebaseError(error) };
