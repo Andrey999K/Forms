@@ -63,7 +63,7 @@ export const firestoreService = {
     const constrains: QueryConstraint[] = [];
 
     if (options.sort) {
-      constrains.push(orderBy('updatedAt', options.sort));
+      constrains.push(orderBy(options.sort.field, options.sort.type));
     }
 
     if (options.limit) {
