@@ -4,7 +4,7 @@ import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
 import { useGetFormQuery } from '@/redux/form';
 import { Loader } from '@/components/common';
 import { useGetResponseQuery } from '@/redux/response';
-import { Routes } from '@/utils/routesConfig.ts';
+import { ROUTES } from '@/utils/routesConfig.ts';
 
 export const FormResponse = () => {
   const { formId, responseId } = useParams();
@@ -29,7 +29,7 @@ export const FormResponse = () => {
   if (isLoadingForm || isLoadingResponse) return <Loader />;
 
   if (!form || !response) {
-    navigate(Routes.NOT_FOUND);
+    navigate(ROUTES.NOT_FOUND);
     return;
   }
 

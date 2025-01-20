@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { PageLayout } from '@/layouts/PageLayout';
 import { lazy, Suspense } from 'react';
-import { Routes } from '@/utils/routesConfig';
+import { ROUTES } from '@/utils/routesConfig';
 import { ProtectedRoute } from './ProtectedRoute';
 import { ErrorBoundary, Loader } from '@/components/common';
 import { toastConfig } from '@/utils/toast.config';
@@ -63,35 +63,35 @@ export const AppRouter = () => {
           ),
           children: [
             {
-              path: Routes.HOME,
+              path: ROUTES.HOME,
               element: <Home />,
             },
             {
-              path: Routes.ME,
+              path: ROUTES.ME,
               element: <Me />,
             },
             {
-              path: Routes.FORMS_NEW,
+              path: ROUTES.FORMS_NEW,
               element: <FormsNew />,
             },
             {
-              path: Routes.FORMS_EDIT,
+              path: ROUTES.FORMS_EDIT,
               element: <FormsEdit />,
             },
             {
-              path: Routes.FORM_RESPONSES,
+              path: ROUTES.FORM_RESPONSES,
               element: <FormResponses />,
             },
             {
-              path: Routes.FORM_RESPONSE,
+              path: ROUTES.FORM_RESPONSE,
               element: <FormResponse />,
             },
             {
-              path: Routes.FORM_PAGE,
+              path: ROUTES.FORM_PAGE,
               element: <FormPage />,
             },
             {
-              path: Routes.NOT_FOUND,
+              path: ROUTES.NOT_FOUND,
               element: <NotFoundPage />,
             },
           ],
@@ -102,7 +102,7 @@ export const AppRouter = () => {
 
   const notAuthRoutes = [
     {
-      path: Routes.HOME,
+      path: ROUTES.HOME,
       element: (
         <>
           <ToastContainer {...toastConfig} />
@@ -115,7 +115,7 @@ export const AppRouter = () => {
       ),
     },
     {
-      path: Routes.LOGIN,
+      path: ROUTES.LOGIN,
       element: (
         <>
           <ToastContainer {...toastConfig} />
@@ -128,7 +128,7 @@ export const AppRouter = () => {
       ),
     },
     {
-      path: Routes.SIGNUP,
+      path: ROUTES.SIGNUP,
       element: (
         <>
           <ToastContainer {...toastConfig} />
@@ -141,7 +141,7 @@ export const AppRouter = () => {
       ),
     },
     {
-      path: Routes.NOT_FOUND,
+      path: ROUTES.NOT_FOUND,
       element: <NotFoundPage />,
     },
   ];

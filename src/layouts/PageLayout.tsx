@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import { Button, Dropdown, MenuProps } from 'antd';
-import { Routes } from '../utils/routesConfig.ts';
+import { ROUTES } from '../utils/routesConfig.ts';
 import { ToastContainer } from 'react-toastify';
 import { ShapeWrapper } from './GlassLayout.js';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.js';
@@ -11,11 +11,11 @@ import { ReactNode } from 'react';
 const pages = [
   {
     title: 'Главная',
-    href: Routes.HOME,
+    href: ROUTES.HOME,
   },
   {
     title: 'Новая форма',
-    href: Routes.FORMS_NEW,
+    href: ROUTES.FORMS_NEW,
   },
 ];
 
@@ -26,13 +26,13 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
 
   const handleExit = async () => {
     await logout().unwrap();
-    navigate(Routes.LOGIN);
+    navigate(ROUTES.LOGIN);
   };
 
   const items: MenuProps['items'] = [
     {
       key: '1',
-      label: <NavLink to={Routes.ME}>Профиль</NavLink>,
+      label: <NavLink to={ROUTES.ME}>Профиль</NavLink>,
     },
     {
       key: '2',
