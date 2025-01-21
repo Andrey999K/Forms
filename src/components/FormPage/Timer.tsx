@@ -15,5 +15,12 @@ export const Timer: FC<TimerProps> = ({ onFinish }) => {
   // const deadline = Date.now() + 1000 * 60 * 15 + 500;
   const deadline = Date.now() + 1000 * 10;
 
-  return <Countdown title="Countdown" value={deadline} onFinish={handleFinish} />;
+  return (
+    <Countdown
+      title="Осталось времени"
+      value={deadline}
+      onFinish={handleFinish}
+      className="flex flex-col gap"
+    />
+  );
 };

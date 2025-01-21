@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useGetFormQuery } from '@/redux/form';
 import { Loader } from '@/components/ui/Loader';
-import { Button, Checkbox, Form, Input, Radio } from 'antd';
+import { Button, Checkbox, Form, Input, Radio, Typography } from 'antd';
 import { ConstructorField } from '@/types';
 import { useCreateResponseMutation } from '@/redux/response';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { ResponseSendMessage } from '@/components/FormPage';
 import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
 import { Timer } from '@/components/FormPage/Timer.tsx';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
 
 export const FormPage = () => {
   const { formId } = useParams();
@@ -53,14 +54,20 @@ export const FormPage = () => {
     }
   };
 
-  const sendForm = async (values: { [key: string]: string | string[] }) => {
-    const answers = Object.keys(values)
+  const sendForm = async (_values: { [key: string]: string | string[] }, strict?: boolean) => {
+    const allValues = form.getFieldsValue({ strict });
+    // Если при отправке формы по таймеру есть незаполненные поля, пишем в них прочерк
+    const completeValues = Object.keys(allValues).reduce((acc: Record<string, any>, key) => {
+      acc[key] = allValues[key] || '-'; // Если значение пустое, ставим "-"
+      return acc;
+    }, {});
+    const answers = Object.keys(completeValues)
       .map((field) => {
         const questionData = formData?.fields.find((currentField) => currentField.id === field);
         const findedField = formData?.fields.find((item) => item.id === field);
-        let value = values[field];
+        let value = completeValues[field];
         if (findedField?.type === 'radio') {
-          value = findedField.options?.find((option) => option.id === values[field])!
+          value = findedField.options?.find((option) => option.id === completeValues[field])!
             .label as string;
         }
         if (findedField?.type === 'checkbox' && Array.isArray(value)) {
@@ -141,10 +148,16 @@ export const FormPage = () => {
       {formSubmitted ? (
         <ResponseSendMessage />
       ) : (
-        <>
-          <h2 className="font-semibold text-lg">{formData.title}</h2>
-          <p className="mt-3">{formData.description}</p>
-          {formData.settings?.timerActive && timerStart && <Timer onFinish={sendFormAfterTimer} />}
+        <GlassWrapper className="p-10 relative">
+          <Typography className="text-lg font-bold leading-none">{formData.title}</Typography>
+          <Typography.Text className="text-sm">{formData.description}</Typography.Text>
+          {/*<h2 className="font-semibold text-lg">{formData.title}</h2>*/}
+          {/*<p className="mt-3">{formData.description}</p>*/}
+          {formData.settings?.timerActive && timerStart && (
+            <div className="absolute top-9 right-9">
+              <Timer onFinish={sendFormAfterTimer} />
+            </div>
+          )}
           <Form
             form={form}
             onFinish={onFinish}
@@ -166,7 +179,7 @@ export const FormPage = () => {
                 {renderField(field)}
               </Form.Item>
             ))}
-            <Form.Item>
+            <Form.Item className="mb-0">
               <div className="flex justify-start">
                 <Button type="primary" htmlType="submit" disabled={!isFormValid}>
                   Отправить форму
@@ -174,7 +187,7 @@ export const FormPage = () => {
               </div>
             </Form.Item>
           </Form>
-        </>
+        </GlassWrapper>
       )}
     </div>
   );
