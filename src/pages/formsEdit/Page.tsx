@@ -17,7 +17,7 @@ import {
 } from '@/types';
 import { getUUID } from '@/utils/getUUID';
 import { Spin } from 'antd';
-import { FC, useEffect, useState } from 'react';
+import { FC, useLayoutEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -36,17 +36,6 @@ export const FormsEdit: FC = () => {
   const [createForm, { isLoading: isCreating }] = useCreateFormMutation();
   const [updateForm, { isLoading: isUpdating }] = useUpdateFormMutation();
   const [deleteForm, { isLoading: isDeleting }] = useDeleteFormMutation();
-
-  useEffect(() => {
-    if (formData) {
-      setConstructor(() => formData);
-    } else if (newFormId) {
-      setConstructor(() => ({
-        id: newFormId,
-        ...NEW_FORM,
-      }));
-    }
-  }, [formData]);
 
   const handleDropField = (type: FieldType, index?: number) => {
     setConstructor((prev) => {
@@ -99,7 +88,6 @@ export const FormsEdit: FC = () => {
 
   const handleSaveForms = async () => {
     if (!constructor) return;
-    console.log('constructor', constructor);
     try {
       if ('createAt' in constructor) {
         await updateForm(constructor).unwrap();
@@ -134,6 +122,17 @@ export const FormsEdit: FC = () => {
     });
   };
 
+  useLayoutEffect(() => {
+    if (formData) {
+      setConstructor(() => formData);
+    } else if (newFormId) {
+      setConstructor(() => ({
+        id: newFormId,
+        ...NEW_FORM,
+      }));
+    }
+  }, [formData]);
+
   if (isLoadingForm) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -146,6 +145,7 @@ export const FormsEdit: FC = () => {
     navigate(ROUTES.NOT_FOUND);
     return;
   }
+
   if (!constructor) return <div>Ошибка при создании конструктора.</div>;
 
   return (
