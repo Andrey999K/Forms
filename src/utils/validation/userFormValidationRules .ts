@@ -6,7 +6,7 @@ type ValidationRule = {
   validate?: (value: string | undefined) => boolean | string;
 };
 
-export type AuthValidationRulesType = {
+export type UserFormValidation = {
   name: ValidationRule;
   surname: ValidationRule;
   email: ValidationRule;
@@ -14,20 +14,25 @@ export type AuthValidationRulesType = {
   copyPassword: (password: string) => ValidationRule;
 };
 
-export const AuthValidationRules: AuthValidationRulesType = {
+export const UserFormValidationRules: UserAuthValidationRules = {
   name: {
     required: { value: true, message: 'Введите имя' },
     pattern: {
-      value: /^[A-Za-zА-Яа-яЁё\s-]{2,50}$/,
-      message: 'Только буквы, пробелы и дефисы',
+      value: /^[A-ZА-ЯЁ][a-zа-яё\s-]+$/,
+      message: 'Имя должно начинаться с заглавной буквы и содержать только буквы, пробелы и дефисы',
     },
+    minLength: { value: 2, message: 'Имя должно быть не менее 2 символов' },
+    maxLength: { value: 50, message: 'Имя должно быть не более 50 символов' },
   },
   surname: {
     required: { value: true, message: 'Введите фамилию' },
     pattern: {
-      value: /^[A-Za-zА-Яа-яЁё\s-]{2,50}$/,
-      message: 'Только буквы, пробелы и дефисы',
+      value: /^[A-ZА-ЯЁ][a-zа-яё\s-]+$/,
+      message:
+        'Фамилия должна начинаться с заглавной буквы и содержать только буквы, пробелы и дефисы',
     },
+    minLength: { value: 2, message: 'Фамилия должна быть не менее 2 символов' },
+    maxLength: { value: 50, message: 'Фамилия должна быть не более 50 символов' },
   },
   email: {
     required: { value: true, message: 'Введите email' },

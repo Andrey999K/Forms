@@ -4,11 +4,11 @@ import { AppRouter } from './routes/routes.tsx';
 import { useFirebaseAuth } from './hooks/useFirebaseAuth.ts';
 import { toastConfig } from './utils/toast.config.ts';
 import { ConfigProvider } from 'antd';
-import { Loader } from './components/common/Loader.tsx';
+import { Loader } from './components/common';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 
-function App() {
+export const App = () => {
   useFirebaseAuth();
 
   return (
@@ -30,6 +30,4 @@ function App() {
       </ConfigProvider>
     </>
   );
-}
-
-export default App;
+};

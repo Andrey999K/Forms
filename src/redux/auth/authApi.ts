@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import { FirebaseError } from 'firebase/app';
 import { firestoreService } from '@/services/firestore.service';
 import { AuthUser, SignInFormValues, SignUpFormValues } from '@/types/auth';
-
 const COLLECTION = 'users';
 
 export const authApi = createApi({
@@ -15,9 +14,9 @@ export const authApi = createApi({
     login: builder.mutation<AuthUser, SignInFormValues>({
       queryFn: async ({ email, password }) => {
         try {
-          const result = await firestoreService.login(email, password);
-          toast.success('Вы успешно авторизовались');
-          return { data: result.data };
+          const { data } = await firestoreService.login(email, password);
+          localStorage.setItem('user', data.uid);
+          return { data };
         } catch (error: unknown) {
           const firebaseError = error as FirebaseError;
           const validatedError = validateAuthError(firebaseError.message);
@@ -40,7 +39,6 @@ export const authApi = createApi({
             name,
             surname
           );
-          toast.success('Вы успешно зарегистрировались');
           return { data: result };
         } catch (error: unknown) {
           const firebaseError = error as FirebaseError;

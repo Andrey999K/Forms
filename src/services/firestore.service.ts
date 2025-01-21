@@ -111,6 +111,7 @@ export const firestoreService = {
   },
 
   get: async <T>(collectionName: string, id: string): Promise<T> => {
+    console.log(`Fetching document from Firestore: ${collectionName}, ID: ${id}`);
     const docRef = doc(db, collectionName, id);
     const docSnap = await getDoc(docRef);
 

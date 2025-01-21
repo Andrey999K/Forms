@@ -1,5 +1,5 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { UserOutlined } from '@ant-design/icons';
+import { NavLink, Outlet } from 'react-router-dom';
+import { RxAvatar } from 'react-icons/rx';
 import { Button, Dropdown, MenuProps } from 'antd';
 import { Routes } from '../utils/routesConfig.ts';
 import { ToastContainer } from 'react-toastify';
@@ -20,23 +20,36 @@ const pages = [
 ];
 
 export const PageLayout = ({ children }: { children?: ReactNode }) => {
-  const navigate = useNavigate();
-
   const [logout] = useLogoutMutation();
 
   const handleExit = async () => {
-    await logout().unwrap();
-    navigate(Routes.LOGIN);
+    try {
+      await logout().unwrap();
+    } catch (error) {
+      console.log('####: logout error', error);
+    }
   };
 
   const items: MenuProps['items'] = [
     {
       key: '1',
-      label: <NavLink to={Routes.ME}>Профиль</NavLink>,
+      label: (
+        <NavLink to={Routes.ME} className="block text-center mb-2">
+          Мой профиль
+        </NavLink>
+      ),
     },
     {
       key: '2',
-      label: <Button onClick={handleExit}>Выход</Button>,
+      label: (
+        <Button
+          onClick={handleExit}
+          type="text"
+          className="block w-full text-center font-semibold bg-[#FA913C] hover:!bg-[#E58333] hover:!text-slate-200 text-white rounded-lg "
+        >
+          Выход
+        </Button>
+      ),
     },
   ];
 
@@ -58,10 +71,8 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
               </NavLink>
             ))}
           </div>
-          <Dropdown menu={{ items }} placement="bottomLeft">
-            <div className="flex justify-center items-center p-2 rounded-full bg-orange-400 cursor-pointer text-white">
-              <UserOutlined />
-            </div>
+          <Dropdown menu={{ items }} placement="bottom">
+            <RxAvatar color="#FA913C" size={30} className="cursor-pointer" />
           </Dropdown>
         </div>
       </GlassWrapper>

@@ -3,12 +3,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { formMiddleware, formReducer, formReducerPath } from './form';
 import { responseMiddleware, responseReducer, responseReducerPath } from './response';
 import { authReducerPath, authReducer, authMiddleware } from './auth';
-import { userReducer } from './user/userSlice';
+import { userReducer, userQueryReducer, userReducerPath, userMiddleware } from './user';
 
 const rootReducer = combineReducers({
   [formReducerPath]: formReducer,
   [authReducerPath]: authReducer,
   [responseReducerPath]: responseReducer,
+  [userReducerPath]: userQueryReducer,
   user: userReducer,
 });
 
@@ -18,7 +19,8 @@ export const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false })
       .concat(formMiddleware)
       .concat(responseMiddleware)
-      .concat(authMiddleware),
+      .concat(authMiddleware)
+      .concat(userMiddleware),
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

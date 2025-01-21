@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { PageLayout } from '@/layouts/PageLayout';
 import { lazy, Suspense } from 'react';
 import { Routes } from '@/utils/routesConfig';
@@ -39,7 +39,6 @@ const NotFoundPage = lazy(() =>
 
 export const AppRouter = () => {
   const user = useSelector((state: RootState) => state.user.user);
-
   const isLoading = useSelector((state: RootState) => state.user.isLoading);
   const isUserReady = useSelector((state: RootState) => state.user.isUserReady);
 
@@ -49,11 +48,7 @@ export const AppRouter = () => {
 
   const authRoutes = [
     {
-      element: (
-        <ErrorBoundary>
-          <PageLayout />
-        </ErrorBoundary>
-      ),
+      element: <PageLayout />,
       children: [
         {
           element: (
@@ -102,7 +97,7 @@ export const AppRouter = () => {
 
   const notAuthRoutes = [
     {
-      path: Routes.HOME,
+      path: Routes.LOGIN,
       element: (
         <>
           <ToastContainer {...toastConfig} />
@@ -115,13 +110,13 @@ export const AppRouter = () => {
       ),
     },
     {
-      path: Routes.LOGIN,
+      path: Routes.FORM_PAGE,
       element: (
         <>
           <ToastContainer {...toastConfig} />
           <ErrorBoundary>
             <Suspense fallback={<Loader />}>
-              <Login />
+              <FormPage />,
             </Suspense>
           </ErrorBoundary>
         </>
@@ -142,7 +137,7 @@ export const AppRouter = () => {
     },
     {
       path: Routes.NOT_FOUND,
-      element: <NotFoundPage />,
+      element: <Navigate to={Routes.LOGIN} replace />,
     },
   ];
 

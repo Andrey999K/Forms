@@ -10,11 +10,11 @@ import { AuthClearFormButton } from '@/components/auth/AuthClearFormButton';
 import { AuthFormInput } from '@/components/auth/AuthFormInput';
 import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
 import { AuthTextLink } from '@/components/auth/AuthTextLink';
-import { AuthValidationRules } from '@/utils/validation';
 import { Routes } from '@/utils/routesConfig';
 import { SignUpFormValues } from '@/types/auth';
 import { useDispatch } from 'react-redux';
-import { setLoading } from '@/redux/user/userSlice';
+import { setLoading } from '@/redux/user';
+import { UserFormValidationRules } from '@/utils/validation';
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -76,21 +76,21 @@ export const Signup = () => {
               control={control}
               name="name"
               placeholder="Имя"
-              rules={AuthValidationRules.name}
+              rules={UserFormValidationRules.name}
               prefix={<MdPerson color="#808897" size={20} className="mr-1" />}
             />
             <AuthFormInput
               control={control}
               name="surname"
               placeholder="Фамилия"
-              rules={AuthValidationRules.surname}
+              rules={UserFormValidationRules.surname}
               prefix={<MdPerson color="#808897" size={20} className="mr-1" />}
             />
             <AuthFormInput
               control={control}
               name="email"
               placeholder="Email"
-              rules={AuthValidationRules.email}
+              rules={UserFormValidationRules.email}
               prefix={<MdMail color="#808897" size={20} className="mr-1" />}
             />
             <AuthFormInput
@@ -98,7 +98,7 @@ export const Signup = () => {
               name="password"
               type={showPassword ? 'text' : 'password'}
               placeholder="Пароль"
-              rules={AuthValidationRules.password}
+              rules={UserFormValidationRules.password}
               prefix={<RiLockFill color="#808897" size={20} className="mr-1" />}
               suffix={
                 <span
@@ -115,7 +115,7 @@ export const Signup = () => {
               name="copyPassword"
               type={showCopyPassword ? 'text' : 'password'}
               placeholder="Пароль"
-              rules={AuthValidationRules.copyPassword(password)}
+              rules={UserFormValidationRules.copyPassword(password)}
               prefix={<RiLockFill color="#808897" size={20} className="mr-1" />}
               suffix={
                 <span

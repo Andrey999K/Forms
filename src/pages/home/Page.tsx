@@ -1,3 +1,4 @@
+import { Loader } from '@/components/common';
 import { HomeList } from '@/components/Home/HomeList/HomeList';
 import { useDeleteFormMutation, useGetFormListQuery } from '@/redux/form';
 import { CardWithCount, Sort } from '@/types';
@@ -67,6 +68,9 @@ export const Home = () => {
   };
 
   const onSearch = (value: string) => {
+    if (value.trim() === '') {
+      return;
+    }
     setLastVisible(undefined);
     setFilteredList([]);
     setPage(0);
@@ -109,12 +113,19 @@ export const Home = () => {
   const showTriggerLoader = !isFetching && !isError && hasNext;
 
   return (
-    <div>
+    <div className="flex flex-col min-h-[calc(100vh-theme(spacing.page-layout-offset))]">
       <Flex justify="space-between" gap={24} className="mb-8">
-        <Search defaultValue={search} onSearch={onSearch} style={{ width: 300 }} />
+        <Search
+          defaultValue={search}
+          disabled={isFetching}
+          onSearch={onSearch}
+          placeholder="Введите название формы"
+          style={{ width: 300 }}
+        />
         <Select
           value={order}
           options={sortOptions}
+          disabled={isFetching}
           style={{ width: 200 }}
           onChange={onChangeSort}
         />
@@ -123,14 +134,15 @@ export const Home = () => {
       {filteredList.length > 0 ? (
         <HomeList items={filteredList.filter((item) => item !== null)} onDelete={onDelete} />
       ) : (
-        !isFetching && isError && <Title level={2}>Нет доступных форм.</Title>
+        !isFetching &&
+        isError && (
+          <div className="flex flex-grow items-center justify-center">
+            <Title level={2}>Нет доступных форм</Title>
+          </div>
+        )
       )}
 
-      {isFetching && (
-        <div className="mb-5 mt-4">
-          <Spin />
-        </div>
-      )}
+      {isFetching && <Loader />}
 
       {showTriggerLoader && (
         <div ref={intersectionRef} className="mt-4 mb-5">
