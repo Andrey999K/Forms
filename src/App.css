@@ -61,3 +61,11 @@
   border-color: transparent !important;
   outline: none !important;
 } */
+
+.custom-form .ant-form-item-explain-error {
+  text-align: left;
+}
+
+.custom-form .ant-form-item {
+  margin-bottom: 40px !important;
+}

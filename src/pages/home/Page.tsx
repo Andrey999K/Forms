@@ -1,14 +1,17 @@
-import { Loader } from '@/components/common';
-import { HomeList } from '@/components/Home/HomeList/HomeList';
-import { useDeleteFormMutation, useGetFormListQuery } from '@/redux/form';
-import { CardWithCount, Sort } from '@/types';
-import { useIntersectionObserver } from '@siberiacancode/reactuse';
-import { Flex, Input, Select, Spin } from 'antd';
-import { DefaultOptionType } from 'antd/es/select';
-import Title from 'antd/es/typography/Title';
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
+import { Flex, Input, Select, Spin } from 'antd';
+import Title from 'antd/es/typography/Title';
+import { DefaultOptionType } from 'antd/es/select';
+import { useIntersectionObserver } from '@siberiacancode/reactuse';
+
+import { AppDispatch, RootState } from '@/redux/store';
+import { resetStore, useDeleteFormMutation, fetchFormsSlice } from '@/redux/form';
+
+import { HomeList } from '@/components/Home/HomeList/HomeList';
+
+import { CardWithCount, Sort } from '@/types';
 
 const { Search } = Input;
 const sortOptions: DefaultOptionType[] = [
@@ -25,35 +28,25 @@ const sortOptions: DefaultOptionType[] = [
 const CARDS_PER_PAGE = 30;
 
 export const Home = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const status = useSelector<RootState, 'pending' | 'success' | 'rejected' | null>(
+    (state) => state.formSlice.status
+  );
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState<string>(searchParams.get('search') ?? '');
   const [order, setOrder] = useState<Sort>((searchParams.get('order') as Sort) ?? Sort.DESC);
-  const [page, setPage] = useState<number>(0);
-  const [lastVisible, setLastVisible] =
-    useState<QueryDocumentSnapshot<DocumentData, DocumentData>>();
-  const [removedIndices, setRemovedIndices] = useState<string[]>([]);
   const [filteredList, setFilteredList] = useState<CardWithCount[]>([]);
   const [hasNext, setHasNext] = useState<boolean>(true);
 
-  const {
-    data: res,
-    isError,
-    isFetching,
-  } = useGetFormListQuery({
-    search: search.length ? { key: 'title', value: search } : undefined,
-    sort: order,
-    limit: CARDS_PER_PAGE,
-    lastVisible,
-    page,
-  });
   const [deleteForm] = useDeleteFormMutation();
 
   const { ref: intersectionRef } = useIntersectionObserver<HTMLDivElement>({
     threshold: 1,
 
     onChange: async (entry) => {
-      if (entry.isIntersecting && !isFetching) {
-        setPage((prev) => prev + 1);
+      if (entry.isIntersecting && status !== 'pending') {
+        handleLoadMore();
       }
     },
   });
@@ -61,27 +54,26 @@ export const Home = () => {
   const onDelete = async (id: string) => {
     try {
       await deleteForm(id).unwrap();
-      setRemovedIndices((prev) => [...prev, id]);
+      setFilteredList((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
       console.error('Ошибка удаления:', error);
     }
   };
 
   const onSearch = (value: string) => {
-    if (value.trim() === '') {
-      return;
-    }
-    setLastVisible(undefined);
-    setFilteredList([]);
-    setPage(0);
+    resetLocalState();
     setSearch(value);
   };
 
   const onChangeSort = (value: Sort) => {
-    setLastVisible(undefined);
-    setFilteredList([]);
-    setPage(0);
+    resetLocalState();
     setOrder(value);
+  };
+
+  const resetLocalState = () => {
+    dispatch(resetStore());
+    setHasNext(true);
+    setFilteredList([]);
   };
 
   useEffect(() => {
@@ -92,40 +84,34 @@ export const Home = () => {
     setSearchParams(query);
   }, [order, search, setSearchParams]);
 
-  useEffect(() => {
-    if ((res?.data?.length ?? 0) < CARDS_PER_PAGE) {
-      setHasNext(false);
-      setLastVisible(undefined);
-    } else if (res?.lastVisible) {
-      setHasNext(true);
-      setLastVisible(res.lastVisible);
-    }
-  }, [res]);
+  const handleLoadMore = () => {
+    dispatch(
+      fetchFormsSlice({
+        search: search.length ? { key: 'title', value: search } : undefined,
+        sort: order,
+        limit: CARDS_PER_PAGE,
+      })
+    )
+      .unwrap()
+      .then((res) => {
+        const data = res.data.data ?? [];
+        if (!data.length) {
+          setHasNext(false);
+          return;
+        }
+        setFilteredList((prev) => [...prev, ...data]);
+      });
+  };
 
-  useEffect(() => {
-    if (res?.data?.length) {
-      setFilteredList(res.data.filter((item) => !removedIndices.includes(item.id)));
-    } else {
-      setFilteredList([]);
-    }
-  }, [res?.data, removedIndices]);
-
-  const showTriggerLoader = !isFetching && !isError && hasNext;
+  const showTrigger = (status === 'success' || status === null) && hasNext;
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-theme(spacing.page-layout-offset))]">
+    <div>
       <Flex justify="space-between" gap={24} className="mb-8">
-        <Search
-          defaultValue={search}
-          disabled={isFetching}
-          onSearch={onSearch}
-          placeholder="Введите название формы"
-          style={{ width: 300 }}
-        />
+        <Search defaultValue={search} onSearch={onSearch} style={{ width: 300 }} />
         <Select
           value={order}
           options={sortOptions}
-          disabled={isFetching}
           style={{ width: 200 }}
           onChange={onChangeSort}
         />
@@ -134,20 +120,23 @@ export const Home = () => {
       {filteredList.length > 0 ? (
         <HomeList items={filteredList.filter((item) => item !== null)} onDelete={onDelete} />
       ) : (
-        !isFetching &&
-        isError && (
-          <div className="flex flex-grow items-center justify-center">
-            <Title level={2}>Нет доступных форм</Title>
-          </div>
-        )
+        status !== 'pending' && !showTrigger && <Title level={2}>Нет доступных форм.</Title>
       )}
 
-      {isFetching && <Loader />}
+      {status === 'pending' && (
+        <div className="mb-5 mt-4">
+          <Spin />
+        </div>
+      )}
 
-      {showTriggerLoader && (
+      {showTrigger && (
         <div ref={intersectionRef} className="mt-4 mb-5">
           <Spin />
         </div>
+      )}
+
+      {status === 'rejected' && !filteredList.length && (
+        <Title level={2}>Произошла ошибка, попробуйте обновить страницу</Title>
       )}
     </div>
   );

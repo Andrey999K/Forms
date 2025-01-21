@@ -1,7 +1,20 @@
 import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
-import { formMiddleware, formReducer, formReducerPath } from './form';
-import { responseMiddleware, responseReducer, responseReducerPath } from './response';
+
+import {
+  formMiddleware,
+  formReducer,
+  formReducerPath,
+  formsSliceReducer,
+  formsSliceReducerPath,
+} from './form';
+import {
+  responseMiddleware,
+  responseReducer,
+  responseReducerPath,
+  responseSliceReducer,
+  responseSliceReducerPath,
+} from './response';
 import { authReducerPath, authReducer, authMiddleware } from './auth';
 import { userReducer, userQueryReducer, userReducerPath, userMiddleware } from './user';
 
@@ -10,6 +23,8 @@ const rootReducer = combineReducers({
   [authReducerPath]: authReducer,
   [responseReducerPath]: responseReducer,
   [userReducerPath]: userQueryReducer,
+  [responseSliceReducerPath]: responseSliceReducer,
+  [formsSliceReducerPath]: formsSliceReducer,
   user: userReducer,
 });
 

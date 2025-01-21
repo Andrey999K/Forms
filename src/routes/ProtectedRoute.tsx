@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { Routes } from '@/utils/routesConfig';
 import { ErrorBoundary, Loader } from '@/components/common';
+import { ROUTES } from '@/utils/routesConfig';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 
@@ -16,6 +16,6 @@ export const ProtectedRoute = () => {
       <Outlet />
     </ErrorBoundary>
   ) : (
-    <Navigate to={Routes.LOGIN} replace />
+    <Navigate to={ROUTES.LOGIN} replace />
   );
 };

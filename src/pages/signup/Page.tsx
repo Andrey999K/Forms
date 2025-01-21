@@ -10,7 +10,7 @@ import { AuthClearFormButton } from '@/components/auth/AuthClearFormButton';
 import { AuthFormInput } from '@/components/auth/AuthFormInput';
 import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
 import { AuthTextLink } from '@/components/auth/AuthTextLink';
-import { Routes } from '@/utils/routesConfig';
+import { ROUTES } from '@/utils/routesConfig';
 import { SignUpFormValues } from '@/types/auth';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/redux/user';
@@ -36,7 +36,7 @@ export const Signup = () => {
     dispatch(setLoading(true));
     try {
       await register(data).unwrap();
-      navigate(Routes.HOME);
+      navigate(ROUTES.HOME);
     } catch (error) {
       console.error('Ошибка авторизации:', error);
     } finally {
@@ -132,7 +132,7 @@ export const Signup = () => {
             </AuthSubmitButton>
             <div className="flex items-center justify-between">
               <AuthClearFormButton reset={reset} />
-              <AuthTextLink text="Есть аккаунт?" linkText="Войти" linkTo={Routes.LOGIN} />
+              <AuthTextLink text="Есть аккаунт?" linkText="Войти" linkTo={ROUTES.LOGIN} />
             </div>
           </Form>
         </div>

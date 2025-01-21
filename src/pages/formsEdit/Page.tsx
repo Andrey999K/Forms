@@ -1,6 +1,6 @@
-import { ConstructorHeader } from '@/components/formsEdit/ConstructorHeader';
-import { ConstructorWorkArea } from '@/components/formsEdit/ConstructorWorkArea';
-import { Sidebar } from '@/components/formsEdit/Sidebar';
+import { ConstructorHeader } from '@/components/FormsEdit/ConstructorHeader';
+import { ConstructorWorkArea } from '@/components/FormsEdit/ConstructorWorkArea';
+import { Sidebar } from '@/components/FormsEdit/Sidebar';
 import {
   useCreateFormMutation,
   useDeleteFormMutation,
@@ -17,13 +17,14 @@ import {
 } from '@/types';
 import { getUUID } from '@/utils/getUUID';
 import { Spin } from 'antd';
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { ROUTES } from '@/utils/routesConfig.ts';
 
-export const FormsEdit: FC = () => {
+export const FormsEdit = () => {
   const { formId } = useParams<{ formId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -140,7 +141,7 @@ export const FormsEdit: FC = () => {
     );
   }
 
-  if (!formData && !newFormId) return <div>Страница не найдена.</div>;
+  if (!formData && !newFormId) navigate(ROUTES.NOT_FOUND);
   if (!constructor) return <div>Ошибка при создании конструктора.</div>;
 
   return (

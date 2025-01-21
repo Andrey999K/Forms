@@ -1,7 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { RxAvatar } from 'react-icons/rx';
 import { Button, Dropdown, MenuProps } from 'antd';
-import { Routes } from '../utils/routesConfig.ts';
+import { ROUTES } from '../utils/routesConfig.ts';
 import { ToastContainer } from 'react-toastify';
 import { ShapeWrapper } from './GlassLayout.js';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.js';
@@ -11,11 +11,11 @@ import { ReactNode } from 'react';
 const pages = [
   {
     title: 'Главная',
-    href: Routes.HOME,
+    href: ROUTES.HOME,
   },
   {
     title: 'Новая форма',
-    href: Routes.FORMS_NEW,
+    href: ROUTES.FORMS_NEW,
   },
 ];
 
@@ -34,7 +34,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
     {
       key: '1',
       label: (
-        <NavLink to={Routes.ME} className="block text-center mb-2">
+        <NavLink to={ROUTES.ME} className="block text-center mb-2">
           Мой профиль
         </NavLink>
       ),
