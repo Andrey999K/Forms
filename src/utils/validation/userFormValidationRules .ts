@@ -14,7 +14,7 @@ export type UserFormValidation = {
   copyPassword: (password: string) => ValidationRule;
 };
 
-export const UserFormValidationRules: UserAuthValidationRules = {
+export const UserFormValidationRules: UserFormValidation = {
   name: {
     required: { value: true, message: 'Введите имя' },
     pattern: {
