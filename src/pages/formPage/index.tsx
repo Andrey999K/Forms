@@ -43,7 +43,7 @@ export const FormPage = () => {
         );
       case 'checkbox':
         return (
-          <Checkbox.Group className="flex justify-start">
+          <Checkbox.Group className="flex justify-start gap-2">
             {field.options?.map((option) => (
               <Checkbox key={option.id} value={option.id}>
                 {option.label}
@@ -58,7 +58,7 @@ export const FormPage = () => {
     const allValues = form.getFieldsValue({ strict });
     // Если при отправке формы по таймеру есть незаполненные поля, пишем в них прочерк
     const completeValues = Object.keys(allValues).reduce((acc: Record<string, any>, key) => {
-      acc[key] = allValues[key] || '-'; // Если значение пустое, ставим "-"
+      acc[key] = allValues[key] || '—'; // Если значение пустое, ставим "-"
       return acc;
     }, {});
     const answers = Object.keys(completeValues)
@@ -67,8 +67,7 @@ export const FormPage = () => {
         const findedField = formData?.fields.find((item) => item.id === field);
         let value = completeValues[field];
         if (findedField?.type === 'radio') {
-          value = findedField.options?.find((option) => option.id === completeValues[field])!
-            .label as string;
+          value = findedField.options?.find((option) => option.id === completeValues[field])?.label;
         }
         if (findedField?.type === 'checkbox' && Array.isArray(value)) {
           value = value.map(
@@ -148,46 +147,50 @@ export const FormPage = () => {
       {formSubmitted ? (
         <ResponseSendMessage />
       ) : (
-        <GlassWrapper className="p-10 relative">
-          <Typography className="text-lg font-bold leading-none">{formData.title}</Typography>
-          <Typography.Text className="text-sm">{formData.description}</Typography.Text>
-          {/*<h2 className="font-semibold text-lg">{formData.title}</h2>*/}
-          {/*<p className="mt-3">{formData.description}</p>*/}
-          {formData.settings?.timerActive && timerStart && (
-            <div className="absolute top-9 right-9">
-              <Timer onFinish={sendFormAfterTimer} />
-            </div>
-          )}
-          <Form
-            form={form}
-            onFinish={onFinish}
-            className="mt-3 custom-form"
-            layout="vertical"
-            onValuesChange={onValuesChange}
-          >
-            {formData.fields.map((field) => (
-              <Form.Item
-                key={field.id}
-                label={field.question}
-                name={field.id}
-                rules={
-                  field.require
-                    ? [{ required: true, message: 'Поле обязательно к заполнению!' }]
-                    : []
-                }
-              >
-                {renderField(field)}
-              </Form.Item>
-            ))}
-            <Form.Item className="mb-0">
-              <div className="flex justify-start">
-                <Button type="primary" htmlType="submit" disabled={!isFormValid}>
-                  Отправить форму
-                </Button>
+        <div className="flex gap-4 items-start">
+          <GlassWrapper className="p-10 relative">
+            <div className="flex items-center justify-around">
+              <div className="flex flex-col gap-3">
+                <Typography className="text-lg font-bold leading-none">{formData.title}</Typography>
+                <Typography.Text className="text-sm block">{formData.description}</Typography.Text>
               </div>
-            </Form.Item>
-          </Form>
-        </GlassWrapper>
+            </div>
+            <Form
+              form={form}
+              onFinish={onFinish}
+              className="mt-3 custom-form"
+              layout="vertical"
+              onValuesChange={onValuesChange}
+            >
+              {formData.fields.map((field) => (
+                <Form.Item
+                  key={field.id}
+                  label={field.question}
+                  name={field.id}
+                  rules={
+                    field.require
+                      ? [{ required: true, message: 'Поле обязательно к заполнению!' }]
+                      : []
+                  }
+                >
+                  {renderField(field)}
+                </Form.Item>
+              ))}
+              <Form.Item className="mb-0">
+                <div className="flex justify-start">
+                  <Button type="primary" htmlType="submit" disabled={!isFormValid}>
+                    Отправить форму
+                  </Button>
+                </div>
+              </Form.Item>
+            </Form>
+          </GlassWrapper>
+          <GlassWrapper className="p-10">
+            {formData.settings?.timerActive && timerStart && (
+              <Timer onFinish={sendFormAfterTimer} />
+            )}
+          </GlassWrapper>
+        </div>
       )}
     </div>
   );
