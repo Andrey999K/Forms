@@ -1,6 +1,7 @@
+import { serverTimestamp } from 'firebase/firestore';
 import { firestoreService } from '@/services/firestore.service';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { FormResponse, ConstructorForm } from '@/types';
+import { FormResponse } from '@/types';
 import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -28,21 +29,21 @@ export const responseApi = createApi({
       },
       providesTags: ['response'],
     }),
-
     createResponse: builder.mutation<
-      ConstructorForm,
+      FormResponse,
       Omit<FormResponse, 'id' | 'createdAt' | 'updatedAt'>
     >({
       queryFn: async (answersData) => {
-        const newResponse = {
-          id: getUUID(),
-          fields: answersData.fields,
-          formId: `form/${answersData.formId}`,
-          createdAt: Date.now(),
-        };
         try {
-          const result = await firestoreService.create(COLLECTION, newResponse);
-          return { data: result as ConstructorForm };
+          const formRef = await firestoreService.getRef('form', answersData.formId);
+          const responseData = {
+            formId: formRef,
+            id: getUUID(),
+            fields: answersData.fields,
+            createdAt: serverTimestamp(),
+          };
+          const result = await firestoreService.create('response', responseData);
+          return { data: result as FormResponse };
         } catch (error) {
           return { error: getFirebaseError(error) };
         }
