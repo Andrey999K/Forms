@@ -11,17 +11,52 @@ import { resetStore, useDeleteFormMutation, fetchFormsSlice } from '@/redux/form
 
 import { HomeList } from '@/components/Home/HomeList/HomeList';
 
-import { CardWithCount, Sort } from '@/types';
+import { CardWithCount, FormListOptions, Sort } from '@/types';
 
 const { Search } = Input;
+
+enum SortKeys {
+  TIME_ASC = 'TIME_ASC',
+  TIME_DESC = 'TIME_DESC',
+  TITLE_ASC = 'TITLE_ASC',
+  TITLE_DESC = 'TITLE_DESC',
+}
+
+const sortType: Record<SortKeys, FormListOptions['sort']> = {
+  [SortKeys.TIME_ASC]: {
+    field: 'createdAt',
+    type: Sort.ASC,
+  },
+  [SortKeys.TIME_DESC]: {
+    field: 'createdAt',
+    type: Sort.DESC,
+  },
+  [SortKeys.TITLE_ASC]: {
+    field: 'title',
+    type: Sort.ASC,
+  },
+  [SortKeys.TITLE_DESC]: {
+    field: 'title',
+    type: Sort.DESC,
+  },
+};
+
 const sortOptions: DefaultOptionType[] = [
   {
-    value: Sort.DESC,
+    value: SortKeys.TIME_DESC,
     label: 'Сначала новые',
   },
   {
-    value: Sort.ASC,
+    value: SortKeys.TIME_ASC,
     label: 'Сначала старые',
+  },
+  {
+    value: SortKeys.TITLE_DESC,
+    label: 'Порядок А-Я',
+  },
+  {
+    value: SortKeys.TITLE_ASC,
+    label: 'Порядок Я-А',
   },
 ];
 
@@ -35,7 +70,9 @@ export const Home = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState<string>(searchParams.get('search') ?? '');
-  const [order, setOrder] = useState<Sort>((searchParams.get('order') as Sort) ?? Sort.DESC);
+  const [order, setOrder] = useState<SortKeys>(
+    (searchParams.get('order') as SortKeys) ?? SortKeys.TIME_DESC
+  );
   const [filteredList, setFilteredList] = useState<CardWithCount[]>([]);
   const [hasNext, setHasNext] = useState<boolean>(true);
 
@@ -65,7 +102,7 @@ export const Home = () => {
     setSearch(value);
   };
 
-  const onChangeSort = (value: Sort) => {
+  const onChangeSort = (value: SortKeys) => {
     resetLocalState();
     setOrder(value);
   };
@@ -77,18 +114,22 @@ export const Home = () => {
   };
 
   useEffect(() => {
-    const query: { order: Sort; search?: string } = { order };
+    const query: { order: SortKeys; search?: string } = { order };
     if (search.length) {
       query.search = search;
     }
     setSearchParams(query);
   }, [order, search, setSearchParams]);
 
+  useEffect(() => {
+    resetLocalState();
+  }, []);
+
   const handleLoadMore = () => {
     dispatch(
       fetchFormsSlice({
         search: search.length ? { key: 'title', value: search } : undefined,
-        sort: order,
+        sort: sortType[order],
         limit: CARDS_PER_PAGE,
       })
     )

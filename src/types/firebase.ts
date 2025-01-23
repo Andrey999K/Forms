@@ -18,7 +18,10 @@ export type FormListOptions = {
     value: string | Date;
     operator: WhereFilterOp;
   }[];
-  sort?: Sort;
+  sort?: {
+    field: string;
+    type: Sort;
+  };
   lastVisible?: QueryDocumentSnapshot<DocumentData, DocumentData>;
   reference?: FormListReferenceOption;
 };
