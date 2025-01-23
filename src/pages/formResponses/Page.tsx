@@ -7,7 +7,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, DatePicker, Select, Spin } from 'antd';
 import typography from 'antd/es/typography';
-import { useIntersectionObserver } from '@siberiacancode/reactuse';
+import { useInView } from 'react-intersection-observer';
 import dayjs, { Dayjs } from 'dayjs';
 
 const { Text, Title } = typography;
@@ -70,11 +70,11 @@ export const FormResponses = () => {
     return newFilters;
   })();
 
-  const { ref: intersectionRef } = useIntersectionObserver<HTMLDivElement>({
+  const { ref: intersectionRef } = useInView({
     threshold: 1,
 
-    onChange: async (entry) => {
-      if (entry.isIntersecting && status !== 'pending') {
+    onChange: async (inView: boolean) => {
+      if (inView && status !== 'pending') {
         handleLoadMore();
       }
     },

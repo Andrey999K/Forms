@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Flex, Input, Select, Spin } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { DefaultOptionType } from 'antd/es/select';
-import { useIntersectionObserver } from '@siberiacancode/reactuse';
+import { useInView } from 'react-intersection-observer';
 
 import { AppDispatch, RootState } from '@/redux/store';
 import { resetStore, useDeleteFormMutation, fetchFormsSlice } from '@/redux/form';
@@ -41,11 +41,11 @@ export const Home = () => {
 
   const [deleteForm] = useDeleteFormMutation();
 
-  const { ref: intersectionRef } = useIntersectionObserver<HTMLDivElement>({
+  const { ref: intersectionRef } = useInView({
     threshold: 1,
 
-    onChange: async (entry) => {
-      if (entry.isIntersecting && status !== 'pending') {
+    onChange: async (inView: boolean) => {
+      if (inView && status !== 'pending') {
         handleLoadMore();
       }
     },
@@ -106,7 +106,7 @@ export const Home = () => {
   const showTrigger = (status === 'success' || status === null) && hasNext;
 
   return (
-    <div>
+    <div data-testid="home-page">
       <Flex justify="space-between" gap={24} className="mb-8">
         <Search defaultValue={search} onSearch={onSearch} style={{ width: 300 }} />
         <Select
