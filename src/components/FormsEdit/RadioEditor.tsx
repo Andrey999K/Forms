@@ -55,7 +55,6 @@ export const RadioEditor: FC<Props> = (props) => {
             value={label}
             className="w-full"
             onChange={(e) => handleChange(id, e.target.value)}
-            onFocus={() => console.log('ff')}
             ref={(el) => el && (inputRefs.current[id] = el)}
           />
           {field?.options && field?.options?.length > 1 && (

@@ -66,6 +66,10 @@
   text-align: left;
 }
 
-.custom-form .ant-form-item {
-  margin-bottom: 40px !important;
+.custom-timer .ant-statistic-title {
+  margin-bottom: 0;
 }
+
+/*.custom-form .ant-form-item {*/
+/*  margin-bottom: 40px !important;*/
+/*}*/

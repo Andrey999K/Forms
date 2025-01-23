@@ -16,7 +16,7 @@ export const SettingsTab: FC<Props> = ({ constructor, onChangeForm }) => {
       <div className="flex gap-2 items-center justify-between">
         <span>Лимит времени:</span>
         <Switch
-          value={constructor.settings.timerActive}
+          value={constructor.settings?.timerActive}
           onChange={(checked) =>
             onChangeForm({
               name: 'settings',
@@ -25,7 +25,7 @@ export const SettingsTab: FC<Props> = ({ constructor, onChangeForm }) => {
           }
         />
       </div>
-      {constructor.settings.timer && (
+      {constructor.settings?.timer && (
         <div className="flex justify-end">
           <TimePicker
             className="w-full"
