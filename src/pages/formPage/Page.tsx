@@ -1,8 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useGetFormQuery } from '@/redux/form';
 import { Loader } from '@/components/ui/Loader';
-import { Button, Checkbox, Form, Input, Radio, Typography } from 'antd';
-import { ConstructorField } from '@/types';
+import { Button, Form, Typography } from 'antd';
 import { useCreateResponseMutation } from '@/redux/response';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -10,6 +9,7 @@ import { ResponseSendMessage } from '@/components/FormPage';
 import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
 import { Timer } from '@/components/FormPage/Timer.tsx';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
+import { renderField } from '@/utils/renderField.tsx';
 
 export const FormPage = () => {
   const { formId } = useParams();
@@ -22,36 +22,6 @@ export const FormPage = () => {
 
   const startTimer = () => {
     setTimerStart(true);
-  };
-
-  const renderField = (field: ConstructorField) => {
-    const { type } = field;
-    switch (type) {
-      case 'input':
-        return <Input key={field.id} />;
-      case 'textarea':
-        return <Input.TextArea />;
-      case 'radio':
-        return (
-          <Radio.Group className="flex justify-start">
-            {field.options?.map((option) => (
-              <Radio key={option.id} value={option.id}>
-                {option.label}
-              </Radio>
-            ))}
-          </Radio.Group>
-        );
-      case 'checkbox':
-        return (
-          <Checkbox.Group className="flex justify-start gap-2">
-            {field.options?.map((option) => (
-              <Checkbox key={option.id} value={option.id}>
-                {option.label}
-              </Checkbox>
-            ))}
-          </Checkbox.Group>
-        );
-    }
   };
 
   const sendForm = async (_values: { [key: string]: string | string[] }, strict?: boolean) => {

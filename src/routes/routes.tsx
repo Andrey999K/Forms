@@ -18,7 +18,7 @@ const FormsEdit = lazy(() =>
   import('@/pages/formsEdit/Page').then((module) => ({ default: module.FormsEdit }))
 );
 const FormPage = lazy(() =>
-  import('@/pages/formPage').then((module) => ({ default: module.FormPage }))
+  import('@/pages/formPage/Page.tsx').then((module) => ({ default: module.FormPage }))
 );
 const FormResponses = lazy(() =>
   import('@/pages/formResponses/Page').then((module) => ({ default: module.FormResponses }))
