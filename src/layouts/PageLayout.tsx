@@ -34,7 +34,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
     {
       key: '1',
       label: (
-        <NavLink to={ROUTES.ME} className="block text-center mb-2">
+        <NavLink to={ROUTES.ME} className="flex justify-center items-center text-center mb-2">
           Мой профиль
         </NavLink>
       ),
@@ -42,11 +42,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
     {
       key: '2',
       label: (
-        <Button
-          onClick={handleExit}
-          type="text"
-          className="block w-full text-center font-semibold bg-[#FA913C] hover:!bg-[#E58333] hover:!text-slate-200 text-white rounded-lg "
-        >
+        <Button color="default" variant="solid" className="w-full" onClick={handleExit}>
           Выход
         </Button>
       ),

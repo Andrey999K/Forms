@@ -3,11 +3,12 @@ import { PageLayout } from '@/layouts/PageLayout';
 import { lazy, Suspense } from 'react';
 import { ROUTES } from '@/utils/routesConfig';
 import { ProtectedRoute } from './ProtectedRoute';
-import { ErrorBoundary, Loader } from '@/components/common';
 import { toastConfig } from '@/utils/toast.config';
 import { ToastContainer } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { ErrorComponent } from '@/components/ui/ErrorComponent/ErrorComponent';
+import { Loader } from '@/components/ui/Loader';
 
 const Home = lazy(() => import('@/pages/home/Page').then((module) => ({ default: module.Home })));
 const Me = lazy(() => import('@/pages/me/Page').then((module) => ({ default: module.Me })));
@@ -49,6 +50,7 @@ export const AppRouter = () => {
   const authRoutes = [
     {
       element: <PageLayout />,
+      errorElement: <ErrorComponent />,
       children: [
         {
           element: (
@@ -78,6 +80,10 @@ export const AppRouter = () => {
               element: <FormResponses />,
             },
             {
+              path: ROUTES.HOME,
+              element: <Home />,
+            },
+            {
               path: ROUTES.FORM_RESPONSE,
               element: <FormResponse />,
             },
@@ -98,45 +104,43 @@ export const AppRouter = () => {
   const notAuthRoutes = [
     {
       path: ROUTES.LOGIN,
+      errorElement: <ErrorComponent />,
       element: (
         <>
           <ToastContainer {...toastConfig} />
-          <ErrorBoundary>
-            <Suspense fallback={<Loader />}>
-              <Login />
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense fallback={<Loader />}>
+            <Login />
+          </Suspense>
         </>
       ),
     },
     {
       path: ROUTES.FORM_PAGE,
+      errorElement: <ErrorComponent />,
       element: (
         <>
           <ToastContainer {...toastConfig} />
-          <ErrorBoundary>
-            <Suspense fallback={<Loader />}>
-              <FormPage />,
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense fallback={<Loader />}>
+            <FormPage />,
+          </Suspense>
         </>
       ),
     },
     {
       path: ROUTES.SIGNUP,
+      errorElement: <ErrorComponent />,
       element: (
         <>
           <ToastContainer {...toastConfig} />
-          <ErrorBoundary>
-            <Suspense fallback={<Loader />}>
-              <Signup />
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense fallback={<Loader />}>
+            <Signup />
+          </Suspense>
         </>
       ),
     },
     {
       path: ROUTES.NOT_FOUND,
+      errorElement: <ErrorComponent />,
       element: <Navigate to={ROUTES.LOGIN} replace />,
     },
   ];

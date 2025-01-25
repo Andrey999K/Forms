@@ -2,7 +2,6 @@ import { firestoreService } from '@/services/firestore.service';
 import { MeChangeFields, MeData } from '@/types/me';
 import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { toast } from 'react-toastify';
 
 export const COLLECTION = 'users';
 
@@ -28,10 +27,8 @@ export const userApi = createApi({
       queryFn: async ({ id, data }) => {
         try {
           const result = await firestoreService.update(COLLECTION, { id, ...data });
-          toast.success('Вы успешно обновили свои данные');
           return { data: result as MeData };
         } catch (error) {
-          toast.error('Не удалось обновить данные');
           return { error: getFirebaseError(error) };
         }
       },

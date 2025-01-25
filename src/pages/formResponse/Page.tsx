@@ -2,9 +2,9 @@ import { Button } from 'antd';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
 import { useGetFormQuery } from '@/redux/form';
-import { Loader } from '@/components/common';
 import { useGetResponseQuery } from '@/redux/response';
 import { ROUTES } from '@/utils/routesConfig.ts';
+import { Loader } from '@/components/ui/Loader';
 
 export const FormResponse = () => {
   const { formId, responseId } = useParams();

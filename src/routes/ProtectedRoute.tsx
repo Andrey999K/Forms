@@ -1,8 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { ErrorBoundary, Loader } from '@/components/common';
 import { ROUTES } from '@/utils/routesConfig';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { Loader } from '@/components/ui/Loader';
 
 export const ProtectedRoute = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -11,11 +11,5 @@ export const ProtectedRoute = () => {
 
   if (isLoading || !isUserReady) return <Loader />;
 
-  return user ? (
-    <ErrorBoundary>
-      <Outlet />
-    </ErrorBoundary>
-  ) : (
-    <Navigate to={ROUTES.LOGIN} replace />
-  );
+  return user ? <Outlet /> : <Navigate to={ROUTES.LOGIN} replace />;
 };

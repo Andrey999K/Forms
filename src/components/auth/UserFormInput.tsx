@@ -10,10 +10,12 @@ type Props<T extends FieldValues> = {
   placeholder: 'Email' | 'Пароль' | 'Имя' | 'Фамилия';
   prefix?: ReactNode;
   suffix?: ReactNode;
+  label?: string;
 };
 
-export const AuthFormInput = <T extends FieldValues>({
+export const UserFormInput = <T extends FieldValues>({
   name,
+  label,
   control,
   rules,
   ...props
@@ -30,24 +32,32 @@ export const AuthFormInput = <T extends FieldValues>({
             fieldState.error && (
               <Typography.Text
                 type="danger"
-                className="text-red-500 text-sm flex justify-start ml-2 min-h-[20px]"
+                style={{
+                  textAlign: 'left',
+                  display: 'block',
+                  lineHeight: '1.4',
+                }}
+                className="text-red-500 text-sm ml-2"
               >
                 {fieldState.error.message}
               </Typography.Text>
             )
           }
         >
-          <Input
-            {...field}
-            {...props}
-            style={{
-              boxShadow: 'none',
-              borderColor: 'transparent',
-              outline: 'none',
-              transition: 'none',
-            }}
-            className="py-1.5 px-4 rounded-lg bg-[#EFF2F6] placeholder-[#4a4b4d] focus:!outline-none focus:!ring-0 focus:!border-transparent focus:!transition-none !transition-none"
-          />
+          <div className="flex flex-col items-start">
+            {label && <Typography.Text className="ml-2">{label}</Typography.Text>}{' '}
+            <Input
+              {...field}
+              {...props}
+              style={{
+                boxShadow: 'none',
+                borderColor: 'transparent',
+                outline: 'none',
+                transition: 'none',
+              }}
+              className="py-1.5 px-4 rounded-lg bg-[#EFF2F6] placeholder-[#4a4b4d] focus:!outline-none focus:!ring-0 focus:!border-transparent focus:!transition-none !transition-none"
+            />
+          </div>
         </Form.Item>
       )}
     />

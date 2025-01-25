@@ -6,6 +6,7 @@ export type MeData = {
   lastName?: string;
   createdAt?: number;
   updatedAt?: number;
+  avatarHash?: string;
 };
 
 export type MeChangeFields = Omit<MeData, 'uid' | 'id' | 'createdAt' | 'updatedAt'>;

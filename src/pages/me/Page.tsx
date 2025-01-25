@@ -1,36 +1,16 @@
 import { Alert, Form } from 'antd';
-import { MouseEvent, useEffect, useState } from 'react';
-import Avatar from 'boring-avatars';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaRegCheckCircle } from 'react-icons/fa';
-import { MdEdit } from 'react-icons/md';
-import { Loader } from '@/components/common';
-import { TextField } from '@/components/ui/TextField';
 import { useGetMeInfoQuery, useUpdateMeInfoMutation } from '@/redux/user';
-import { UserFormValidationRules } from '@/utils/validation';
-
-type MeFormData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-};
+import { MeChangeFields } from '@/types/me';
+import { MeProfileActions, MeAvatar } from '@/components/Me';
+import { MeProfileDetails } from '@/components/Me/MeProfileDetails';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
+import { Loader } from '@/components/ui/Loader';
+import { toast } from 'react-toastify';
 
 export const Me = () => {
-  const {
-    control,
-    handleSubmit,
-    formState: { isValid, dirtyFields },
-    reset,
-  } = useForm<MeFormData>({
-    mode: 'onChange',
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-    },
-  });
-
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const userUid = localStorage.getItem('user');
 
   const {
@@ -41,128 +21,78 @@ export const Me = () => {
     skip: !userUid,
   });
 
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid, dirtyFields },
+    reset,
+  } = useForm<MeChangeFields>({
+    mode: 'onChange',
+  });
+
   const [updateUserInfo, { isLoading: isUpdating }] = useUpdateMeInfoMutation();
 
-  useEffect(() => {
-    if (user) {
-      reset({
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        email: user.email || '',
-      });
-    }
-  }, [user, reset]);
-
-  const handleEdit = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setIsEditing(true);
-  };
-
-  const handleSave = async (data: MeFormData) => {
-    if (!Object.keys(dirtyFields).length) return;
+  const handleSave = async (data: MeChangeFields) => {
+    if (JSON.stringify(dirtyFields) === '{}') return;
     if (userUid) {
       try {
         await updateUserInfo({ id: userUid, data }).unwrap();
-        setIsEditing(false);
+        toast.success('Данные успешно обновлены');
+        setIsEdit(false);
       } catch (error) {
+        toast.error('Не удалось обновить данные');
         console.error('Ошибка обновления данных:', error);
       }
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      reset({
+        firstName: user?.firstName || '',
+        lastName: user?.lastName || '',
+        email: user?.email || '',
+      });
+    }
+  }, [user]);
+
+  if (!user || isLoading || isUpdating) return <Loader />;
+
   return (
-    <div className="flex justify-center items-center">
-      {isLoading ? (
-        <Loader />
-      ) : error ? (
-        <Alert
-          message="Ошибка загрузки данных"
-          description="Не удалось получить информацию о пользователе. Попробуйте позднее."
-          type="error"
-          showIcon
-        />
-      ) : (
-        <div className="flex relative flex-col items-center justify-center gap-4 p-6 border rounded-lg shadow-md w-1/2 h-1/3">
-          <Form
-            onFinish={handleSubmit(handleSave)}
-            className="w-full flex flex-col gap-7 text-center"
-          >
-            {!isEditing ? (
-              <button
-                className="absolute top-3 right-3 p-0 m-0 bg-transparent border-none"
-                onClick={handleEdit}
-              >
-                <MdEdit size={45} color="#4682B4" className="cursor-pointer" />
-              </button>
-            ) : (
-              <button
-                type="submit"
-                className={`absolute top-3 right-3 p-0 m-0 bg-transparent border-none 
-                  ${
-                    !isValid || Object.keys(dirtyFields).length === 0
-                      ? 'opacity-30 cursor-not-allowed'
-                      : 'opacity-100 cursor-pointer'
-                  }`}
-                disabled={!isValid || isUpdating || !Object.keys(dirtyFields).length}
-              >
-                <FaRegCheckCircle
-                  size={45}
-                  color={!isValid || Object.keys(dirtyFields).length === 0 ? '#808080' : '#0E8B57'}
-                />
-              </button>
-            )}
-            <div className="flex justify-center w-full mb-3">
-              <Avatar
-                size={300}
-                name={'Default User'}
-                variant="bauhaus"
-                colors={['#FFAD08', '#EDD75A', '#73B06F', '#0C8F8F', '#405059']}
+    <div className="flex justify-center p-4 break-words w-full">
+      <GlassWrapper className={`w-1/2 px-5 py-5 text-center`} style={{ zIndex: 10 }}>
+        {error ? (
+          <Alert
+            message="Ошибка загрузки данных"
+            description="Не удалось получить информацию о пользователе"
+            type="error"
+            showIcon
+          />
+        ) : (
+          <div className="">
+            <Form
+              onFinish={handleSubmit(handleSave)}
+              className="w-full flex flex-col gap-4 text-center"
+            >
+              <MeProfileActions
+                isEdit={isEdit}
+                dirtyFields={dirtyFields}
+                isValid={isValid}
+                setIsEdit={setIsEdit}
+                isUpdating={isUpdating}
               />
-            </div>
-            {!isEditing ? (
-              <div className="flex flex-col items-start gap-1">
-                <div className="text-lg font-semibold text-[#885028E0]">{`${user?.firstName} ${user?.lastName}`}</div>
-                <div className="text-base text-[#0D1117]">{user?.email}</div>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2">
-                <TextField
-                  control={control}
-                  name="firstName"
-                  placeholder="Имя"
-                  rules={UserFormValidationRules.name}
-                />
-                <TextField
-                  control={control}
-                  name="lastName"
-                  placeholder="Фамилия"
-                  rules={UserFormValidationRules.surname}
-                />
-                <TextField
-                  control={control}
-                  name="email"
-                  placeholder="Email"
-                  rules={UserFormValidationRules.email}
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    reset({
-                      firstName: user?.firstName || '',
-                      lastName: user?.lastName || '',
-                      email: user?.email || '',
-                    });
-                    setIsEditing(false);
-                  }}
-                  className="bg-[#FA913C] hover:!bg-[#E58333] hover:!text-slate-200 text-white py-2 px-4 rounded-lg transition duration-300"
-                >
-                  Отменить изменения
-                </button>
-              </div>
-            )}
-          </Form>
-        </div>
-      )}
+              <MeAvatar avatarHash={user?.avatarHash} />
+              <MeProfileDetails
+                isEditing={isEdit}
+                control={control}
+                reset={reset}
+                user={user}
+                setIsEdit={setIsEdit}
+              />
+            </Form>
+          </div>
+        )}
+      </GlassWrapper>
     </div>
   );
 };

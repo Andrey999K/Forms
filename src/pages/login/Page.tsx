@@ -6,7 +6,6 @@ import { MdMail } from 'react-icons/md';
 import { RiLockFill } from 'react-icons/ri';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { useState } from 'react';
-import { AuthFormInput } from '@/components/auth/AuthFormInput';
 import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
 import { AuthTextLink } from '@/components/auth/AuthTextLink';
 import { ROUTES } from '@/utils/routesConfig';
@@ -16,6 +15,7 @@ import { SignInFormValues } from '@/types/auth';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/redux/user';
 import { UserFormValidationRules } from '@/utils/validation';
+import { UserFormInput } from '@/components/auth/UserFormInput';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -23,8 +23,6 @@ export const Login = () => {
     mode: 'onChange',
   });
   const [login, { isLoading }] = useLoginMutation();
-
-  console.log('####: isLoading', isLoading);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -71,14 +69,14 @@ export const Login = () => {
             </Typography.Title>
           </div>
           <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
-            <AuthFormInput
+            <UserFormInput
               control={control}
               name="email"
               placeholder="Email"
               rules={UserFormValidationRules.email}
               prefix={<MdMail color="#808897" size={20} className="mr-1" />}
             />
-            <AuthFormInput
+            <UserFormInput
               control={control}
               name="password"
               type={showPassword ? 'text' : 'password'}
