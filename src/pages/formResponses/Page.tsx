@@ -7,7 +7,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, DatePicker, Select, Spin } from 'antd';
 import typography from 'antd/es/typography';
-import { useIntersectionObserver } from '@siberiacancode/reactuse';
+import { useInView } from 'react-intersection-observer';
 import dayjs, { Dayjs } from 'dayjs';
 
 const { Text, Title } = typography;
@@ -26,6 +26,27 @@ type Dates = {
 const dateFormat = 'YYYY-MM-DD';
 const CARDS_PER_PAGE = 30;
 
+enum SortKeys {
+  TIME_ASC = 'TIME_ASC',
+  TIME_DESC = 'TIME_DESC',
+}
+
+const sortType: Record<SortKeys, FormListOptions['sort']> = {
+  [SortKeys.TIME_ASC]: {
+    field: 'createdAt',
+    type: Sort.ASC,
+  },
+  [SortKeys.TIME_DESC]: {
+    field: 'createdAt',
+    type: Sort.DESC,
+  },
+};
+
+const sortOptions = [
+  { value: SortKeys.TIME_DESC, label: 'Сначала новые' },
+  { value: SortKeys.TIME_ASC, label: 'Сначала старые' },
+];
+
 export const FormResponses = () => {
   const dispatch = useDispatch<AppDispatch>();
   const status = useSelector<RootState, 'pending' | 'success' | 'rejected' | null>(
@@ -38,7 +59,9 @@ export const FormResponses = () => {
   const { data: form } = useGetFormQuery(formId ?? '');
 
   const [list, setList] = useState<FormResponse[]>([]);
-  const [sort, setSort] = useState<Sort>((searchParams.get('sort') as Sort) ?? Sort.DESC);
+  const [sort, setSort] = useState<SortKeys>(
+    (searchParams.get('sort') as SortKeys) ?? SortKeys.TIME_DESC
+  );
   const [dates, setDates] = useState<Dates>({
     start: searchParams.get('start') ? dayjs.unix(Number(searchParams.get('start'))) : null,
     end: searchParams.get('end') ? dayjs.unix(Number(searchParams.get('end'))) : null,
@@ -50,7 +73,7 @@ export const FormResponses = () => {
 
     if (dates.start) {
       newFilters?.push({
-        key: 'updatedAt',
+        key: 'createdAt',
         operator: '>=',
         value: new Date(dayjs(dates.start).toDate()),
       });
@@ -61,7 +84,7 @@ export const FormResponses = () => {
       copyEnd = copyEnd.add(1, 'day');
 
       newFilters?.push({
-        key: 'updatedAt',
+        key: 'createdAt',
         operator: '<=',
         value: new Date(copyEnd.toDate()),
       });
@@ -70,28 +93,28 @@ export const FormResponses = () => {
     return newFilters;
   })();
 
-  const { ref: intersectionRef } = useIntersectionObserver<HTMLDivElement>({
+  const { ref: intersectionRef } = useInView({
     threshold: 1,
 
-    onChange: async (entry) => {
-      if (entry.isIntersecting && status !== 'pending') {
+    onChange: async (inView: boolean) => {
+      if (inView && status !== 'pending') {
         handleLoadMore();
       }
     },
   });
 
   useEffect(() => {
-    const query: { sort: Sort; start?: string; end?: string } = { sort };
+    const query: { sort: SortKeys; start?: string; end?: string } = { sort };
     if (dates.start) {
       query.start = dates.start.unix().toString();
     }
     if (dates.end) {
       query.end = dates.end.unix().toString();
     }
-    setSearchParams(query);
+    setSearchParams(query, { replace: true });
   }, [sort, dates, setSearchParams]);
 
-  const handleChangeSort = (value: Sort) => {
+  const handleChangeSort = (value: SortKeys) => {
     resetLocalState();
     setSort(value);
   };
@@ -110,7 +133,7 @@ export const FormResponses = () => {
         limit: CARDS_PER_PAGE,
         reference: { collectionName: 'form', id: formId ?? '', key: 'formId' },
         filters,
-        sort,
+        sort: sortType[sort],
       })
     )
       .unwrap()
@@ -141,10 +164,7 @@ export const FormResponses = () => {
         <Select
           defaultValue={sort}
           onChange={handleChangeSort}
-          options={[
-            { value: Sort.DESC, label: 'Сначала новые' },
-            { value: Sort.ASC, label: 'Сначала старые' },
-          ]}
+          options={sortOptions}
           className="min-w-[20ch] text-left"
         />
         <RangePicker

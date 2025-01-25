@@ -17,14 +17,14 @@ import {
 } from '@/types';
 import { getUUID } from '@/utils/getUUID';
 import { Spin } from 'antd';
-import { useEffect, useState } from 'react';
+import { FC, useLayoutEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ROUTES } from '@/utils/routesConfig.ts';
 
-export const FormsEdit = () => {
+export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,17 +36,6 @@ export const FormsEdit = () => {
   const [createForm, { isLoading: isCreating }] = useCreateFormMutation();
   const [updateForm, { isLoading: isUpdating }] = useUpdateFormMutation();
   const [deleteForm, { isLoading: isDeleting }] = useDeleteFormMutation();
-
-  useEffect(() => {
-    if (formData) {
-      setConstructor(() => formData);
-    } else if (newFormId) {
-      setConstructor(() => ({
-        id: newFormId,
-        ...NEW_FORM,
-      }));
-    }
-  }, [formData]);
 
   const handleDropField = (type: FieldType, index?: number) => {
     setConstructor((prev) => {
@@ -133,6 +122,17 @@ export const FormsEdit = () => {
     });
   };
 
+  useLayoutEffect(() => {
+    if (formData) {
+      setConstructor(() => formData);
+    } else if (newFormId) {
+      setConstructor(() => ({
+        id: newFormId,
+        ...NEW_FORM,
+      }));
+    }
+  }, [formData]);
+
   if (isLoadingForm) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -141,7 +141,11 @@ export const FormsEdit = () => {
     );
   }
 
-  if (!formData && !newFormId) navigate(ROUTES.NOT_FOUND);
+  if (!formData && !newFormId) {
+    navigate(ROUTES.NOT_FOUND);
+    return;
+  }
+
   if (!constructor) return <div>Ошибка при создании конструктора.</div>;
 
   return (
