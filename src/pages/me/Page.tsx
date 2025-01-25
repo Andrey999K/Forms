@@ -4,10 +4,10 @@ import { useForm } from 'react-hook-form';
 import { useGetMeInfoQuery, useUpdateMeInfoMutation } from '@/redux/user';
 import { MeChangeFields } from '@/types/me';
 import { MeProfileActions, MeAvatar } from '@/components/Me';
-import { MeProfileDetails } from '@/components/Me/MeProfileDetails';
+import { MeProfileDetails } from '@/components/Me';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
-import { Loader } from '@/components/ui/Loader';
 import { toast } from 'react-toastify';
+import { Loader } from '@/components/ui/Loader';
 
 export const Me = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
