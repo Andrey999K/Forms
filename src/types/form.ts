@@ -32,6 +32,7 @@ type Form = {
   description: string;
   settings: { timer: string; timerActive: false; tags: Tag[] };
   fields: ConstructorField[];
+  userId: string;
 };
 
 export type StoreDates = {
@@ -47,7 +48,7 @@ export type ConstructorForm = { id: string } & Form & Partial<StoreDates>;
 
 export const FIELD_EXISTS = 'exists';
 
-export const NEW_FORM: Form = {
+export const NEW_FORM: Omit<Form, 'userId'> = {
   fields: [],
   title: 'Название формы',
   description: 'Описание формы',

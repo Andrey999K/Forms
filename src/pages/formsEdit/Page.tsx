@@ -23,6 +23,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ROUTES } from '@/utils/routesConfig.ts';
+import { RootState } from '@/redux/store';
+import { useSelector } from 'react-redux';
 
 export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -36,6 +38,7 @@ export const FormsEdit: FC = () => {
   const [createForm, { isLoading: isCreating }] = useCreateFormMutation();
   const [updateForm, { isLoading: isUpdating }] = useUpdateFormMutation();
   const [deleteForm, { isLoading: isDeleting }] = useDeleteFormMutation();
+  const user = useSelector((state: RootState) => state.user.user);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const isError = useMemo(() => {
     let isError = false;
@@ -147,6 +150,7 @@ export const FormsEdit: FC = () => {
     } else if (newFormId) {
       setConstructor(() => ({
         id: newFormId,
+        userId: user?.uid || '',
         ...NEW_FORM,
       }));
     }
