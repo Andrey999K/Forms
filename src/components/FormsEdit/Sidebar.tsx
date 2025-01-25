@@ -11,6 +11,8 @@ type Props = {
   isCreating: boolean;
   isUpdating: boolean;
   isDeleting: boolean;
+  isError: boolean;
+  isNew: boolean;
   onSaveConstructor: () => void;
   onRemoveConstructor: () => void;
   onChangeForm: ({ value, name }: HandleChangeForm) => void;
@@ -22,6 +24,8 @@ export const Sidebar: FC<Props> = (props) => {
     isCreating,
     isUpdating,
     isDeleting,
+    isError,
+    isNew,
     onSaveConstructor,
     onRemoveConstructor,
     onChangeForm,
@@ -61,7 +65,7 @@ export const Sidebar: FC<Props> = (props) => {
 
   return (
     <GlassWrapper
-      className={`w-96 px-5 pb-5 ${isSticky ? 'sticky top-4' : ''}`}
+      className={`w-full max-w-72 px-5 pb-5 ${isSticky ? 'sticky top-4' : ''}`}
       style={{ zIndex: 10 }}
     >
       <Tabs defaultActiveKey="constructor" items={TABS_ITEMS} />
@@ -75,24 +79,25 @@ export const Sidebar: FC<Props> = (props) => {
             className="w-full"
             icon={<SaveOutlined />}
             loading={isUpdating || isCreating}
-            disabled={constructor.fields.length === 0 || isDeleting}
+            disabled={constructor.fields.length === 0 || isDeleting || isError}
             onClick={onSaveConstructor}
           >
             {'updatedAt' in constructor && constructor?.updatedAt
               ? 'Обновить форму'
               : 'Сохранить форму'}
           </Button>
-          <Button
-            color="danger"
-            variant="filled"
-            className="w-full"
-            icon={<DeleteOutlined />}
-            loading={isDeleting}
-            disabled={isUpdating || isCreating}
-            onClick={onRemoveConstructor}
-          >
-            Удалить форму
-          </Button>
+          {!isNew && (
+            <Button
+              color="danger"
+              variant="filled"
+              className="w-full"
+              icon={<DeleteOutlined />}
+              loading={isDeleting}
+              onClick={onRemoveConstructor}
+            >
+              Удалить форму
+            </Button>
+          )}
         </div>
       </div>
     </GlassWrapper>

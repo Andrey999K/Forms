@@ -17,7 +17,7 @@ import {
 } from '@/types';
 import { getUUID } from '@/utils/getUUID';
 import { Spin } from 'antd';
-import { FC, useLayoutEffect, useState } from 'react';
+import { FC, useLayoutEffect, useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -36,13 +36,21 @@ export const FormsEdit: FC = () => {
   const [createForm, { isLoading: isCreating }] = useCreateFormMutation();
   const [updateForm, { isLoading: isUpdating }] = useUpdateFormMutation();
   const [deleteForm, { isLoading: isDeleting }] = useDeleteFormMutation();
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const isError = useMemo(() => {
+    let isError = false;
+    Object.keys(errors).forEach((key) => {
+      if (!isError && errors[key]) isError = true;
+    });
+    return isError;
+  }, [errors]);
 
   const handleDropField = (type: FieldType, index?: number) => {
     setConstructor((prev) => {
       if (!prev) return prev;
       const { fields } = prev;
       const isTypeRadio = type === FieldTypes.RADIO;
-      const options = isTypeRadio ? { options: [{ id: getUUID(), label: 'Вариант 1' }] } : {};
+      const options = isTypeRadio ? { options: [{ id: getUUID(), label: '' }] } : {};
       const newField: ConstructorField = {
         id: getUUID(),
         type,
@@ -81,13 +89,20 @@ export const FormsEdit: FC = () => {
     setConstructor((prev) => {
       if (!prev) return prev;
       const { fields } = prev;
-      const newFields = fields.filter((field) => field.id !== id);
+      const newFields = fields.filter((field) => {
+        if (field.options) {
+          field.options.forEach((option) => setErrors((prev) => ({ ...prev, [option.id]: false })));
+        }
+        return field.id !== id;
+      });
       return { ...prev, fields: newFields };
     });
   };
 
   const handleSaveForms = async () => {
     if (!constructor) return;
+    if (isError) return;
+
     try {
       if ('createAt' in constructor) {
         await updateForm(constructor).unwrap();
@@ -120,6 +135,10 @@ export const FormsEdit: FC = () => {
       if (!prev) return prev;
       return { ...prev, [name]: value };
     });
+  };
+
+  const handleError = (id: string, updates: boolean) => {
+    setErrors((prev) => ({ ...prev, [id]: updates }));
   };
 
   useLayoutEffect(() => {
@@ -156,6 +175,8 @@ export const FormsEdit: FC = () => {
           isCreating={isCreating}
           isUpdating={isUpdating}
           isDeleting={isDeleting}
+          isError={isError}
+          isNew={!!newFormId}
           onSaveConstructor={handleSaveForms}
           onRemoveConstructor={handleRemoveForms}
           onChangeForm={handleChangeForm}
@@ -164,6 +185,7 @@ export const FormsEdit: FC = () => {
           <ConstructorHeader constructor={constructor} onChangeForm={handleChangeForm} />
           <ConstructorWorkArea
             constructor={constructor}
+            onError={handleError}
             onDropField={handleDropField}
             onMoveField={moveField}
             onRemoveField={removeField}
