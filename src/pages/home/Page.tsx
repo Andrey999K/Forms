@@ -118,7 +118,7 @@ export const Home = () => {
     if (search.length) {
       query.search = search;
     }
-    setSearchParams(query);
+    setSearchParams(query, { replace: true });
   }, [order, search, setSearchParams]);
 
   useEffect(() => {

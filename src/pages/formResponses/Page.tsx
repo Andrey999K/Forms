@@ -111,7 +111,7 @@ export const FormResponses = () => {
     if (dates.end) {
       query.end = dates.end.unix().toString();
     }
-    setSearchParams(query);
+    setSearchParams(query, { replace: true });
   }, [sort, dates, setSearchParams]);
 
   const handleChangeSort = (value: SortKeys) => {
