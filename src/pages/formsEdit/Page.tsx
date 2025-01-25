@@ -48,6 +48,8 @@ export const FormsEdit: FC = () => {
     return isError;
   }, [errors]);
 
+  console.log(formData);
+
   const handleDropField = (type: FieldType, index?: number) => {
     setConstructor((prev) => {
       if (!prev) return prev;
@@ -180,7 +182,7 @@ export const FormsEdit: FC = () => {
           isUpdating={isUpdating}
           isDeleting={isDeleting}
           isError={isError}
-          isNew={!!newFormId}
+          isNew={!formData}
           onSaveConstructor={handleSaveForms}
           onRemoveConstructor={handleRemoveForms}
           onChangeForm={handleChangeForm}
