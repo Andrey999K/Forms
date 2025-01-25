@@ -45,3 +45,5 @@ export const NEW_FORM: Form = {
   description: 'Описание формы',
   settings: { timer: '', timerActive: false },
 };
+
+export const BASE_AVATAR_URL = 'https://api.dicebear.com/6.x/avataaars/svg';

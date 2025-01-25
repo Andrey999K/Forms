@@ -1,9 +1,9 @@
 import { Button } from 'antd';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useGetFormQuery } from '@/redux/form';
-import { Loader } from '@/components/common';
 import { useGetResponseQuery } from '@/redux/response';
 import { ROUTES } from '@/utils/routesConfig.ts';
+import { Loader } from '@/components/ui/Loader';
 import { AnswerCard } from '@/components/FormResponse/AnswerCard';
 
 export const FormResponse = () => {

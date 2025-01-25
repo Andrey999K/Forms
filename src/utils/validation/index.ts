@@ -1,1 +1,1 @@
-export { AuthValidationRules } from './authValidationRules';
+export { UserFormValidationRules } from './userFormValidationRules ';

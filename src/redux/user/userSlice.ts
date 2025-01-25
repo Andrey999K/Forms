@@ -33,8 +33,3 @@ export const userSlice = createSlice({
     },
   },
 });
-
-export const {
-  reducer: userReducer,
-  actions: { setUser, setLoading, setError, setIsUserReady },
-} = userSlice;

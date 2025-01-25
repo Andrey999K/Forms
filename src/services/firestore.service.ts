@@ -20,6 +20,7 @@ import {
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { db, auth } from '@/utils/firebase/firebaseConfig';
 import { FormListOptions, FormListResponse } from '@/types';
+import { generateAvatarHash } from '@/utils/generateAvatarHash';
 
 const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | number): number => {
   if (typeof timestamp !== 'number') {
@@ -165,6 +166,7 @@ export const firestoreService = {
       firstName: name,
       lastName: surname,
       email,
+      avatarHash: generateAvatarHash(),
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });

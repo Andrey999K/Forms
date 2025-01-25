@@ -16,12 +16,13 @@ import {
   responseSliceReducerPath,
 } from './response';
 import { authReducerPath, authReducer, authMiddleware } from './auth';
-import { userReducer } from './user/userSlice';
+import { userReducer, userQueryReducer, userReducerPath, userMiddleware } from './user';
 
 const rootReducer = combineReducers({
   [formReducerPath]: formReducer,
   [authReducerPath]: authReducer,
   [responseReducerPath]: responseReducer,
+  [userReducerPath]: userQueryReducer,
   [responseSliceReducerPath]: responseSliceReducer,
   [formsSliceReducerPath]: formsSliceReducer,
   user: userReducer,
@@ -33,7 +34,8 @@ export const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false }).concat(
       formMiddleware,
       responseMiddleware,
-      authMiddleware
+      authMiddleware,
+      userMiddleware
     ),
 });
 
