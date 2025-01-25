@@ -1,30 +1,16 @@
 import { Button } from 'antd';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
 import { useGetFormQuery } from '@/redux/form';
 import { useGetResponseQuery } from '@/redux/response';
 import { ROUTES } from '@/utils/routesConfig.ts';
 import { Loader } from '@/components/ui/Loader';
+import { AnswerCard } from '@/components/FormResponse/AnswerCard';
 
 export const FormResponse = () => {
   const { formId, responseId } = useParams();
   const { data: form, isLoading: isLoadingForm } = useGetFormQuery(formId || '');
   const { data: response, isLoading: isLoadingResponse } = useGetResponseQuery(responseId || '');
   const navigate = useNavigate();
-
-  const renderAnswer = (answer: string | string[]) => {
-    if (typeof answer === 'string') {
-      return answer;
-    } else {
-      return (
-        <p className="flex flex-col gap-2">
-          {answer.map((item, index) => (
-            <span key={item + index}>{item}</span>
-          ))}
-        </p>
-      );
-    }
-  };
 
   if (isLoadingForm || isLoadingResponse) return <Loader />;
 
@@ -39,12 +25,7 @@ export const FormResponse = () => {
       <p className="text-sm mt-2">{form.description}</p>
       <div className="flex flex-col gap-2 mt-8">
         {response.fields.map((field) => (
-          <GlassWrapper key={field.id} className="p-5">
-            <div className="flex flex-col items-start gap-1">
-              <h3 className="font-semibold">{field.question}</h3>
-              <p className="text-start text-sm">{renderAnswer(field.answer)}</p>
-            </div>
-          </GlassWrapper>
+          <AnswerCard key={field.id} data={field} />
         ))}
         <div className="flex items-center gap-3 mt-4">
           <Button type="primary">
