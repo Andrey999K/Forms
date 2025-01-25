@@ -1,14 +1,15 @@
 import { ConstructorField, FIELD_EXISTS, FieldTypes } from '@/types';
+import { AlignLeftOutlined, FormOutlined } from '@ant-design/icons';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 import { ConstructorFieldWrapper } from './ConstructorFieldWrapper';
 import { RadioEditor } from './RadioEditor';
-import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
-import { AlignLeftOutlined, FormOutlined } from '@ant-design/icons';
 
 type Props = {
   field: ConstructorField;
   index: number;
+  onError: (id: string, updates: boolean) => void;
   onMoveField: (dragIndex: number, hoverIndex: number) => void;
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
@@ -16,7 +17,8 @@ type Props = {
 };
 
 export const ConstructorDraggableField: FC<Props> = (props) => {
-  const { field, index, onMoveField, onRemoveField, onUpdateField, isOutsideWorkspace } = props;
+  const { field, index, onMoveField, onRemoveField, onUpdateField, isOutsideWorkspace, onError } =
+    props;
   const ref = useRef<HTMLDivElement>(null);
   const dragRef = useRef<HTMLButtonElement>(null);
   const [isOverDelete, setIsOverDelete] = useState(false);
@@ -75,7 +77,7 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
   dragPreview(drop(ref));
   drag(dragRef);
 
-  const commonProps = { dragRef, field, onUpdateField, onRemoveField };
+  const commonProps = { dragRef, field, onUpdateField, onRemoveField, onError };
 
   const renderField = () => {
     switch (field.type) {
@@ -95,7 +97,7 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
         );
       case FieldTypes.RADIO:
       case FieldTypes.CHECKBOX: {
-        return <RadioEditor field={field} onUpdateField={onUpdateField} />;
+        return <RadioEditor field={field} onUpdateField={onUpdateField} onError={onError} />;
       }
       default:
         return null;

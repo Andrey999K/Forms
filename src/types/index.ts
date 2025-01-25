@@ -1,3 +1,4 @@
+import { Tag } from 'antd';
 import {
   FIELD_EXISTS,
   FieldTypes,
@@ -6,6 +7,9 @@ import {
   ConstructorForm,
   FormData,
   NEW_FORM,
+  ConstructorError,
+  ConstructorErrors,
+  RadioOption,
 } from './form';
 import { Sort, Slice } from './base';
 import { AuthFormValues } from './auth';
@@ -28,6 +32,10 @@ export type {
   CardWithCount,
   FormData,
   HandleChangeForm,
+  Tag,
+  ConstructorError,
+  ConstructorErrors,
+  RadioOption,
 };
 
 export { FIELD_EXISTS, FieldTypes, Sort, NEW_FORM };
