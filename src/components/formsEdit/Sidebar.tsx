@@ -82,7 +82,7 @@ export const Sidebar: FC<Props> = (props) => {
             disabled={constructor.fields.length === 0 || isDeleting || isError}
             onClick={onSaveConstructor}
           >
-            {'updateAt' in constructor && constructor?.updateAt
+            {'updatedAt' in constructor && constructor?.updatedAt
               ? 'Обновить форму'
               : 'Сохранить форму'}
           </Button>

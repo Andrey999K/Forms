@@ -1,6 +1,6 @@
-import { ConstructorHeader } from '@/components/formsEdit/ConstructorHeader';
-import { ConstructorWorkArea } from '@/components/formsEdit/ConstructorWorkArea';
-import { Sidebar } from '@/components/formsEdit/Sidebar';
+import { ConstructorHeader } from '@/components/FormsEdit/ConstructorHeader';
+import { ConstructorWorkArea } from '@/components/FormsEdit/ConstructorWorkArea';
+import { Sidebar } from '@/components/FormsEdit/Sidebar';
 import {
   useCreateFormMutation,
   useDeleteFormMutation,
@@ -17,11 +17,12 @@ import {
 } from '@/types';
 import { getUUID } from '@/utils/getUUID';
 import { Spin } from 'antd';
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useLayoutEffect, useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { ROUTES } from '@/utils/routesConfig.ts';
 
 export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -43,17 +44,6 @@ export const FormsEdit: FC = () => {
     });
     return isError;
   }, [errors]);
-
-  useEffect(() => {
-    if (formData) {
-      setConstructor(() => formData);
-    } else if (newFormId) {
-      setConstructor(() => ({
-        id: newFormId,
-        ...NEW_FORM,
-      }));
-    }
-  }, [formData]);
 
   const handleDropField = (type: FieldType, index?: number) => {
     setConstructor((prev) => {
@@ -157,6 +147,17 @@ export const FormsEdit: FC = () => {
     setErrors((prev) => ({ ...prev, [id]: updates }));
   };
 
+  useLayoutEffect(() => {
+    if (formData) {
+      setConstructor(() => formData);
+    } else if (newFormId) {
+      setConstructor(() => ({
+        id: newFormId,
+        ...NEW_FORM,
+      }));
+    }
+  }, [formData]);
+
   if (isLoadingForm) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -165,7 +166,11 @@ export const FormsEdit: FC = () => {
     );
   }
 
-  if (!formData && !newFormId) return <div>Страница не найдена.</div>;
+  if (!formData && !newFormId) {
+    navigate(ROUTES.NOT_FOUND);
+    return;
+  }
+
   if (!constructor) return <div>Ошибка при создании конструктора.</div>;
 
   return (

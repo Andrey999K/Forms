@@ -22,7 +22,7 @@ export const HomeCard = (props: Props) => {
         count={item.responseCount ?? 0}
         showZero
         size="small"
-        styles={{ indicator: { fontSize: 10 } }}
+        styles={{ indicator: { fontSize: 10 }, root: { color: 'inherit' } }}
         offset={[2, -2]}
       >
         <MdOutlineQuestionAnswer size={18} />
@@ -33,6 +33,7 @@ export const HomeCard = (props: Props) => {
     </Link>,
     <div
       key="delete"
+      data-testid="delete-button"
       className="text-red-600 hover:text-red-400 transition-all duration-200 ease-in-out"
       onClick={handleDeleteClick}
     >

@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
+
 import {
   formMiddleware,
   formReducer,
@@ -29,10 +30,11 @@ const rootReducer = combineReducers({
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false })
-      .concat(formMiddleware)
-      .concat(responseMiddleware)
-      .concat(authMiddleware),
+    getDefaultMiddleware({ serializableCheck: false }).concat(
+      formMiddleware,
+      responseMiddleware,
+      authMiddleware
+    ),
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

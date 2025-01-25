@@ -3,6 +3,11 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      colors: {
+        colorPrimary: '#fa9145',
+        colorTextBase: '#885028',
+        colorBgBase: '#fdf8f4',
+      },
       backgroundImage: {
         authImg: "url('/sky.jpg')",
       },

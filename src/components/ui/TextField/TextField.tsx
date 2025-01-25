@@ -12,7 +12,7 @@ type Props<T extends FieldValues> = {
   >;
   type?: 'text' | 'password';
   error?: string;
-  placeholder: string;
+  placeholder?: string;
   prefix?: ReactNode;
   suffix?: ReactNode;
   onBlur?: () => void;
