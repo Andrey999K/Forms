@@ -7,7 +7,7 @@ import { MdOutlineCancel, MdOutlineEmail } from 'react-icons/md';
 import { FaRegRegistered } from 'react-icons/fa6';
 import { formatUserCreatedAt } from '@/utils/formatUserCreatedAt';
 import { MdPerson, MdOutlinePeople } from 'react-icons/md';
-import { UserFormInput } from '../auth/UserFormInput';
+import { UserFormInput } from '../Auth/UserFormInput';
 
 type Props = {
   control: Control<any>;
