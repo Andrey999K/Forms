@@ -26,7 +26,8 @@ export const formApi = createApi({
     createForm: builder.mutation<ConstructorForm, ConstructorForm>({
       queryFn: async (form) => {
         try {
-          const result = await firestoreService.create(COLLECTION, form);
+          const userRef = await firestoreService.getRef('users', form.userId);
+          const result = await firestoreService.create(COLLECTION, { ...form, userId: userRef });
           return { data: result as FormData };
         } catch (error) {
           return { error: getFirebaseError(error) };

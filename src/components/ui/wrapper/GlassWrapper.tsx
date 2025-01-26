@@ -16,7 +16,7 @@ type Settings = {
 
 const defaultSettings: Settings = {
   shadow: '0rem 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.1)',
-  backdropBlur: 4,
+  backdropBlur: 3,
   bgColor: 'rgba(255, 255, 255, 0.2)',
   rounded: 1,
 };

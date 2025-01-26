@@ -3,6 +3,7 @@ import {
   deleteDoc,
   doc,
   DocumentData,
+  DocumentReference,
   DocumentSnapshot,
   getDoc,
   getDocs,
@@ -111,6 +112,16 @@ export const firestoreService = {
     throw new Error('Id not found');
   },
 
+  getRef: async (
+    collectionName: string,
+    id: string
+  ): Promise<DocumentReference<DocumentData, DocumentData>> => {
+    const docRef = doc(db, collectionName, id);
+
+    if (docRef.id) return docRef;
+
+    throw new Error('Id not found');
+  },
   get: async <T>(collectionName: string, id: string): Promise<T> => {
     const docRef = doc(db, collectionName, id);
     const docSnap = await getDoc(docRef);

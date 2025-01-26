@@ -6,6 +6,7 @@ import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 
 type Props = {
   constructor: ConstructorForm;
+  onError: (id: string, updates: boolean) => void;
   onDropField: (type: FieldType, index?: number) => void;
   onMoveField: (dragIndex: number, hoverIndex: number) => void;
   onRemoveField: (id: string) => void;
@@ -14,7 +15,7 @@ type Props = {
 };
 
 export const ConstructorWorkArea: FC<Props> = (props) => {
-  const { constructor, onDropField, onMoveField, onRemoveField, onUpdateField } = props;
+  const { constructor, onDropField, onMoveField, onRemoveField, onUpdateField, onError } = props;
   const workspaceRef = useRef<HTMLDivElement>(null);
 
   const isOutsideWorkspace = (x: number, y: number) => {
@@ -46,6 +47,7 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
               <ConstructorDraggableField
                 field={field}
                 index={index}
+                onError={onError}
                 onMoveField={onMoveField}
                 onRemoveField={onRemoveField}
                 onUpdateField={onUpdateField}
