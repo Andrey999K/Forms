@@ -28,19 +28,28 @@ import { db, auth } from '@/utils/firebase/firebaseConfig';
 import { FormListOptions, FormListResponse } from '@/types';
 import { generateAvatarHash } from '@/utils/generateAvatarHash';
 
-const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | number): number => {
-  if (typeof timestamp !== 'number') {
-    return timestamp ? timestamp.toMillis() : Date.now();
+const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | number): string => {
+  if (timestamp) {
+    if (typeof timestamp !== 'number') {
+      const date = new Date(timestamp.toMillis());
+      return date.toISOString();
+    } else {
+      const date = new Date();
+      return date.toISOString();
+    }
   } else {
-    return timestamp;
+    const date = new Date();
+    return date.toISOString();
   }
 };
 
 const convertFirestoreData = <T>(doc: DocumentSnapshot<DocumentData>) => {
   const data = doc.data();
+  const userId = data?.userId ? { userId: data?.userId.id } : {};
   return {
     id: doc.id,
     ...data,
+    ...userId,
     createdAt: convertTimestampToNumber(data?.createdAt),
     updatedAt: convertTimestampToNumber(data?.updatedAt),
   } as T;
@@ -51,9 +60,8 @@ export const firestoreService = {
     collectionName: string,
     payload: { id: string; [key: string]: unknown }
   ): Promise<T> => {
-    const { id, ...rest } = payload;
-    const data = { ...rest, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
-    const docRef = doc(collection(db, collectionName), id);
+    const data = { ...payload, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+    const docRef = doc(collection(db, collectionName), payload.id);
     await setDoc(docRef, data);
     const docSnap = await getDoc(docRef);
 
@@ -143,6 +151,8 @@ export const firestoreService = {
     payload: { id: string; [key: string]: unknown }
   ): Promise<object> => {
     const { id, ...updateData } = payload;
+    delete updateData?.['userId'];
+    delete updateData?.['createAt'];
     const docRef = doc(db, collectionName, id);
     const docSnap = await getDoc(docRef);
 
