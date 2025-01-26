@@ -11,7 +11,7 @@ import { AuthTextLink } from '@/components/auth/AuthTextLink';
 import { ROUTES } from '@/utils/routesConfig';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/redux/auth';
-import { AuthFormValues } from '@/types/auth';
+import { SignInFormValues } from '@/types/auth';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/redux/user';
 import { UserFormValidationRules } from '@/utils/validation';
@@ -19,7 +19,7 @@ import { UserFormInput } from '@/components/auth/UserFormInput';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const { control, handleSubmit } = useForm<AuthFormValues>({
+  const { control, handleSubmit } = useForm<SignInFormValues>({
     mode: 'onChange',
   });
   const [login, { isLoading }] = useLoginMutation();
@@ -29,7 +29,7 @@ export const Login = () => {
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
-  const onSubmit: SubmitHandler<AuthFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
     dispatch(setLoading(true));
     try {
       await login(data).unwrap();
