@@ -12,6 +12,7 @@ import { resetStore, useDeleteFormMutation, fetchFormsSlice } from '@/redux/form
 import { HomeList } from '@/components/Home/HomeList/HomeList';
 
 import { CardWithCount, FormListOptions, Sort } from '@/types';
+import { toast } from 'react-toastify';
 
 const { Search } = Input;
 
@@ -67,6 +68,7 @@ export const Home = () => {
   const status = useSelector<RootState, 'pending' | 'success' | 'rejected' | null>(
     (state) => state.formSlice.status
   );
+  const user = useSelector((state: RootState) => state.user.user);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState<string>(searchParams.get('search') ?? '');
@@ -126,11 +128,17 @@ export const Home = () => {
   }, []);
 
   const handleLoadMore = () => {
+    if (!user) {
+      toast.error('Не найдены данные пользователя');
+      return;
+    }
+
     dispatch(
       fetchFormsSlice({
         search: search.length ? { key: 'title', value: search } : undefined,
         sort: sortType[order],
         limit: CARDS_PER_PAGE,
+        reference: { collectionName: 'users', key: 'userId', id: user.uid },
       })
     )
       .unwrap()
