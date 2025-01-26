@@ -39,8 +39,7 @@ export const formApi = createApi({
     updateForm: builder.mutation<ConstructorForm, ConstructorForm>({
       queryFn: async (form) => {
         try {
-          const { id, ...updateData } = form;
-          const result = await firestoreService.update(COLLECTION, { id, ...updateData });
+          const result = await firestoreService.update(COLLECTION, form);
           return { data: result as FormData };
         } catch (error) {
           return { error: getFirebaseError(error) };

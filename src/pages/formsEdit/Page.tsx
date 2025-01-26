@@ -117,13 +117,13 @@ export const FormsEdit: FC = () => {
     if (!constructor) return;
     if (isError) return;
 
-    const newConstructor = checkBeforeSending(constructor);
+    const verifiedConstructor = checkBeforeSending(constructor);
     try {
-      if ('createAt' in newConstructor) {
-        await updateForm(newConstructor).unwrap();
+      if ('createAt' in verifiedConstructor) {
+        await updateForm(verifiedConstructor).unwrap();
         toast.success('Форма успешно обновлена ');
       } else {
-        await createForm(newConstructor).unwrap();
+        await createForm(verifiedConstructor).unwrap();
         toast.success('Форма успешно сохранена');
       }
     } catch (error) {
@@ -192,7 +192,7 @@ export const FormsEdit: FC = () => {
           isUpdating={isUpdating}
           isDeleting={isDeleting}
           isError={isError}
-          isNew={!formData}
+          isNew={'createAt' in constructor}
           onSaveConstructor={handleSaveForms}
           onRemoveConstructor={handleRemoveForms}
           onChangeForm={handleChangeForm}
