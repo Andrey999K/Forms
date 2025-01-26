@@ -7,7 +7,7 @@ import { MdOutlineCancel, MdOutlineEmail } from 'react-icons/md';
 import { FaRegRegistered } from 'react-icons/fa6';
 import { formatUserCreatedAt } from '@/utils/formatUserCreatedAt';
 import { MdPerson, MdOutlinePeople } from 'react-icons/md';
-import { UserFormInput } from '../auth/UserFormInput';
+import { UserFormInput } from '../Auth/UserFormInput';
 
 type Props = {
   control: Control<any>;
@@ -51,7 +51,7 @@ export const MeProfileDetails = ({ isEditing, control, reset, user, setIsEdit }:
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div>
           <UserFormInput
             control={control}
             label="Имя"

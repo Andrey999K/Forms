@@ -14,7 +14,7 @@ export const authApi = createApi({
     login: builder.mutation<AuthUser, SignInFormValues>({
       queryFn: async ({ email, password }) => {
         try {
-          const { data } = await firestoreService.login(email, password);
+          const data = (await firestoreService.login(email, password)) as AuthUser;
           localStorage.setItem('user', data.uid);
           return { data };
         } catch (error: unknown) {
@@ -39,7 +39,7 @@ export const authApi = createApi({
             name,
             surname
           );
-          return { data: result };
+          return { data: result as AuthUser };
         } catch (error: unknown) {
           const firebaseError = error as FirebaseError;
           const validatedError = validateAuthError(firebaseError.message);
@@ -62,6 +62,21 @@ export const authApi = createApi({
         }
       },
       invalidatesTags: ['auth'],
+    }),
+    resetPassword: builder.mutation<void, string>({
+      queryFn: async (email) => {
+        try {
+          await firestoreService.resetPassword(email);
+          return { data: undefined };
+        } catch (error) {
+          const firebaseError = error as FirebaseError;
+          const validatedError = validateAuthError(firebaseError.message);
+          toast.error(
+            (validatedError.data as string) || 'Произошла ошибка. Пожалуйста, попробуйте позже.'
+          );
+          return { error: validatedError };
+        }
+      },
     }),
   }),
 });
