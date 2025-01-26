@@ -2,68 +2,100 @@ import { ConstructorField, FieldTypes } from '@/types';
 import { getUUID } from '@/utils/getUUID';
 import { MinusCircleOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Input, InputRef, Radio, Select, Tooltip } from 'antd';
-import { FC, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 
 type Props = {
   field: ConstructorField;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
+  onError: (id: string, updates: boolean) => void;
 };
 
 export const RadioEditor: FC<Props> = (props) => {
-  const { field, onUpdateField } = props;
-  const [newInputId, setNewInputId] = useState<string | null>(null); // Track the ID of the new input
-  const inputRefs = useRef<{ [key: string]: InputRef | null }>({});
-
-  const handleAdd = () => {
-    const options = field?.options || [];
-    const id = getUUID();
-    setNewInputId(id);
-    onUpdateField(field.id, { options: [...options, { id, label: '' }] });
-  };
-
-  const handleChange = (id: string, label: string) => {
-    const options = field.options || [];
-    const index = options.findIndex((option) => option.id === id);
-    options[index] = { ...options[index], label };
-    onUpdateField(field.id, { options });
-  };
-
-  const handleRemove = (id: string) => {
-    const options = field?.options || [];
-    onUpdateField(field.id, { options: options.filter((option) => option.id !== id) });
-  };
+  const { field, onUpdateField, onError } = props;
+  const options = field.options || [];
+  const [newInputId, setNewInputId] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChangeType = (type: FieldTypes) => {
     onUpdateField(field.id, { type });
   };
 
-  useEffect(() => {
-    if (newInputId && inputRefs.current[newInputId]) {
-      inputRefs.current[newInputId]?.focus({
-        cursor: 'start',
-      });
+  const handleAdd = () => {
+    const newOption = { id: getUUID(), label: '' };
+    onUpdateField(field.id, { options: [...options, newOption] });
+    setNewInputId(newOption.id);
+  };
+
+  const handleRemove = (id: string) => {
+    const newOptions = options.filter((option) => option.id !== id);
+    onUpdateField(field.id, { options: newOptions });
+    onError(id, false);
+  };
+
+  const getErrors = (id: string, label: string): Record<string, string> => {
+    if (label.trim() === '') {
+      onError(id, true);
+      return { ...errors, [id]: 'Поле не может быть пустым' };
+    } else {
+      const newErrors = { ...errors };
+      onError(id, false);
+      delete newErrors[id];
+      return newErrors;
     }
-  }, [newInputId]);
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newOptions = options.map((option) => {
+      if (option.id === e.target.id) {
+        setErrors(getErrors(e.target.id, e.target.value));
+        return { ...option, label: e.target.value };
+      }
+      return option;
+    });
+    onUpdateField(field.id, { options: newOptions });
+  };
+
+  const handleRef = (ref: InputRef) => {
+    if (ref && newInputId === ref.input?.id) {
+      ref.focus({ cursor: 'start' });
+      setNewInputId(null);
+    }
+  };
+
+  const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
+    if (options.length > 1 && e.target.value.trim() === '') {
+      handleRemove(e.target.id);
+    }
+  };
+
+  useEffect(() => {
+    options.forEach((option) => {
+      getErrors(option.id, option.label);
+    });
+  }, []);
 
   return (
     <>
-      {field?.options?.map(({ id, label }, i) => (
-        <div key={id} className="w-full flex items-center gap-2">
+      {options.map((option, index) => (
+        <div key={option.id} className="w-full flex gap-2 items-center">
           {field.type === 'radio' ? <Radio className="m-0" disabled /> : <Checkbox disabled />}
           <Input
-            placeholder={`Вариант ${i + 1}`}
-            value={label}
-            className="w-full"
-            onChange={(e) => handleChange(id, e.target.value)}
-            ref={(el) => el && (inputRefs.current[id] = el)}
+            id={option.id}
+            status={errors[option.id] && 'error'}
+            value={option.label}
+            placeholder={`Вариант ${index + 1}`}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            ref={handleRef}
           />
-          {field?.options && field?.options?.length > 1 && (
+
+          {options.length > 1 && (
             <Tooltip title="Удалить">
               <Button
                 type="text"
                 danger
                 icon={<MinusCircleOutlined />}
-                onClick={() => handleRemove(id)}
+                onClick={() => handleRemove(option.id)}
               />
             </Tooltip>
           )}

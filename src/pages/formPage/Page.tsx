@@ -117,8 +117,8 @@ export const FormPage = () => {
       {formSubmitted ? (
         <ResponseSendMessage />
       ) : (
-        <div className="flex gap-4 items-start">
-          <GlassWrapper className="p-10 relative">
+        <div className="flex gap-4 items-start w-full">
+          <GlassWrapper className="p-10 relative w-full">
             <div className="flex items-center justify-around">
               <div className="flex flex-col gap-3">
                 <Typography className="text-lg font-bold leading-none">{formData.title}</Typography>
@@ -155,11 +155,11 @@ export const FormPage = () => {
               </Form.Item>
             </Form>
           </GlassWrapper>
-          <GlassWrapper className="p-10">
-            {formData.settings?.timerActive && timerStart && (
+          {formData.settings?.timerActive && timerStart && (
+            <GlassWrapper className="p-10">
               <Timer onFinish={sendFormAfterTimer} />
-            )}
-          </GlassWrapper>
+            </GlassWrapper>
+          )}
         </div>
       )}
     </div>

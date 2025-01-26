@@ -20,6 +20,8 @@ export const App = () => {
             colorPrimary: '#fa9145',
             colorTextBase: '#885028',
             colorBgBase: '#fdf8f4',
+            colorLinkActive: '#fa9145',
+            colorLinkHover: '#fa9145',
           },
           cssVar: true,
         }}

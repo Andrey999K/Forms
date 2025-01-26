@@ -6,6 +6,8 @@ import {
   ConstructorForm,
   FormData,
   NEW_FORM,
+  Tag,
+  RadioOption,
 } from './form';
 import { Sort, Slice } from './base';
 import { AuthFormValues } from './auth';
@@ -28,6 +30,8 @@ export type {
   CardWithCount,
   FormData,
   HandleChangeForm,
+  Tag,
+  RadioOption,
 };
 
 export { FIELD_EXISTS, FieldTypes, Sort, NEW_FORM };
