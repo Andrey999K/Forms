@@ -8,5 +8,6 @@ export enum ROUTES {
   FORM_RESPONSE = '/forms/:formId/responses/:responseId',
   LOGIN = '/login',
   SIGNUP = '/signup',
+  RECOVERY_PASSWORD = '/recovery-password',
   NOT_FOUND = '*',
 }

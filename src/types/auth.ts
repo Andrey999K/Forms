@@ -23,3 +23,5 @@ export type AuthUser = {
   uid: string;
   email: string | null;
 };
+
+export type EmailValue = Pick<AuthFormValues, 'email'>;

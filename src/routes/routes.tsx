@@ -34,6 +34,10 @@ const Signup = lazy(() =>
   import('@/pages/signup/Page').then((module) => ({ default: module.Signup }))
 );
 
+const RecoveryPassword = lazy(() =>
+  import('@/pages/recoveryPassword/Page').then((module) => ({ default: module.RecoveryPassword }))
+);
+
 const NotFoundPage = lazy(() =>
   import('@/pages/notFoundPage/Page').then((module) => ({ default: module.NotFound }))
 );
@@ -115,13 +119,13 @@ export const AppRouter = () => {
       ),
     },
     {
-      path: ROUTES.FORM_PAGE,
+      path: ROUTES.RECOVERY_PASSWORD,
       errorElement: <ErrorComponent />,
       element: (
         <>
           <ToastContainer {...toastConfig} />
           <Suspense fallback={<Loader />}>
-            <FormPage />,
+            <RecoveryPassword />
           </Suspense>
         </>
       ),
@@ -134,6 +138,18 @@ export const AppRouter = () => {
           <ToastContainer {...toastConfig} />
           <Suspense fallback={<Loader />}>
             <Signup />
+          </Suspense>
+        </>
+      ),
+    },
+    {
+      path: ROUTES.FORM_PAGE,
+      errorElement: <ErrorComponent />,
+      element: (
+        <>
+          <ToastContainer {...toastConfig} />
+          <Suspense fallback={<Loader />}>
+            <FormPage />,
           </Suspense>
         </>
       ),

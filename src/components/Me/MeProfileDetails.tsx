@@ -51,7 +51,7 @@ export const MeProfileDetails = ({ isEditing, control, reset, user, setIsEdit }:
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div>
           <UserFormInput
             control={control}
             label="Имя"

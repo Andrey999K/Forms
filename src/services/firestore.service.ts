@@ -17,7 +17,12 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
 import { db, auth } from '@/utils/firebase/firebaseConfig';
 import { FormListOptions, FormListResponse } from '@/types';
 import { generateAvatarHash } from '@/utils/generateAvatarHash';
@@ -145,10 +150,10 @@ export const firestoreService = {
     return true;
   },
 
-  login: async (email: string, password: string) => {
+  login: async (email: string, password: string): Promise<object> => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-    return { data: { uid: user.uid, email: user.email } };
+    return { uid: user.uid, email: user.email };
   },
 
   register: async (
@@ -157,7 +162,7 @@ export const firestoreService = {
     password: string,
     name: string,
     surname: string
-  ) => {
+  ): Promise<object> => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     const docRef = doc(db, collectionName, user.uid);
@@ -177,8 +182,13 @@ export const firestoreService = {
     };
   },
 
-  logout: async () => {
+  logout: async (): Promise<boolean> => {
     await signOut(auth);
+    return true;
+  },
+
+  resetPassword: async (email: string): Promise<boolean> => {
+    await sendPasswordResetEmail(auth, email);
     return true;
   },
 };

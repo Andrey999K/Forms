@@ -11,7 +11,7 @@ import { AuthTextLink } from '@/components/auth/AuthTextLink';
 import { ROUTES } from '@/utils/routesConfig';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/redux/auth';
-import { SignInFormValues } from '@/types/auth';
+import { AuthFormValues } from '@/types/auth';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/redux/user';
 import { UserFormValidationRules } from '@/utils/validation';
@@ -19,7 +19,7 @@ import { UserFormInput } from '@/components/auth/UserFormInput';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const { control, handleSubmit } = useForm<SignInFormValues>({
+  const { control, handleSubmit } = useForm<AuthFormValues>({
     mode: 'onChange',
   });
   const [login, { isLoading }] = useLoginMutation();
@@ -29,7 +29,7 @@ export const Login = () => {
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
-  const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<AuthFormValues> = async (data) => {
     dispatch(setLoading(true));
     try {
       await login(data).unwrap();
@@ -96,6 +96,11 @@ export const Login = () => {
             <AuthSubmitButton disabled={isLoading}>
               {isLoading ? <Spin size="small" /> : 'Войти'}
             </AuthSubmitButton>
+            <AuthTextLink
+              text="Забыли пароль?"
+              linkText="Сбросить пароль"
+              linkTo={ROUTES.RECOVERY_PASSWORD}
+            />
             <AuthTextLink
               text="Нет аккаунта?"
               linkText="Зарегистрироваться"
