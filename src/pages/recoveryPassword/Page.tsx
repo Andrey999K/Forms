@@ -46,7 +46,7 @@ export const RecoveryPassword = () => {
                 margin: '0',
               }}
             >
-              Введите почту, на который будет отправлено письмо для сброса пароля.
+              Введите почту, на которую будет отправлено письмо для сброса пароля.
             </Typography.Title>
           </div>
           <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
