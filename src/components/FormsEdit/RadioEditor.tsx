@@ -63,9 +63,7 @@ export const RadioEditor: FC<Props> = (props) => {
   };
 
   const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
-    if (options.length > 1 && e.target.value.trim() === '') {
-      handleRemove(e.target.id);
-    }
+    getErrors(e.target.id, e.target.value);
   };
 
   useEffect(() => {
