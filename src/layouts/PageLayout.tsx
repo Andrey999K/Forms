@@ -1,12 +1,12 @@
-import { NavLink, Outlet } from 'react-router-dom';
-import { RxAvatar } from 'react-icons/rx';
-import { Button, Dropdown, MenuProps } from 'antd';
-import { ROUTES } from '../utils/routesConfig.ts';
-import { ToastContainer } from 'react-toastify';
-import { ShapeWrapper } from './GlassLayout.js';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.js';
 import { useLogoutMutation } from '@/redux/auth/authApi.js';
+import { IconUserCircle } from '@tabler/icons-react';
+import { Button, Dropdown, MenuProps } from 'antd';
 import { ReactNode } from 'react';
+import { NavLink, Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import { ROUTES } from '../utils/routesConfig.ts';
+import { ShapeWrapper } from './GlassLayout.js';
 
 const pages = [
   {
@@ -68,7 +68,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
             ))}
           </div>
           <Dropdown menu={{ items }} placement="bottom">
-            <RxAvatar color="#FA913C" size={30} className="cursor-pointer" />
+            <IconUserCircle stroke={1.5} size={30} color="#FA913C" className="cursor-pointer" />
           </Dropdown>
         </div>
       </GlassWrapper>
