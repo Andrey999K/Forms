@@ -41,9 +41,11 @@ export const HomeCard = (props: Props) => {
     </div>,
   ];
 
+  const titleElement = <Link to={`/forms/${item.id}`}>{item.title}</Link>;
+
   return (
     <Card
-      title={item.title}
+      title={titleElement}
       bordered={false}
       actions={actions}
       style={{ backdropFilter: 'blur(4px)', background: 'rgb(255 250 245 / 85%)' }}
