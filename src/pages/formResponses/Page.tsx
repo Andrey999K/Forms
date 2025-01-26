@@ -160,11 +160,13 @@ export const FormResponses = () => {
       <Title level={1} className="mt-10">
         Отклики на — Форма {form?.title}
       </Title>
+
       <div className="flex items-center justify-end w-full gap-2 mt-10">
         <Select
           defaultValue={sort}
           onChange={handleChangeSort}
           options={sortOptions}
+          disabled={!list.length}
           className="min-w-[20ch] text-left"
         />
         <RangePicker
@@ -172,9 +174,11 @@ export const FormResponses = () => {
           onChange={handleEditDates}
           className="max-w-[30ch]"
           format={dateFormat}
+          disabled={!list.length}
           maxDate={dayjs()}
         />
       </div>
+
       <div className="flex flex-col gap-4 my-6">
         {list.length
           ? list.map((response, index) => (
@@ -189,18 +193,22 @@ export const FormResponses = () => {
                 </Card>
               </Link>
             ))
-          : status !== 'pending' && !showTrigger && <Title level={2}>Нет доступных форм.</Title>}
+          : status !== 'pending' &&
+            !showTrigger && <Title level={2}>У данной формы нет откликов.</Title>}
       </div>
+
       {status === 'pending' && (
         <div className="mb-5 mt-4">
           <Spin />
         </div>
       )}
+
       {showTrigger && (
         <div ref={intersectionRef} className="mt-4 mb-5">
           <Spin />
         </div>
       )}
+
       {status === 'rejected' && !list.length && (
         <Title level={2}>Произошла ошибка, попробуйте обновить страницу</Title>
       )}

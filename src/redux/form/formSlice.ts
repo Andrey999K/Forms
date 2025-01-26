@@ -23,6 +23,7 @@ export const fetchFormsSlice = createAsyncThunk<
       { ...payload, lastVisible: formSlice.lastVisible },
       true
     );
+
     for (const card of cards.data) {
       const responses = await firestoreService.getAll<FormResponse[]>(
         RESPONSE_COLLECTION,
