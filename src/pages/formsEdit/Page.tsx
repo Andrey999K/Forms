@@ -102,16 +102,28 @@ export const FormsEdit: FC = () => {
     });
   };
 
+  const checkBeforeSending = (constructor: ConstructorForm) => {
+    let copyConstructor: ConstructorForm = JSON.parse(JSON.stringify(constructor));
+    if (copyConstructor.settings.timerActive && copyConstructor.settings.timer === '') {
+      copyConstructor = {
+        ...copyConstructor,
+        settings: { ...copyConstructor.settings, timerActive: false },
+      };
+    }
+    return copyConstructor;
+  };
+
   const handleSaveForms = async () => {
     if (!constructor) return;
     if (isError) return;
 
+    const newConstructor = checkBeforeSending(constructor);
     try {
-      if ('createAt' in constructor) {
-        await updateForm(constructor).unwrap();
+      if ('createAt' in newConstructor) {
+        await updateForm(newConstructor).unwrap();
         toast.success('Форма успешно обновлена ');
       } else {
-        await createForm(constructor).unwrap();
+        await createForm(newConstructor).unwrap();
         toast.success('Форма успешно сохранена');
       }
     } catch (error) {
