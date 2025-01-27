@@ -6,16 +6,16 @@ import { MdMail } from 'react-icons/md';
 import { RiLockFill } from 'react-icons/ri';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { useState } from 'react';
-import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
-import { AuthTextLink } from '@/components/Auth/AuthTextLink';
-import { ROUTES } from '@/utils/routesConfig';
+import { AuthSubmitButton } from '@/shared/components/Auth/AuthSubmitButton';
+import { AuthTextLink } from '@/shared/components/Auth/AuthTextLink';
+import { ROUTES } from '@/shared/utils/routesConfig';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/redux/auth';
-import { SignInFormValues } from '@/types/auth';
+import { SignInFormValues } from '@/shared/types/auth';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/redux/user';
-import { UserFormValidationRules } from '@/utils/validation';
-import { UserFormInput } from '@/components/Auth/UserFormInput';
+import { UserFormValidationRules } from '@/shared/utils/validation';
+import { UserFormInput } from '@/shared/components/Auth/UserFormInput';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -42,7 +42,7 @@ export const Login = () => {
   };
 
   return (
-    <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">
+    <Layout className="min-h-screen auth-bg-gradient overflow-hidden">
       <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
         <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
           <div className="mb-6">

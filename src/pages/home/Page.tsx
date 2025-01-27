@@ -9,9 +9,9 @@ import { useInView } from 'react-intersection-observer';
 import { AppDispatch, RootState } from '@/redux/store';
 import { resetStore, useDeleteFormMutation, fetchFormsSlice } from '@/redux/form';
 
-import { HomeList } from '@/components/Home/HomeList/HomeList';
+import { HomeList } from '@/shared/components/Home/HomeList/HomeList';
 
-import { CardWithCount, FormListOptions, Sort } from '@/types';
+import { CardWithCount, FormListOptions, Sort } from '@/shared/types';
 import { toast } from 'react-toastify';
 
 const { Search } = Input;

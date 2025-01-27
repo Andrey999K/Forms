@@ -1,15 +1,15 @@
 import { useParams } from 'react-router-dom';
 import { useGetFormQuery } from '@/redux/form';
-import { Loader } from '@/components/ui/Loader';
 import { Button, Form, Typography } from 'antd';
 import { useCreateResponseMutation } from '@/redux/response';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { ResponseSendMessage } from '@/components/FormPage';
-import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
-import { Timer } from '@/components/FormPage/Timer.tsx';
-import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
-import { renderField } from '@/utils/renderField.tsx';
+import { ResponseSendMessage } from '@/shared/components/FormPage';
+import { StartTimer } from '@/shared/components/FormPage/StartTimer';
+import { Timer } from '@/shared/components/FormPage/Timer';
+import { Loader } from '@/shared/components/ui/Loader';
+import { GlassWrapper } from '@/shared/components/ui/wrapper/GlassWrapper';
+import { renderField } from '@/shared/utils/renderField';
 
 export const FormPage = () => {
   const { formId } = useParams();

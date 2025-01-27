@@ -1,7 +1,7 @@
 import { fetchResponseSlice, resetStore } from '@/redux/response';
 import { useGetFormQuery } from '@/redux/form';
 import { AppDispatch, RootState } from '@/redux/store';
-import { FormListOptions, FormResponse, Sort } from '@/types';
+import { FormListOptions, FormResponse, Sort } from '@/shared/types';
 import { ComponentProps, useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';

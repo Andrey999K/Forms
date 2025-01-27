@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, ReactNode, useRef } from 'react';
-import { getUUID } from '@/utils/getUUID';
+import { getUUID } from '@/shared/utils/getUUID';
 
 type Props = {
   children: ReactNode;

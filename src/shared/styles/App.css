@@ -1,0 +1,79 @@
+#root {
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  /* padding: 2rem; */
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* .ant-btn:focus,
+.ant-btn:active,
+.ant-btn:hover {
+  box-shadow: none !important;
+  border-color: transparent !important;
+  outline: none !important;
+  transition: none !important;
+}
+
+.ant-btn:focus {
+  box-shadow: none !important;
+  border-color: transparent !important;
+  outline: none !important;
+}
+
+.ant-btn:active {
+  box-shadow: none !important;
+  border-color: transparent !important;
+  outline: none !important;
+} */
+
+.custom-form .ant-form-item-explain-error {
+  text-align: left;
+}
+
+.custom-timer .ant-statistic-title {
+  margin-bottom: 0;
+}
+
+/*.custom-form .ant-form-item {*/
+/*  margin-bottom: 40px !important;*/
+/*}*/
+
+.auth-bg-gradient {
+  background: linear-gradient(to bottom, #9da9b3, #d4c6a9, #eea53a);
+}

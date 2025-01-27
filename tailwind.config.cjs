@@ -8,9 +8,6 @@ module.exports = {
         colorTextBase: '#885028',
         colorBgBase: '#fdf8f4',
       },
-      backgroundImage: {
-        authImg: "url('/sky.jpg')",
-      },
       spacing: {
         'page-layout-offset': '93px',
       },

@@ -2,12 +2,12 @@ import { Alert, Form } from 'antd';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useGetMeInfoQuery, useUpdateMeInfoMutation } from '@/redux/user';
-import { MeChangeFields } from '@/types/me';
-import { MeProfileActions, MeAvatar } from '@/components/Me';
-import { MeProfileDetails } from '@/components/Me';
-import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
+import { MeChangeFields } from '@/shared/types/me';
+import { MeProfileActions, MeAvatar } from '@/shared/components/Me';
+import { MeProfileDetails } from '@/shared/components/Me';
+import { GlassWrapper } from '@/shared/components/ui/wrapper/GlassWrapper';
 import { toast } from 'react-toastify';
-import { Loader } from '@/components/ui/Loader';
+import { Loader } from '@/shared/components/ui/Loader';
 
 export const Me = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);

@@ -1,4 +1,4 @@
-import { getUUID } from '@/utils/getUUID';
+import { getUUID } from '@/shared/utils/getUUID';
 import { Spin } from 'antd';
 import { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';

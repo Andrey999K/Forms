@@ -1,12 +1,12 @@
 import { serverTimestamp } from 'firebase/firestore';
 import { firestoreService } from '@/services/firestore.service';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { FormResponse } from '@/types';
-import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
+import { FormResponse } from '@/shared/types';
+import { getFirebaseError } from '@/shared/utils/firebase/getFirebaseError';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { getUUID } from '@/utils/getUUID.ts';
+import { getUUID } from '@/shared/utils/getUUID';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

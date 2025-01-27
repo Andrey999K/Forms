@@ -2,14 +2,14 @@ import { Form, Layout, Spin, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { MdMail } from 'react-icons/md';
-import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
-import { UserFormValidationRules } from '@/utils/validation';
-import { UserFormInput } from '@/components/Auth/UserFormInput';
-import { EmailValue } from '@/types/auth';
+import { AuthSubmitButton } from '@/shared/components/Auth/AuthSubmitButton';
+import { UserFormValidationRules } from '@/shared/utils/validation';
+import { UserFormInput } from '@/shared/components/Auth/UserFormInput';
+import { EmailValue } from '@/shared/types/auth';
 import { useResetPasswordMutation } from '@/redux/auth';
 import { toast } from 'react-toastify';
-import { AuthTextLink } from '@/components/Auth/AuthTextLink';
-import { ROUTES } from '@/utils/routesConfig';
+import { AuthTextLink } from '@/shared/components/Auth/AuthTextLink';
+import { ROUTES } from '@/shared/utils/routesConfig';
 
 export const RecoveryPassword = () => {
   const { control, handleSubmit, reset } = useForm<EmailValue>({
@@ -28,7 +28,7 @@ export const RecoveryPassword = () => {
   };
 
   return (
-    <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">
+    <Layout className="min-h-screen auth-bg-gradient overflow-hidden">
       <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
         <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
           <div className="mb-6">

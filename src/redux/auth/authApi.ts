@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { validateAuthError } from '@/utils/errors/validateAuthError';
+import { validateAuthError } from '@/shared/utils/errors/validateAuthError';
 import { toast } from 'react-toastify';
 import { FirebaseError } from 'firebase/app';
 import { firestoreService } from '@/services/firestore.service';
-import { AuthUser, SignInFormValues, SignUpFormValues } from '@/types/auth';
+import { AuthUser, SignInFormValues, SignUpFormValues } from '@/shared/types/auth';
 const COLLECTION = 'users';
 
 export const authApi = createApi({
@@ -56,6 +56,7 @@ export const authApi = createApi({
       queryFn: async () => {
         try {
           await firestoreService.logout();
+          localStorage.removeItem('user');
           return { data: undefined };
         } catch (error) {
           return { error: { status: 500, data: error } };

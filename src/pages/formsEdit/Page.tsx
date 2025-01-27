@@ -1,6 +1,6 @@
-import { ConstructorHeader } from '@/components/FormsEdit/ConstructorHeader';
-import { ConstructorWorkArea } from '@/components/FormsEdit/ConstructorWorkArea';
-import { Sidebar } from '@/components/FormsEdit/Sidebar';
+import { ConstructorHeader } from '@/shared/components/FormsEdit/ConstructorHeader';
+import { ConstructorWorkArea } from '@/shared/components/FormsEdit/ConstructorWorkArea';
+import { Sidebar } from '@/shared/components/FormsEdit/Sidebar';
 import {
   useCreateFormMutation,
   useDeleteFormMutation,
@@ -14,17 +14,17 @@ import {
   FieldTypes,
   HandleChangeForm,
   NEW_FORM,
-} from '@/types';
-import { getUUID } from '@/utils/getUUID';
+} from '@/shared/types';
+import { getUUID } from '@/shared/utils/getUUID';
 import { Spin } from 'antd';
 import { FC, useLayoutEffect, useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ROUTES } from '@/utils/routesConfig.ts';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
+import { NotFound } from '../notFoundPage/Page';
 
 export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -177,8 +177,7 @@ export const FormsEdit: FC = () => {
   }
 
   if (!formData && !newFormId) {
-    navigate(ROUTES.NOT_FOUND);
-    return;
+    return <NotFound />;
   }
 
   if (!constructor) return <div>Ошибка при создании конструктора.</div>;
