@@ -1,12 +1,12 @@
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.js';
 import { useLogoutMutation } from '@/redux/auth/authApi.js';
-import { IconUserCircle } from '@tabler/icons-react';
 import { Button, Dropdown, MenuProps } from 'antd';
 import { ReactNode } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { ROUTES } from '../utils/routesConfig.ts';
 import { ShapeWrapper } from './GlassLayout.js';
+import { UserOutlined } from '@ant-design/icons';
 
 const pages = [
   {
@@ -68,7 +68,9 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
             ))}
           </div>
           <Dropdown menu={{ items }} placement="bottom">
-            <IconUserCircle stroke={1.5} size={30} color="#FA913C" className="cursor-pointer" />
+            <div className="border-2 border-[#FA913C] rounded-full cursor-pointer text-[#FA913C] w-7 h-7 flex justify-center items-center">
+              <UserOutlined style={{ fontSize: '1.25rem' }} />
+            </div>
           </Dropdown>
         </div>
       </GlassWrapper>
