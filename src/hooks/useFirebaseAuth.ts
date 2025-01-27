@@ -14,9 +14,7 @@ export const useFirebaseAuth = () => {
       if (user !== currentUser) {
         dispatch(setUser(user));
       }
-      // if (!currentUser) {
       dispatch(setIsUserReady(true));
-      // }
     });
 
     return () => unsubscribe();

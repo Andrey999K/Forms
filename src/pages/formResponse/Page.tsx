@@ -3,7 +3,6 @@ import { Link, useParams } from 'react-router-dom';
 import { useGetFormQuery } from '@/redux/form';
 import { useGetResponseQuery } from '@/redux/response';
 import { Loader } from '@/shared/components/ui/Loader';
-// import { AnswerCard } from '@/shared/components/FormResponse/AnswerCard/AnswerCard.tsx';
 import { AnswerCard } from '@/shared/components/FormResponse/AnswerCard/AnswerCard';
 import { NotFound } from '../notFoundPage/Page';
 
