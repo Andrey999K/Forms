@@ -1,7 +1,7 @@
 import { ConstructorField, FieldTypes } from '@/types';
 import { getUUID } from '@/utils/getUUID';
 import { MinusCircleOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Input, InputRef, Radio, Select, Tooltip } from 'antd';
+import { Button, Checkbox, Input, InputRef, Radio, Select } from 'antd';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 
 type Props = {
@@ -15,6 +15,7 @@ export const RadioEditor: FC<Props> = (props) => {
   const options = field.options || [];
   const [newInputId, setNewInputId] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [deleteId, setDeleteId] = useState('');
 
   const handleChangeType = (type: FieldTypes) => {
     onUpdateField(field.id, { type });
@@ -66,6 +67,14 @@ export const RadioEditor: FC<Props> = (props) => {
     getErrors(e.target.id, e.target.value);
   };
 
+  const handleDelete = (id: string) => {
+    setDeleteId(id);
+    setTimeout(() => {
+      handleRemove(id);
+      setDeleteId('');
+    }, 300);
+  };
+
   useEffect(() => {
     options.forEach((option) => {
       getErrors(option.id, option.label);
@@ -75,7 +84,10 @@ export const RadioEditor: FC<Props> = (props) => {
   return (
     <>
       {options.map((option, index) => (
-        <div key={option.id} className="w-full flex gap-2 items-center">
+        <div
+          key={option.id}
+          className={`w-full flex gap-2 items-center ${deleteId === option.id ? 'animate-scaleDown' : 'animate-scaleUp'}`}
+        >
           {field.type === 'radio' ? <Radio className="m-0" disabled /> : <Checkbox disabled />}
           <Input
             id={option.id}
@@ -88,14 +100,12 @@ export const RadioEditor: FC<Props> = (props) => {
           />
 
           {options.length > 1 && (
-            <Tooltip title="Удалить">
-              <Button
-                type="text"
-                danger
-                icon={<MinusCircleOutlined />}
-                onClick={() => handleRemove(option.id)}
-              />
-            </Tooltip>
+            <Button
+              type="text"
+              danger
+              icon={<MinusCircleOutlined />}
+              onClick={() => handleDelete(option.id)}
+            />
           )}
         </div>
       ))}
@@ -107,7 +117,7 @@ export const RadioEditor: FC<Props> = (props) => {
           </Button>
         </div>
         <Select
-          defaultValue={FieldTypes.RADIO}
+          defaultValue={field.type}
           className="w-[300px]"
           onChange={handleChangeType}
           options={[

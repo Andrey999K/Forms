@@ -10,7 +10,7 @@ type Props = {
 
 export const SidebarDraggableItem: FC<Props> = (props) => {
   const { type, children } = props;
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [, drag] = useDrag(() => ({
     type,
     item: { type, isNew: true },
     collect: (monitor) => ({
@@ -19,7 +19,7 @@ export const SidebarDraggableItem: FC<Props> = (props) => {
   }));
 
   return (
-    <div ref={drag} className={`flex gap-2 ${isDragging ? 'opacity-50' : 'opacity-100'}`}>
+    <div ref={drag} className={`flex gap-2 `}>
       <Button className="w-full text-left justify-start" type="text">
         {children}
       </Button>

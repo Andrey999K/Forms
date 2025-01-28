@@ -1,8 +1,11 @@
 import { ConstructorField, ConstructorForm, FieldType } from '@/types';
+import { PlusCircleOutlined } from '@ant-design/icons';
+import { Button, Dropdown, MenuProps } from 'antd';
 import { FC, Fragment, useRef } from 'react';
+import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 import { ConstructorDraggableField } from './ConstructorDraggableField';
 import { ConstructorDropZone } from './ConstructorDropZone';
-import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
+import { useConstructorItems } from './useConstructorItems';
 
 type Props = {
   constructor: ConstructorForm;
@@ -17,6 +20,17 @@ type Props = {
 export const ConstructorWorkArea: FC<Props> = (props) => {
   const { constructor, onDropField, onMoveField, onRemoveField, onUpdateField, onError } = props;
   const workspaceRef = useRef<HTMLDivElement>(null);
+  const { items } = useConstructorItems();
+  const menuItems: MenuProps['items'] = Object.entries(items).map(([key, { label, jsxIcon }]) => ({
+    key,
+    label: (
+      <div className="flex gap-2 items-center justify-center">
+        {jsxIcon}
+        {label}
+      </div>
+    ),
+    onClick: () => onDropField(key as FieldType, constructor.fields.length),
+  }));
 
   const isOutsideWorkspace = (x: number, y: number) => {
     if (!workspaceRef.current) return false;
@@ -37,11 +51,7 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
         />
       ) : (
         <>
-          <ConstructorDropZone
-            onDropField={(type) => onDropField(type, 0)}
-            className="min-h-5"
-            index={0}
-          />
+          <ConstructorDropZone onDropField={(type) => onDropField(type, 0)} index={0} />
           {constructor.fields.map((field, index) => (
             <Fragment key={field.id}>
               <ConstructorDraggableField
@@ -53,13 +63,21 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
                 onUpdateField={onUpdateField}
                 isOutsideWorkspace={isOutsideWorkspace}
               />
+
               <ConstructorDropZone
                 onDropField={(type) => onDropField(type, index + 1)}
-                className="min-h-5"
                 index={index + 1}
               />
             </Fragment>
           ))}
+          <div className="w-full pb-2 flex justify-center">
+            <Dropdown menu={{ items: menuItems }} placement="top" arrow={{ pointAtCenter: true }}>
+              <Button
+                type="text"
+                icon={<PlusCircleOutlined className="cursor-pointer transition" />}
+              />
+            </Dropdown>
+          </div>
         </>
       )}
     </GlassWrapper>

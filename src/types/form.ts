@@ -30,7 +30,8 @@ export type Tag = {
 type Form = {
   title: string;
   description: string;
-  settings: { timer: string; timerActive: false; tags: Tag[] };
+  tags: Tag[];
+  timer: string;
   fields: ConstructorField[];
   userId: string;
 };
@@ -52,7 +53,8 @@ export const NEW_FORM: Omit<Form, 'userId'> = {
   fields: [],
   title: 'Название формы',
   description: 'Описание формы',
-  settings: { timer: '', timerActive: false, tags: [] },
+  timer: '',
+  tags: [],
 };
 
 export const BASE_AVATAR_URL = 'https://api.dicebear.com/6.x/avataaars/svg';
