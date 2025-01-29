@@ -118,7 +118,7 @@ export const FormPage = () => {
         <ResponseSendMessage />
       ) : (
         <div className="flex gap-4 items-start w-full">
-          <GlassWrapper className="p-10 relative w-full">
+          <GlassWrapper className="p-10 relative w-full overflow-hidden max-h-[calc(100dvh-200px)]">
             <div className="flex items-center justify-around">
               <div className="flex flex-col gap-3">
                 <Typography className="text-lg font-bold leading-none">{formData.title}</Typography>
@@ -132,27 +132,29 @@ export const FormPage = () => {
               layout="vertical"
               onValuesChange={onValuesChange}
             >
-              {formData.fields.map((field) => (
-                <Form.Item
-                  key={field.id}
-                  label={field.question}
-                  name={field.id}
-                  rules={
-                    field.require
-                      ? [{ required: true, message: 'Поле обязательно к заполнению!' }]
-                      : []
-                  }
-                >
-                  {renderField(field)}
-                </Form.Item>
-              ))}
-              <Form.Item className="mb-0">
+              <div className="overflow-auto max-h-[calc(100dvh-400px)] pr-2">
+                {formData.fields.map((field) => (
+                  <Form.Item
+                    key={field.id}
+                    label={field.question}
+                    name={field.id}
+                    rules={
+                      field.require
+                        ? [{ required: true, message: 'Поле обязательно к заполнению!' }]
+                        : []
+                    }
+                  >
+                    {renderField(field)}
+                  </Form.Item>
+                ))}
+              </div>
+              <div className="mb-0 pt-5 relative">
                 <div className="flex justify-start">
                   <Button type="primary" htmlType="submit" disabled={!isFormValid}>
                     Отправить форму
                   </Button>
                 </div>
-              </Form.Item>
+              </div>
             </Form>
           </GlassWrapper>
           {formData.settings?.timerActive && timerStart && (
