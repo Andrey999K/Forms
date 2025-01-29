@@ -159,8 +159,6 @@ export const FormsEdit: FC = () => {
 
   useLayoutEffect(() => {
     if (formData) {
-      console.log(formData);
-
       setConstructor(() => formData);
     } else if (newFormId) {
       setConstructor(() => ({
