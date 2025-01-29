@@ -10,7 +10,7 @@ export const renderField = (field: ConstructorField) => {
       return <Input.TextArea />;
     case 'radio':
       return (
-        <Radio.Group className="flex justify-start">
+        <Radio.Group className="flex justify-start flex-col gap-2 md:gap-0 md:flex-row">
           {field.options?.map((option) => (
             <Radio key={option.id} value={option.id}>
               {option.label}

@@ -74,7 +74,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
           </Dropdown>
         </div>
       </GlassWrapper>
-      <div className="mt-5 w-full max-w-screen-lg m-auto">{children || <Outlet />}</div>
+      <div className="mt-5 w-full max-w-screen-lg m-auto px-4">{children || <Outlet />}</div>
       <ToastContainer />
     </ShapeWrapper>
   );

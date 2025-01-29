@@ -3,18 +3,20 @@ import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { MdMail, MdPerson, MdPersonAddAlt1, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { RiLockFill } from 'react-icons/ri';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterMutation } from '@/redux/auth';
-import { AuthClearFormButton } from '@/components/Auth/AuthClearFormButton';
-import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
-import { AuthTextLink } from '@/components/Auth/AuthTextLink';
+
+import { AuthClearFormButton } from '@/components/Auth/AuthClearFormButton.tsx';
+
 import { ROUTES } from '@/utils/routesConfig';
 import { SignUpFormValues } from '@/types/auth';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/redux/user';
 import { UserFormValidationRules } from '@/utils/validation';
-import { UserFormInput } from '@/components/Auth/UserFormInput';
+import { UserFormInput } from '@/components/Auth/UserFormInput.tsx';
+import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton.tsx';
+import { AuthTextLink } from '@/components/Auth/AuthTextLink.tsx';
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -43,6 +45,10 @@ export const Signup = () => {
       dispatch(setLoading(false));
     }
   };
+
+  useEffect(() => {
+    document.title = 'Регистрация';
+  }, []);
 
   return (
     <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">

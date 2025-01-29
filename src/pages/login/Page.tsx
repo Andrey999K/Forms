@@ -5,7 +5,7 @@ import { FiLogIn } from 'react-icons/fi';
 import { MdMail } from 'react-icons/md';
 import { RiLockFill } from 'react-icons/ri';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
 import { AuthTextLink } from '@/components/Auth/AuthTextLink';
 import { ROUTES } from '@/utils/routesConfig';
@@ -40,6 +40,10 @@ export const Login = () => {
       dispatch(setLoading(false));
     }
   };
+
+  useEffect(() => {
+    document.title = 'Вход';
+  }, []);
 
   return (
     <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">

@@ -125,6 +125,7 @@ export const Home = () => {
 
   useEffect(() => {
     resetLocalState();
+    document.title = 'Главная';
   }, []);
 
   const handleLoadMore = () => {

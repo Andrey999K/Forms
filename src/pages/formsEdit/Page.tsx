@@ -20,7 +20,7 @@ import { getUUID } from '@/utils/getUUID';
 import { ROUTES } from '@/utils/routesConfig.ts';
 import { Spin } from 'antd';
 import { HTML5toTouch } from 'rdndmb-html5-to-touch';
-import { FC, useLayoutEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { MultiBackend } from 'react-dnd-multi-backend';
 import { useSelector } from 'react-redux';
@@ -103,28 +103,16 @@ export const FormsEdit: FC = () => {
     });
   };
 
-  const checkBeforeSending = (constructor: ConstructorForm) => {
-    let copyConstructor: ConstructorForm = JSON.parse(JSON.stringify(constructor));
-    if (copyConstructor.settings.timerActive && copyConstructor.settings.timer === '') {
-      copyConstructor = {
-        ...copyConstructor,
-        settings: { ...copyConstructor.settings, timerActive: false },
-      };
-    }
-    return copyConstructor;
-  };
-
   const handleSaveForms = async () => {
     if (!constructor) return;
     if (isError) return;
 
-    const verifiedConstructor = checkBeforeSending(constructor);
     try {
-      if ('createAt' in verifiedConstructor) {
-        await updateForm(verifiedConstructor).unwrap();
+      if ('createAt' in constructor) {
+        await updateForm(constructor).unwrap();
         toast.success('Форма успешно обновлена ');
       } else {
-        await createForm(verifiedConstructor).unwrap();
+        await createForm(constructor).unwrap();
         toast.success('Форма успешно сохранена');
       }
     } catch (error) {
@@ -168,6 +156,10 @@ export const FormsEdit: FC = () => {
       }));
     }
   }, [formData]);
+
+  useEffect(() => {
+    document.title = 'Конструктор';
+  }, []);
 
   if (isLoadingForm) {
     return (
