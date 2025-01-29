@@ -3,7 +3,7 @@ import { useGetFormQuery } from '@/redux/form';
 import { Loader } from '@/components/ui/Loader';
 import { Button, Form, Typography } from 'antd';
 import { useCreateResponseMutation } from '@/redux/response';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { ResponseSendMessage } from '@/components/FormPage';
 import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
@@ -91,6 +91,12 @@ export const FormPage = () => {
     await sendForm(form.getFieldsValue(true));
   };
 
+  useEffect(() => {
+    if (formData) {
+      document.title = formData.title;
+    }
+  }, [formData]);
+
   if (!formId) {
     return <h2>Форма не найдена!</h2>;
   }
@@ -103,7 +109,7 @@ export const FormPage = () => {
     return <h2>Нет данных!</h2>;
   }
 
-  if (!timerStart && formData?.settings?.timerActive) {
+  if (!timerStart && formData?.timer) {
     return <StartTimer onStart={startTimer} />;
   }
 
@@ -157,7 +163,7 @@ export const FormPage = () => {
               </div>
             </Form>
           </GlassWrapper>
-          {formData.settings?.timerActive && timerStart && (
+          {formData?.timer && timerStart && (
             <GlassWrapper className="p-10">
               <Timer onFinish={sendFormAfterTimer} />
             </GlassWrapper>

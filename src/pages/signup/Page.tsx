@@ -3,7 +3,7 @@ import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { MdMail, MdPerson, MdPersonAddAlt1, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { RiLockFill } from 'react-icons/ri';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterMutation } from '@/redux/auth';
 
@@ -45,6 +45,10 @@ export const Signup = () => {
       dispatch(setLoading(false));
     }
   };
+
+  useEffect(() => {
+    document.title = 'Регистрация';
+  }, []);
 
   return (
     <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">

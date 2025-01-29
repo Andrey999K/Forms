@@ -10,6 +10,7 @@ import { useResetPasswordMutation } from '@/redux/auth';
 import { toast } from 'react-toastify';
 import { AuthTextLink } from '@/components/Auth/AuthTextLink';
 import { ROUTES } from '@/utils/routesConfig';
+import { useEffect } from 'react';
 
 export const RecoveryPassword = () => {
   const { control, handleSubmit, reset } = useForm<EmailValue>({
@@ -26,6 +27,10 @@ export const RecoveryPassword = () => {
       console.error('Ошибка сброса пароля:', error);
     }
   };
+
+  useEffect(() => {
+    document.title = 'Сброс пароля';
+  }, []);
 
   return (
     <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">

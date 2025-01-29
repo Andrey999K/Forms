@@ -5,12 +5,17 @@ import { useGetResponseQuery } from '@/redux/response';
 import { ROUTES } from '@/utils/routesConfig.ts';
 import { Loader } from '@/components/ui/Loader';
 import { AnswerCard } from '@/components/FormResponse/AnswerCard';
+import { useEffect } from 'react';
 
 export const FormResponse = () => {
   const { formId, responseId } = useParams();
   const { data: form, isLoading: isLoadingForm } = useGetFormQuery(formId || '');
   const { data: response, isLoading: isLoadingResponse } = useGetResponseQuery(responseId || '');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = 'Отклик';
+  }, []);
 
   if (isLoadingForm || isLoadingResponse) return <Loader />;
 

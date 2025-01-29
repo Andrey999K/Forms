@@ -56,6 +56,10 @@ export const Me = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    document.title = 'Профиль';
+  }, []);
+
   if (!user || isLoading || isUpdating) return <Loader />;
 
   return (
