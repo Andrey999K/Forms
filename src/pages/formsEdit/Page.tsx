@@ -20,7 +20,7 @@ import {
 import { getUUID } from '@/utils/getUUID';
 import { Spin } from 'antd';
 import { HTML5toTouch } from 'rdndmb-html5-to-touch';
-import { FC, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { FC, useLayoutEffect, useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { MultiBackend } from 'react-dnd-multi-backend';
 import { useSelector } from 'react-redux';
@@ -157,10 +157,6 @@ export const FormsEdit: FC = () => {
       }));
     }
   }, [formData]);
-
-  useEffect(() => {
-    document.title = 'Конструктор';
-  }, []);
 
   if (isLoadingForm) {
     return (
