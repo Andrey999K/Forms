@@ -1,6 +1,7 @@
 import { ConstructorHeader } from '@/components/FormsEdit/ConstructorHeader';
 import { ConstructorWorkArea } from '@/components/FormsEdit/ConstructorWorkArea';
 import { Sidebar } from '@/components/FormsEdit/Sidebar';
+import PageTitle from '@/components/ui/PageTitle/PageTitle';
 import {
   useCreateFormMutation,
   useDeleteFormMutation,
@@ -177,32 +178,37 @@ export const FormsEdit: FC = () => {
   if (!constructor) return <div>Ошибка при создании конструктора.</div>;
 
   return (
-    <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-      <div className="flex gap-4 items-start p-4">
-        <Sidebar
-          constructor={constructor}
-          isCreating={isCreating}
-          isUpdating={isUpdating}
-          isDeleting={isDeleting}
-          isError={isError}
-          isNew={!('createdAt' in constructor)}
-          onSaveConstructor={handleSaveForms}
-          onRemoveConstructor={handleRemoveForms}
-          onChangeForm={handleChangeForm}
-        />
-        <div className="flex flex-col w-full relative gap-4 ">
-          <ConstructorHeader constructor={constructor} onChangeForm={handleChangeForm} />
-          <ConstructorWorkArea
+    <>
+      <PageTitle
+        title={formData?.title ? `Изменение формы | ${formData.title}` : 'Изменение формы'}
+      />
+      <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+        <div className="flex gap-4 items-start p-4">
+          <Sidebar
             constructor={constructor}
-            onError={handleError}
-            onDropField={handleDropField}
-            onMoveField={moveField}
-            onRemoveField={removeField}
-            onUpdateField={updateField}
+            isCreating={isCreating}
+            isUpdating={isUpdating}
+            isDeleting={isDeleting}
+            isError={isError}
+            isNew={!('createdAt' in constructor)}
+            onSaveConstructor={handleSaveForms}
+            onRemoveConstructor={handleRemoveForms}
             onChangeForm={handleChangeForm}
           />
+          <div className="flex flex-col w-full relative gap-4 ">
+            <ConstructorHeader constructor={constructor} onChangeForm={handleChangeForm} />
+            <ConstructorWorkArea
+              constructor={constructor}
+              onError={handleError}
+              onDropField={handleDropField}
+              onMoveField={moveField}
+              onRemoveField={removeField}
+              onUpdateField={updateField}
+              onChangeForm={handleChangeForm}
+            />
+          </div>
         </div>
-      </div>
-    </DndProvider>
+      </DndProvider>
+    </>
   );
 };

@@ -8,6 +8,7 @@ import { MeProfileDetails } from '@/components/Me';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { toast } from 'react-toastify';
 import { Loader } from '@/components/ui/Loader';
+import PageTitle from '@/components/ui/PageTitle/PageTitle';
 
 export const Me = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -64,6 +65,7 @@ export const Me = () => {
 
   return (
     <div className="flex justify-center p-4 break-words w-full">
+      <PageTitle title="Профиль" />
       <GlassWrapper className={`w-1/2 px-5 py-5 text-center`} style={{ zIndex: 10 }}>
         {error ? (
           <Alert

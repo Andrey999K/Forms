@@ -10,6 +10,7 @@ import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
 import { Timer } from '@/components/FormPage/Timer.tsx';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
 import { renderField } from '@/utils/renderField.tsx';
+import PageTitle from '@/components/ui/PageTitle/PageTitle';
 
 export const FormPage = () => {
   const { formId } = useParams();
@@ -98,23 +99,44 @@ export const FormPage = () => {
   }, [formData]);
 
   if (!formId) {
-    return <h2>Форма не найдена!</h2>;
+    return (
+      <>
+        <PageTitle title="Форма" />
+        <h2>Форма не найдена!</h2>
+      </>
+    );
   }
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <>
+        <PageTitle title="Форма" />
+        <Loader />
+      </>
+    );
   }
 
   if (!formData) {
-    return <h2>Нет данных!</h2>;
+    return (
+      <>
+        <PageTitle title="Форма" />
+        <h2>Нет данных!</h2>
+      </>
+    );
   }
 
   if (!timerStart && formData?.timer) {
-    return <StartTimer onStart={startTimer} />;
+    return (
+      <>
+        <PageTitle title={formData?.title ? `Форма | ${formData.title}` : 'Форма'} />
+        <StartTimer onStart={startTimer} />
+      </>
+    );
   }
 
   return (
     <div className="pt-5 relative">
+      <PageTitle title={formData?.title ? `Форма | ${formData.title}` : 'Форма'} />
       {isLoadingCreateResponse && (
         <div className="absolute h-full inset-0 bg-white/90 flex justify-center items-center z-10">
           <Loader />
