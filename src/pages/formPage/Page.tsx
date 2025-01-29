@@ -128,17 +128,19 @@ export const FormPage = () => {
             <div className="flex items-center justify-around">
               <div className="flex flex-col gap-3">
                 <Typography className="text-lg font-bold leading-none">{formData.title}</Typography>
-                <Typography.Text className="text-sm block">{formData.description}</Typography.Text>
+                <Typography.Text className="text-sm line-clamp-3">
+                  {formData.description}
+                </Typography.Text>
               </div>
             </div>
             <Form
               form={form}
               onFinish={onFinish}
-              className="mt-3 custom-form"
+              className="mt-5 custom-form flex flex-col h-full max-h-full"
               layout="vertical"
               onValuesChange={onValuesChange}
             >
-              <div className="overflow-auto max-h-[calc(100dvh-400px)] pr-2">
+              <div className="overflow-auto h-full max-h-[calc(100dvh-440px)] pr-2">
                 {formData.fields.map((field) => (
                   <Form.Item
                     key={field.id}
@@ -154,7 +156,7 @@ export const FormPage = () => {
                   </Form.Item>
                 ))}
               </div>
-              <div className="mb-0 pt-5 relative">
+              <div className="mb-0 py-5 relative h-full block border-t-[1px] border-solid border-gray-200">
                 <div className="flex justify-start">
                   <Button type="primary" htmlType="submit" disabled={!isFormValid}>
                     Отправить форму
