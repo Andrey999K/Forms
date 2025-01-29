@@ -7,6 +7,7 @@ import {
   useGetFormQuery,
   useUpdateFormMutation,
 } from '@/redux/form';
+import { RootState } from '@/redux/store';
 import {
   ConstructorField,
   ConstructorForm,
@@ -16,15 +17,15 @@ import {
   NEW_FORM,
 } from '@/types';
 import { getUUID } from '@/utils/getUUID';
+import { ROUTES } from '@/utils/routesConfig.ts';
 import { Spin } from 'antd';
+import { HTML5toTouch } from 'rdndmb-html5-to-touch';
 import { FC, useLayoutEffect, useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { MultiBackend } from 'react-dnd-multi-backend';
+import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ROUTES } from '@/utils/routesConfig.ts';
-import { RootState } from '@/redux/store';
-import { useSelector } from 'react-redux';
 
 export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -52,7 +53,7 @@ export const FormsEdit: FC = () => {
     setConstructor((prev) => {
       if (!prev) return prev;
       const { fields } = prev;
-      const isTypeRadio = type === FieldTypes.RADIO;
+      const isTypeRadio = type === FieldTypes.RADIO || type === FieldTypes.CHECKBOX;
       const options = isTypeRadio ? { options: [{ id: getUUID(), label: '' }] } : {};
       const newField: ConstructorField = {
         id: getUUID(),
@@ -184,7 +185,7 @@ export const FormsEdit: FC = () => {
   if (!constructor) return <div>Ошибка при создании конструктора.</div>;
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={MultiBackend} options={HTML5toTouch}>
       <div className="flex gap-4 items-start p-4">
         <Sidebar
           constructor={constructor}
@@ -192,7 +193,7 @@ export const FormsEdit: FC = () => {
           isUpdating={isUpdating}
           isDeleting={isDeleting}
           isError={isError}
-          isNew={'createAt' in constructor}
+          isNew={!('createdAt' in constructor)}
           onSaveConstructor={handleSaveForms}
           onRemoveConstructor={handleRemoveForms}
           onChangeForm={handleChangeForm}
