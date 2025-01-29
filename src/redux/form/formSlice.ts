@@ -1,7 +1,7 @@
 import { firestoreService } from '@/services/firestore.service';
 import { CardWithCount, FormListOptions, FormListResponse, FormResponse } from '@/types';
 import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { RootState } from '../store';
@@ -53,12 +53,16 @@ type InitialState = {
   status: 'pending' | 'success' | 'rejected' | null;
   data: CardWithCount[];
   lastVisible?: QueryDocumentSnapshot<DocumentData, DocumentData>;
+  order?: FormListOptions['sort'];
+  search?: string;
+  hasNext: boolean;
 };
 
 const initialState: InitialState = {
   status: null,
   error: null,
   data: [],
+  hasNext: true,
 };
 
 const formsSlice = createSlice({
@@ -68,6 +72,9 @@ const formsSlice = createSlice({
     resetStore: () => {
       return initialState;
     },
+    deleteLocalForm: (state, action: PayloadAction<string>) => {
+      state.data = state.data.filter((form) => form.id !== action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -76,8 +83,11 @@ const formsSlice = createSlice({
       })
       .addCase(fetchFormsSlice.fulfilled, (state, action) => {
         state.lastVisible = action.payload.data?.lastVisible;
-        state.data = action.payload.data?.data ?? [];
+        state.search = action.meta.arg.search?.value;
+        state.order = action.meta.arg.sort;
         state.status = 'success';
+        state.hasNext = action.payload.data.data.length === action.meta.arg.limit;
+        state.data = [...state.data, ...(action.payload.data?.data ?? [])];
       })
       .addCase(fetchFormsSlice.rejected, (state) => {
         state.status = 'rejected';

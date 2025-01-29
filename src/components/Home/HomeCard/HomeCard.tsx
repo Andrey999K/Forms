@@ -48,13 +48,18 @@ export const HomeCard = (props: Props) => {
       title={titleElement}
       bordered={false}
       actions={actions}
-      style={{ backdropFilter: 'blur(4px)', background: 'rgb(255 250 245 / 85%)' }}
+      style={{
+        backdropFilter: 'blur(4px)',
+        background: 'rgb(255 250 245 / 85%)',
+      }}
       styles={{
         actions: { background: 'transparent', borderColor: '#ffe2cb' },
         header: { borderColor: '#ffe2cb' },
+        body: { flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' },
       }}
+      className="h-full flex flex-col"
     >
-      {item.description}
+      <div className="line-clamp-3 ">{item.description}</div>
     </Card>
   );
 };

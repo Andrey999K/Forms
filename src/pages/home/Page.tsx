@@ -7,12 +7,13 @@ import { DefaultOptionType } from 'antd/es/select';
 import { useInView } from 'react-intersection-observer';
 
 import { AppDispatch, RootState } from '@/redux/store';
-import { resetStore, useDeleteFormMutation, fetchFormsSlice } from '@/redux/form';
+import { resetStore, deleteLocalForm, useDeleteFormMutation, fetchFormsSlice } from '@/redux/form';
 
 import { HomeList } from '@/components/Home/HomeList/HomeList';
 
-import { CardWithCount, FormListOptions, Sort } from '@/types';
+import { FormListOptions, Sort } from '@/types';
 import { toast } from 'react-toastify';
+import PageTitle from '@/components/ui/PageTitle/PageTitle';
 
 const { Search } = Input;
 
@@ -61,7 +62,7 @@ const sortOptions: DefaultOptionType[] = [
   },
 ];
 
-const CARDS_PER_PAGE = 30;
+const CARDS_PER_PAGE = 6;
 
 export const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -69,14 +70,16 @@ export const Home = () => {
     (state) => state.formSlice.status
   );
   const user = useSelector((state: RootState) => state.user.user);
+  const savedOrder = useSelector((state: RootState) => state.formSlice.order);
+  const savedSearch = useSelector((state: RootState) => state.formSlice.search);
+  const formsList = useSelector((state: RootState) => state.formSlice.data);
+  const hasNext = useSelector((state: RootState) => state.formSlice.hasNext);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState<string>(searchParams.get('search') ?? '');
   const [order, setOrder] = useState<SortKeys>(
     (searchParams.get('order') as SortKeys) ?? SortKeys.TIME_DESC
   );
-  const [filteredList, setFilteredList] = useState<CardWithCount[]>([]);
-  const [hasNext, setHasNext] = useState<boolean>(true);
 
   const [deleteForm] = useDeleteFormMutation();
 
@@ -93,26 +96,20 @@ export const Home = () => {
   const onDelete = async (id: string) => {
     try {
       await deleteForm(id).unwrap();
-      setFilteredList((prev) => prev.filter((item) => item.id !== id));
+      dispatch(deleteLocalForm(id));
     } catch (error) {
       console.error('Ошибка удаления:', error);
     }
   };
 
   const onSearch = (value: string) => {
-    resetLocalState();
+    dispatch(resetStore());
     setSearch(value);
   };
 
   const onChangeSort = (value: SortKeys) => {
-    resetLocalState();
-    setOrder(value);
-  };
-
-  const resetLocalState = () => {
     dispatch(resetStore());
-    setHasNext(true);
-    setFilteredList([]);
+    setOrder(value);
   };
 
   useEffect(() => {
@@ -124,8 +121,17 @@ export const Home = () => {
   }, [order, search, setSearchParams]);
 
   useEffect(() => {
-    resetLocalState();
-    document.title = 'Главная';
+    if (search !== (savedSearch ?? '')) {
+      dispatch(resetStore());
+      return;
+    }
+    if (
+      sortType[order]?.field !== savedOrder?.field ||
+      sortType[order]?.type !== savedOrder?.type
+    ) {
+      dispatch(resetStore());
+      return;
+    }
   }, []);
 
   const handleLoadMore = () => {
@@ -141,53 +147,54 @@ export const Home = () => {
         limit: CARDS_PER_PAGE,
         reference: { collectionName: 'users', key: 'userId', id: user.uid },
       })
-    )
-      .unwrap()
-      .then((res) => {
-        const data = res.data.data ?? [];
-        if (!data.length) {
-          setHasNext(false);
-          return;
-        }
-        setFilteredList((prev) => [...prev, ...data]);
-      });
+    );
   };
 
   const showTrigger = (status === 'success' || status === null) && hasNext;
 
   return (
-    <div data-testid="home-page">
-      <Flex justify="space-between" gap={24} className="mb-8">
-        <Search defaultValue={search} onSearch={onSearch} style={{ width: 300 }} />
-        <Select
-          value={order}
-          options={sortOptions}
-          style={{ width: 200 }}
-          onChange={onChangeSort}
-        />
-      </Flex>
+    <>
+      <PageTitle title="Главная страница" />
+      <div data-testid="home-page">
+        <Flex
+          justify="space-between"
+          gap={12}
+          vertical
+          className="mb-4 px-5 lg:px-0 sm:flex-row sm:mb-8"
+        >
+          <Search defaultValue={search} onSearch={onSearch} className="w-full sm:w-[300px]" />
+          <Select
+            value={order}
+            options={sortOptions}
+            onChange={onChangeSort}
+            className="w-full sm:w-[200px]"
+          />
+        </Flex>
 
-      {filteredList.length > 0 ? (
-        <HomeList items={filteredList.filter((item) => item !== null)} onDelete={onDelete} />
-      ) : (
-        status !== 'pending' && !showTrigger && <Title level={2}>Нет доступных форм.</Title>
-      )}
-
-      {status === 'pending' && (
-        <div className="mb-5 mt-4">
-          <Spin />
+        <div className="pb-5">
+          {formsList.length > 0 ? (
+            <HomeList items={formsList.filter((item) => item !== null)} onDelete={onDelete} />
+          ) : (
+            status !== 'pending' && !showTrigger && <Title level={2}>Нет доступных форм.</Title>
+          )}
         </div>
-      )}
 
-      {showTrigger && (
-        <div ref={intersectionRef} className="mt-4 mb-5">
-          <Spin />
-        </div>
-      )}
+        {status === 'pending' && (
+          <div className="mb-5 mt-4">
+            <Spin />
+          </div>
+        )}
 
-      {status === 'rejected' && !filteredList.length && (
-        <Title level={2}>Произошла ошибка, попробуйте обновить страницу</Title>
-      )}
-    </div>
+        {showTrigger && (
+          <div ref={intersectionRef} className="mt-4 mb-5">
+            <Spin />
+          </div>
+        )}
+
+        {status === 'rejected' && !formsList.length && (
+          <Title level={2}>Произошла ошибка, попробуйте обновить страницу</Title>
+        )}
+      </div>
+    </>
   );
 };
