@@ -9,6 +9,7 @@ import { Card, DatePicker, Select, Spin } from 'antd';
 import typography from 'antd/es/typography';
 import { useInView } from 'react-intersection-observer';
 import dayjs, { Dayjs } from 'dayjs';
+import PageTitle from '@/components/ui/PageTitle/PageTitle';
 
 const { Text, Title } = typography;
 
@@ -162,30 +163,32 @@ export const FormResponses = () => {
   const showTrigger = (status === 'success' || status === null) && hasNext;
 
   return (
-    <div>
-      <Title level={1} className="mt-10">
-        Отклики на — Форма {form?.title}
+    <>
+      <PageTitle title={form ? `Отклики | ${form.title}` : 'Отклики'} />
+      <Title className="mt-10 px-5 !text-2xl lg:px-0 md:!text-4xl">
+        Отклики формы <br /> &quot;{form?.title}&quot;
       </Title>
 
-      <div className="flex items-center justify-end w-full gap-2 mt-10">
+      <div className="flex flex-col w-full gap-2 mt-10 px-5 mb-4 lg:px-0 sm:justify-between sm:flex-row">
         <Select
           defaultValue={sort}
           onChange={handleChangeSort}
           options={sortOptions}
           disabled={!list.length}
-          className="min-w-[20ch] text-left"
+          className="w-full sm:w-[200px] text-left"
         />
         <RangePicker
           defaultValue={[dates.start, dates.end]}
           onChange={handleEditDates}
-          className="max-w-[30ch]"
+          className="w-full sm:max-w-[300px]"
           format={dateFormat}
+          allowEmpty
           disabled={!list.length}
           maxDate={dayjs()}
         />
       </div>
 
-      <div className="flex flex-col gap-4 my-6">
+      <div className="flex flex-col gap-4 mb-4 px-5 lg:px-0">
         {list.length
           ? list.map((response, index) => (
               <Link to={`/forms/${formId}/responses/${response.id}`} key={response.id}>
@@ -218,6 +221,6 @@ export const FormResponses = () => {
       {status === 'rejected' && !list.length && (
         <Title level={2}>Произошла ошибка, попробуйте обновить страницу</Title>
       )}
-    </div>
+    </>
   );
 };

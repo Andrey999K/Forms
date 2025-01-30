@@ -1,3 +1,4 @@
+import PageTitle from '@/components/ui/PageTitle/PageTitle';
 import { getUUID } from '@/utils/getUUID';
 import { Spin } from 'antd';
 import { FC, useEffect } from 'react';
@@ -15,6 +16,7 @@ export const FormsNew: FC = () => {
 
   return (
     <div className="flex justify-center items-center">
+      <PageTitle title="Новая форма" />
       <Spin />
     </div>
   );
