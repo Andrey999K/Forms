@@ -4,6 +4,7 @@ import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/Forms/',
   plugins: [react()],
   server: {
     open: true,
