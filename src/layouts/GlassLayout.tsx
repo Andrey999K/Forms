@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback, ReactNode, useRef } from 'react';
+import { getRandomColor } from '@/utils/getRandomColor';
 import { getUUID } from '@/utils/getUUID';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 type Props = {
   children: ReactNode;
@@ -15,7 +16,7 @@ type Settings = {
 };
 
 const defaultSettings: Settings = {
-  color: 'rgb(229, 229, 229, 0.5)',
+  color: 'rgb(229, 229, 229, 0.25)',
   minSize: 5,
   numberCirclesInDirections: 5,
   spacing: 1,
@@ -27,6 +28,7 @@ type Circle = {
   x: number;
   y: number;
   size: number;
+  color: string;
 };
 
 type PageSize = {
@@ -94,7 +96,8 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
       let sizeReductionAttempts = 0;
       const maxSizeReductionAttempts = 3;
       const maxAttemptsPerSize = 10;
-      let newCircle = { x: 0, y: 0, size: 0, id: getUUID() };
+      const color = getRandomColor();
+      let newCircle = { x: 0, y: 0, size: 0, id: getUUID(), color };
 
       while (sizeReductionAttempts < maxSizeReductionAttempts) {
         let attempts = 0;

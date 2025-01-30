@@ -2,6 +2,7 @@ import { ConstructorField } from '@/types';
 import { CloseOutlined, HolderOutlined } from '@ant-design/icons';
 import { Button, Input, InputRef, Switch, Tooltip } from 'antd';
 import { ChangeEvent, FC, ReactNode, useEffect, useRef, useState } from 'react';
+import { useConstructorItems } from './useConstructorItems';
 
 type Props = {
   children: ReactNode;
@@ -17,6 +18,7 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
   const { field, children, dragRef, onRemoveField, onUpdateField, className = '', onError } = props;
   const [errors, setErrors] = useState<Record<string, string>>({});
   const inputRef = useRef<InputRef>(null);
+  const { items } = useConstructorItems();
 
   const getErrors = (id: string, label: string): Record<string, string> => {
     if (label.trim() === '') {
@@ -68,24 +70,27 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
           </div>
           {children}
         </div>
-      </div>
-
-      <div className="border-l my-2 px-2 flex flex-col gap-2 justify-between items-center">
-        <Tooltip title="Обязательное поле">
-          <Switch
-            size="small"
-            value={field.require}
-            onChange={(require) => onUpdateField(field.id, { require })}
-          />
-        </Tooltip>
-        <Tooltip title="Удалить">
-          <Button
-            type="text"
-            danger
-            icon={<CloseOutlined />}
-            onClick={() => handleRemove(field.id)}
-          />
-        </Tooltip>
+        <div className="px-4 border-t flex justify-between">
+          <div className="flex gap-2 items-center text-sm px-1">
+            {items[field.type].jsxIcon}
+            {items[field.type].label}
+          </div>
+          <div className="flex gap-2 items-center">
+            <Tooltip title="Обязательное поле">
+              <Switch
+                size="small"
+                value={field.require}
+                onChange={(require) => onUpdateField(field.id, { require })}
+              />
+            </Tooltip>
+            <Button
+              type="text"
+              danger
+              icon={<CloseOutlined />}
+              onClick={() => handleRemove(field.id)}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

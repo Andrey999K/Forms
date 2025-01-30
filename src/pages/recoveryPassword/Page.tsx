@@ -10,6 +10,7 @@ import { useResetPasswordMutation } from '@/redux/auth';
 import { toast } from 'react-toastify';
 import { AuthTextLink } from '@/components/Auth/AuthTextLink';
 import { ROUTES } from '@/utils/routesConfig';
+import PageTitle from '@/components/ui/PageTitle/PageTitle';
 
 export const RecoveryPassword = () => {
   const { control, handleSubmit, reset } = useForm<EmailValue>({
@@ -28,42 +29,45 @@ export const RecoveryPassword = () => {
   };
 
   return (
-    <Layout className="min-h-screen auth-bg-gradient overflow-hidden">
-      <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
-        <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
-          <div className="mb-6">
-            <Typography.Title
-              level={2}
-              style={{
-                marginBottom: '0.5rem',
-              }}
-            >
-              Сброс пароля
-            </Typography.Title>
-            <Typography.Title
-              level={5}
-              style={{
-                margin: '0',
-              }}
-            >
-              Введите почту, на которую будет отправлено письмо для сброса пароля.
-            </Typography.Title>
+    <>
+      <PageTitle title="Восстановление пароля" />
+      <Layout className="min-h-screen auth-bg-gradient bg-cover bg-center overflow-hidden">
+        <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
+          <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
+            <div className="mb-6">
+              <Typography.Title
+                level={2}
+                style={{
+                  marginBottom: '0.5rem',
+                }}
+              >
+                Сброс пароля
+              </Typography.Title>
+              <Typography.Title
+                level={5}
+                style={{
+                  margin: '0',
+                }}
+              >
+                Введите почту, на которую будет отправлено письмо для сброса пароля.
+              </Typography.Title>
+            </div>
+            <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
+              <UserFormInput
+                control={control}
+                name="email"
+                placeholder="Email"
+                rules={UserFormValidationRules.email}
+                prefix={<MdMail color="#808897" size={20} className="mr-1" />}
+              />
+              <AuthSubmitButton disabled={isLoading}>
+                {isLoading ? <Spin size="small" /> : 'Сбросить пароль'}
+              </AuthSubmitButton>
+              <AuthTextLink linkText="На страницу входа" linkTo={ROUTES.LOGIN} />
+            </Form>
           </div>
-          <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
-            <UserFormInput
-              control={control}
-              name="email"
-              placeholder="Email"
-              rules={UserFormValidationRules.email}
-              prefix={<MdMail color="#808897" size={20} className="mr-1" />}
-            />
-            <AuthSubmitButton disabled={isLoading}>
-              {isLoading ? <Spin size="small" /> : 'Сбросить пароль'}
-            </AuthSubmitButton>
-            <AuthTextLink linkText="На страницу входа" linkTo={ROUTES.LOGIN} />
-          </Form>
-        </div>
-      </Content>
-    </Layout>
+        </Content>
+      </Layout>
+    </>
   );
 };

@@ -63,8 +63,8 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
           className="p-5 flex items-center justify-center border-b-[1px] border-solid border-gray-200"
         >
           <NavLink to={ROUTES.HOME}>
-            <div className="cursor-pointer ml-8">
-              <img src="/logo-forms.png" alt="Logo Image" style={{ width: '190px' }} />
+            <div className="absolute top-1.5 text-[35px] font-bold text-[#f97316] font-caveat hidden sm:block">
+              Конструктор форм
             </div>
           </NavLink>
           <div className="flex items-center gap-5 w-full max-w-screen-lg justify-end mr-8">
@@ -103,7 +103,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
             </div>
           </div>
         </GlassWrapper>
-        <div className="mt-5 w-full max-w-screen-lg m-auto">{children || <Outlet />}</div>
+        <div className="mt-5 w-full max-w-screen-lg m-auto px-4">{children || <Outlet />}</div>
       </ShapeWrapper>
     </header>
   );

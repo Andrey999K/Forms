@@ -1,12 +1,14 @@
 import { ConstructorHeader } from '@/components/FormsEdit/ConstructorHeader';
 import { ConstructorWorkArea } from '@/components/FormsEdit/ConstructorWorkArea';
 import { Sidebar } from '@/components/FormsEdit/Sidebar';
+import PageTitle from '@/components/ui/PageTitle/PageTitle';
 import {
   useCreateFormMutation,
   useDeleteFormMutation,
   useGetFormQuery,
   useUpdateFormMutation,
 } from '@/redux/form';
+import { RootState } from '@/redux/store';
 import {
   ConstructorField,
   ConstructorForm,
@@ -17,13 +19,13 @@ import {
 } from '@/types';
 import { getUUID } from '@/utils/getUUID';
 import { Spin } from 'antd';
-import { FC, useLayoutEffect, useMemo, useState } from 'react';
+import { HTML5toTouch } from 'rdndmb-html5-to-touch';
+import { FC, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { MultiBackend } from 'react-dnd-multi-backend';
+import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { RootState } from '@/redux/store';
-import { useSelector } from 'react-redux';
 import { NotFound } from '../notFoundPage/Page';
 
 export const FormsEdit: FC = () => {
@@ -52,7 +54,7 @@ export const FormsEdit: FC = () => {
     setConstructor((prev) => {
       if (!prev) return prev;
       const { fields } = prev;
-      const isTypeRadio = type === FieldTypes.RADIO;
+      const isTypeRadio = type === FieldTypes.RADIO || type === FieldTypes.CHECKBOX;
       const options = isTypeRadio ? { options: [{ id: getUUID(), label: '' }] } : {};
       const newField: ConstructorField = {
         id: getUUID(),
@@ -102,28 +104,16 @@ export const FormsEdit: FC = () => {
     });
   };
 
-  const checkBeforeSending = (constructor: ConstructorForm) => {
-    let copyConstructor: ConstructorForm = JSON.parse(JSON.stringify(constructor));
-    if (copyConstructor.settings.timerActive && copyConstructor.settings.timer === '') {
-      copyConstructor = {
-        ...copyConstructor,
-        settings: { ...copyConstructor.settings, timerActive: false },
-      };
-    }
-    return copyConstructor;
-  };
-
   const handleSaveForms = async () => {
     if (!constructor) return;
     if (isError) return;
 
-    const verifiedConstructor = checkBeforeSending(constructor);
     try {
-      if ('createAt' in verifiedConstructor) {
-        await updateForm(verifiedConstructor).unwrap();
+      if ('createAt' in constructor) {
+        await updateForm(constructor).unwrap();
         toast.success('Форма успешно обновлена ');
       } else {
-        await createForm(verifiedConstructor).unwrap();
+        await createForm(constructor).unwrap();
         toast.success('Форма успешно сохранена');
       }
     } catch (error) {
@@ -168,6 +158,10 @@ export const FormsEdit: FC = () => {
     }
   }, [formData]);
 
+  useEffect(() => {
+    document.title = 'Конструктор';
+  }, []);
+
   if (isLoadingForm) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -183,32 +177,37 @@ export const FormsEdit: FC = () => {
   if (!constructor) return <div>Ошибка при создании конструктора.</div>;
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="flex gap-4 items-start p-4">
-        <Sidebar
-          constructor={constructor}
-          isCreating={isCreating}
-          isUpdating={isUpdating}
-          isDeleting={isDeleting}
-          isError={isError}
-          isNew={'createAt' in constructor}
-          onSaveConstructor={handleSaveForms}
-          onRemoveConstructor={handleRemoveForms}
-          onChangeForm={handleChangeForm}
-        />
-        <div className="flex flex-col w-full relative gap-4 ">
-          <ConstructorHeader constructor={constructor} onChangeForm={handleChangeForm} />
-          <ConstructorWorkArea
+    <>
+      <PageTitle
+        title={formData?.title ? `Изменение формы | ${formData.title}` : 'Изменение формы'}
+      />
+      <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+        <div className="flex gap-4 items-start p-4">
+          <Sidebar
             constructor={constructor}
-            onError={handleError}
-            onDropField={handleDropField}
-            onMoveField={moveField}
-            onRemoveField={removeField}
-            onUpdateField={updateField}
+            isCreating={isCreating}
+            isUpdating={isUpdating}
+            isDeleting={isDeleting}
+            isError={isError}
+            isNew={!('createdAt' in constructor)}
+            onSaveConstructor={handleSaveForms}
+            onRemoveConstructor={handleRemoveForms}
             onChangeForm={handleChangeForm}
           />
+          <div className="flex flex-col w-full relative gap-4 ">
+            <ConstructorHeader constructor={constructor} onChangeForm={handleChangeForm} />
+            <ConstructorWorkArea
+              constructor={constructor}
+              onError={handleError}
+              onDropField={handleDropField}
+              onMoveField={moveField}
+              onRemoveField={removeField}
+              onUpdateField={updateField}
+              onChangeForm={handleChangeForm}
+            />
+          </div>
         </div>
-      </div>
-    </DndProvider>
+      </DndProvider>
+    </>
   );
 };

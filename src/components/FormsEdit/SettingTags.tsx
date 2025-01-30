@@ -16,7 +16,7 @@ interface Props {
 export const SettingTags: React.FC<Props> = (props) => {
   const { constructor, onChangeForm } = props;
   const { token } = theme.useToken();
-  const [tags, setTags] = useState<TagForm[]>(constructor.settings.tags);
+  const [tags, setTags] = useState<TagForm[]>(constructor.tags);
   const [inputVisible, setInputVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [editInputIndex, setEditInputIndex] = useState<string>('');
@@ -29,7 +29,7 @@ export const SettingTags: React.FC<Props> = (props) => {
   }, [editInputValue]);
 
   useEffect(() => {
-    onChangeForm?.({ name: 'settings', value: { ...constructor.settings, tags } });
+    onChangeForm?.({ name: 'settings', value: { tags } });
   }, [tags]);
 
   const handleClose = (tagId: string) => {
@@ -79,7 +79,7 @@ export const SettingTags: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    setTags(constructor.settings.tags);
+    setTags(constructor.tags);
   }, []);
 
   return (

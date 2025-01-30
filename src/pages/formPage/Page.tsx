@@ -1,15 +1,16 @@
 import { useParams } from 'react-router-dom';
 import { useGetFormQuery } from '@/redux/form';
+import { Loader } from '@/components/ui/Loader';
 import { Button, Form, Typography } from 'antd';
 import { useCreateResponseMutation } from '@/redux/response';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { ResponseSendMessage } from '@/components/FormPage';
-import { StartTimer } from '@/components/FormPage/StartTimer';
-import { Timer } from '@/components/FormPage/Timer';
-import { Loader } from '@/components/ui/Loader';
-import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
-import { renderField } from '@/utils/renderField';
+import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
+import { Timer } from '@/components/FormPage/Timer.tsx';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
+import { renderField } from '@/utils/renderField.tsx';
+import PageTitle from '@/components/ui/PageTitle/PageTitle';
 
 export const FormPage = () => {
   const { formId } = useParams();
@@ -91,24 +92,51 @@ export const FormPage = () => {
     await sendForm(form.getFieldsValue(true));
   };
 
+  useEffect(() => {
+    if (formData) {
+      document.title = formData.title;
+    }
+  }, [formData]);
+
   if (!formId) {
-    return <h2>Форма не найдена!</h2>;
+    return (
+      <>
+        <PageTitle title="Форма" />
+        <h2>Форма не найдена!</h2>
+      </>
+    );
   }
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <>
+        <PageTitle title="Форма" />
+        <Loader />
+      </>
+    );
   }
 
   if (!formData) {
-    return <h2>Нет данных!</h2>;
+    return (
+      <>
+        <PageTitle title="Форма" />
+        <h2>Нет данных!</h2>
+      </>
+    );
   }
 
-  if (!timerStart && formData?.settings?.timerActive) {
-    return <StartTimer onStart={startTimer} />;
+  if (!timerStart && formData?.timer) {
+    return (
+      <>
+        <PageTitle title={formData?.title ? `Форма | ${formData.title}` : 'Форма'} />
+        <StartTimer onStart={startTimer} />
+      </>
+    );
   }
 
   return (
     <div className="pt-5 relative">
+      <PageTitle title={formData?.title ? `Форма | ${formData.title}` : 'Форма'} />
       {isLoadingCreateResponse && (
         <div className="absolute h-full inset-0 bg-white/90 flex justify-center items-center z-10">
           <Loader />
@@ -118,44 +146,48 @@ export const FormPage = () => {
         <ResponseSendMessage />
       ) : (
         <div className="flex gap-4 items-start w-full">
-          <GlassWrapper className="p-10 relative w-full">
+          <GlassWrapper className="p-10 relative w-full overflow-hidden max-h-[calc(100dvh-200px)]">
             <div className="flex items-center justify-around">
               <div className="flex flex-col gap-3">
                 <Typography className="text-lg font-bold leading-none">{formData.title}</Typography>
-                <Typography.Text className="text-sm block">{formData.description}</Typography.Text>
+                <Typography.Text className="text-sm line-clamp-3">
+                  {formData.description}
+                </Typography.Text>
               </div>
             </div>
             <Form
               form={form}
               onFinish={onFinish}
-              className="mt-3 custom-form"
+              className="mt-5 custom-form flex flex-col h-full max-h-full"
               layout="vertical"
               onValuesChange={onValuesChange}
             >
-              {formData.fields.map((field) => (
-                <Form.Item
-                  key={field.id}
-                  label={field.question}
-                  name={field.id}
-                  rules={
-                    field.require
-                      ? [{ required: true, message: 'Поле обязательно к заполнению!' }]
-                      : []
-                  }
-                >
-                  {renderField(field)}
-                </Form.Item>
-              ))}
-              <Form.Item className="mb-0">
+              <div className="overflow-auto h-full max-h-[calc(100dvh-440px)] pr-2">
+                {formData.fields.map((field) => (
+                  <Form.Item
+                    key={field.id}
+                    label={field.question}
+                    name={field.id}
+                    rules={
+                      field.require
+                        ? [{ required: true, message: 'Поле обязательно к заполнению!' }]
+                        : []
+                    }
+                  >
+                    {renderField(field)}
+                  </Form.Item>
+                ))}
+              </div>
+              <div className="mb-0 py-5 relative h-full block border-t-[1px] border-solid border-gray-200">
                 <div className="flex justify-start">
                   <Button type="primary" htmlType="submit" disabled={!isFormValid}>
                     Отправить форму
                   </Button>
                 </div>
-              </Form.Item>
+              </div>
             </Form>
           </GlassWrapper>
-          {formData.settings?.timerActive && timerStart && (
+          {formData?.timer && timerStart && (
             <GlassWrapper className="p-10">
               <Timer onFinish={sendFormAfterTimer} />
             </GlassWrapper>

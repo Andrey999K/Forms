@@ -1,4 +1,4 @@
-import { createBrowserRouter, Outlet, RouteObject, RouterProvider } from 'react-router-dom';
+import { createHashRouter, Outlet, RouteObject, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { ROUTES } from '@/utils/routesConfig';
 import { ProtectedRoute } from './ProtectedRoute';
@@ -78,5 +78,5 @@ export const AppRouter = () => {
     },
   ];
 
-  return <RouterProvider router={createBrowserRouter(routes)} />;
+  return <RouterProvider router={createHashRouter(routes)} />;
 };

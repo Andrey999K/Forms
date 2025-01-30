@@ -33,15 +33,17 @@ export const ConstructorDropZone: FC<Props> = (props) => {
   return (
     <div
       ref={drop}
-      className={`relative w-full min-h-5 group transition-all duration-200 ${className}`}
+      className={`relative w-full group transition-all duration-200 ${className} ${
+        isOverNewItem ? 'py-5' : 'py-3'
+      }`}
       data-index={index}
     >
       <div
         className={`absolute inset-0 flex items-center justify-center ${
-          isOverNewItem ? 'opacity-100' : 'opacity-0'
+          isOverNewItem ? 'animate-scaleUp' : 'opacity-0'
         }`}
       >
-        <div className="w-full h-0.5 bg-orange-500" />
+        <div className="w-full border-2 border-colorPrimary rounded-xl" />
       </div>
       {children}
     </div>
