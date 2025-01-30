@@ -12,8 +12,6 @@
     "preview": "vite preview",
     "prepare": "husky",
     "test": "vitest",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.2",
@@ -22,7 +20,6 @@
     "antd": "^5.22.4",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
-    "gh-pages": "^6.3.0",
     "husky": "^9.1.7",
     "rdndmb-html5-to-touch": "^8.1.2",
     "react": "^18.3.1",

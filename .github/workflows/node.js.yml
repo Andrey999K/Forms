@@ -61,4 +61,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist # Убедитесь, что это папка с результатами сборки
+          publish_dir: ./dist
