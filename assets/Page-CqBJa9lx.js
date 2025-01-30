@@ -1,0 +1,1 @@
+import{J as a,b as r,M as i,j as e,S as n}from"./index-DueYcCxo.js";const c=()=>{const t=a();return r.useEffect(()=>{const s=i();s&&t(`/forms/${s}/edit`,{state:{id:s}})},[]),e.jsx("div",{className:"flex justify-center items-center",children:e.jsx(n,{})})};export{c as FormsNew};
