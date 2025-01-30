@@ -32,7 +32,7 @@ export const MeProfileActions = ({
     </button>
   ) : (
     <button className={btnPositionStyles} onClick={() => setIsEdit(true)}>
-      <MdEdit size={35} color="#885028" className="cursor-pointer" />
+      <MdEdit size={35} className="cursor-pointer" />
     </button>
   );
 };

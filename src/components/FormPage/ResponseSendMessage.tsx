@@ -1,5 +1,5 @@
 import { Result } from 'antd';
-import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 
 export const ResponseSendMessage = () => {
   return (

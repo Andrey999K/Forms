@@ -1,4 +1,4 @@
-import { Form, Layout, Spin, Typography } from 'antd';
+import { Button, Form, Layout, Spin, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { MdMail, MdPerson, MdPersonAddAlt1, MdVisibility, MdVisibilityOff } from 'react-icons/md';
@@ -6,24 +6,21 @@ import { RiLockFill } from 'react-icons/ri';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterMutation } from '@/redux/auth';
-
-import { AuthClearFormButton } from '@/components/Auth/AuthClearFormButton.tsx';
-
+import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
+import { AuthTextLink } from '@/components/Auth/AuthTextLink';
 import { ROUTES } from '@/utils/routesConfig';
 import { SignUpFormValues } from '@/types/auth';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/redux/user';
 import { UserFormValidationRules } from '@/utils/validation';
-import { UserFormInput } from '@/components/Auth/UserFormInput.tsx';
-import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton.tsx';
-import { AuthTextLink } from '@/components/Auth/AuthTextLink.tsx';
+import { UserFormInput } from '@/components/Auth/UserFormInput';
 import PageTitle from '@/components/ui/PageTitle/PageTitle';
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showCopyPassword, setShowCopyPassword] = useState<boolean>(false);
   const { control, handleSubmit, watch, reset } = useForm<SignUpFormValues>({
-    mode: 'onChange',
+    mode: 'onBlur',
   });
   const [register, { isLoading }] = useRegisterMutation();
 
@@ -50,7 +47,7 @@ export const Signup = () => {
   return (
     <>
       <PageTitle title="Регистрация" />
-      <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">
+      <Layout className="min-h-screen auth-bg-gradient overflow-hidden">
         <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
           <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
             <div className="mb-6">
@@ -136,7 +133,11 @@ export const Signup = () => {
                 {isLoading ? <Spin size="small" /> : 'Зарегистрироваться'}
               </AuthSubmitButton>
               <div className="flex items-center justify-between">
-                <AuthClearFormButton reset={reset} />
+                <Form.Item className="flex justify-end ml-1 mb-0">
+                  <Button onClick={() => reset()} color="default" variant="solid">
+                    Очистить форму
+                  </Button>
+                </Form.Item>
                 <AuthTextLink text="Есть аккаунт?" linkText="Войти" linkTo={ROUTES.LOGIN} />
               </div>
             </Form>

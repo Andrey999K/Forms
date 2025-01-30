@@ -18,7 +18,6 @@ import {
   NEW_FORM,
 } from '@/types';
 import { getUUID } from '@/utils/getUUID';
-import { ROUTES } from '@/utils/routesConfig.ts';
 import { Spin } from 'antd';
 import { HTML5toTouch } from 'rdndmb-html5-to-touch';
 import { FC, useEffect, useLayoutEffect, useMemo, useState } from 'react';
@@ -27,6 +26,7 @@ import { MultiBackend } from 'react-dnd-multi-backend';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { NotFound } from '../notFoundPage/Page';
 
 export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -171,8 +171,7 @@ export const FormsEdit: FC = () => {
   }
 
   if (!formData && !newFormId) {
-    navigate(ROUTES.NOT_FOUND);
-    return;
+    return <NotFound />;
   }
 
   if (!constructor) return <div>Ошибка при создании конструктора.</div>;

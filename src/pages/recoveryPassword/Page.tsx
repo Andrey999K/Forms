@@ -31,7 +31,7 @@ export const RecoveryPassword = () => {
   return (
     <>
       <PageTitle title="Восстановление пароля" />
-      <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">
+      <Layout className="min-h-screen auth-bg-gradient bg-cover bg-center overflow-hidden">
         <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
           <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
             <div className="mb-6">

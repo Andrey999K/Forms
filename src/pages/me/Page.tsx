@@ -28,7 +28,7 @@ export const Me = () => {
     formState: { isValid, dirtyFields },
     reset,
   } = useForm<MeChangeFields>({
-    mode: 'onChange',
+    mode: 'onBlur',
   });
 
   const [updateUserInfo, { isLoading: isUpdating }] = useUpdateMeInfoMutation();

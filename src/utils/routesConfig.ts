@@ -9,5 +9,4 @@ export enum ROUTES {
   LOGIN = '/login',
   SIGNUP = '/signup',
   RECOVERY_PASSWORD = '/recovery-password',
-  NOT_FOUND = '*',
 }

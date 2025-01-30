@@ -21,7 +21,7 @@ import PageTitle from '@/components/ui/PageTitle/PageTitle';
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const { control, handleSubmit } = useForm<SignInFormValues>({
-    mode: 'onChange',
+    mode: 'onBlur',
   });
   const [login, { isLoading }] = useLoginMutation();
 
@@ -49,7 +49,7 @@ export const Login = () => {
   return (
     <>
       <PageTitle title="Авторизация" />
-      <Layout className="min-h-screen bg-authImg bg-cover bg-center overflow-hidden">
+      <Layout className="min-h-screen auth-bg-gradient overflow-hidden">
         <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
           <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
             <div className="mb-6">
@@ -58,6 +58,7 @@ export const Login = () => {
                   <FiLogIn size={30} color="#808897" />
                 </div>
               </div>
+
               <Typography.Title
                 level={2}
                 style={{

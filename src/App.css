@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+
 #root {
   /* max-width: 1280px; */
   margin: 0 auto;
@@ -100,3 +102,7 @@
 /*.custom-form .ant-form-item {*/
 /*  margin-bottom: 40px !important;*/
 /*}*/
+
+.auth-bg-gradient {
+  background: linear-gradient(to bottom, #9da9b3, #d4c6a9, #eea53a);
+}
