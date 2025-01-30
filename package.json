@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "andrey999k.github.io/Forms",
+  "homepage": "https://andrey999k.github.io/Forms",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
