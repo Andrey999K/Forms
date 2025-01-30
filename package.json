@@ -11,7 +11,7 @@
     "lint:fix": "eslint --fix",
     "preview": "vite preview",
     "prepare": "husky",
-    "test": "vitest",
+    "test": "vitest"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.2",
