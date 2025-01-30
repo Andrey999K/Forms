@@ -37,5 +37,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install packages
         run: npm ci
+      - name: Set GitHub user
+        run: |
+          git config --global user.name "Deploy Bot"
+          git config --global user.email "deploy.bot@example.com"
       - name: Deploy
         run: npm run deploy
