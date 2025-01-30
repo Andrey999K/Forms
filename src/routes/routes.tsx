@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import { createHashRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { PageLayout } from '@/layouts/PageLayout';
 import { lazy, Suspense } from 'react';
 import { ROUTES } from '@/utils/routesConfig';
@@ -162,7 +162,7 @@ export const AppRouter = () => {
   ];
 
   const routes = user ? authRoutes : notAuthRoutes;
-  const router = createBrowserRouter(routes);
+  const router = createHashRouter(routes);
 
   return <RouterProvider router={router} />;
 };
