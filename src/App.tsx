@@ -6,7 +6,7 @@ import { toastConfig } from './utils/toast.config.ts';
 import { ConfigProvider } from 'antd';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { Loader } from './components/ui/Loader/index.tsx';
+import { Loader } from './components/ui/Loader';
 
 export const App = () => {
   useFirebaseAuth();
