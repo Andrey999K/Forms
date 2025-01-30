@@ -210,8 +210,6 @@ export const firestoreService = {
   ): Promise<object> => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-    // const avatarUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${avatarHash}`;
-
     const defaultAvatar = `https://api.dicebear.com/7.x/initials/svg?seed=${generateAvatarHash()}`;
 
     const user = userCredential.user;
@@ -221,7 +219,6 @@ export const firestoreService = {
       firstName: name,
       lastName: surname,
       email,
-      // avatarHash: generateAvatarHash(),
       avatarHash: defaultAvatar,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
