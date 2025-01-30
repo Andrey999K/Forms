@@ -6,21 +6,21 @@ import { RiLockFill } from 'react-icons/ri';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterMutation } from '@/redux/auth';
-import { AuthClearFormButton } from '@/components/Auth/AuthClearFormButton';
-import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
-import { AuthTextLink } from '@/components/Auth/AuthTextLink';
+import { AuthClearFormButton } from '@/components/auth/AuthClearFormButton';
+import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
+import { AuthTextLink } from '@/components/auth/AuthTextLink';
 import { ROUTES } from '@/utils/routesConfig';
 import { SignUpFormValues } from '@/types/auth';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/redux/user';
 import { UserFormValidationRules } from '@/utils/validation';
-import { UserFormInput } from '@/components/Auth/UserFormInput';
+import { UserFormInput } from '@/components/auth/UserFormInput';
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showCopyPassword, setShowCopyPassword] = useState<boolean>(false);
   const { control, handleSubmit, watch, reset } = useForm<SignUpFormValues>({
-    mode: 'onChange',
+    mode: 'onBlur',
   });
   const [register, { isLoading }] = useRegisterMutation();
 

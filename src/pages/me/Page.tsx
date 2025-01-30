@@ -8,9 +8,13 @@ import { MeProfileDetails } from '@/components/Me';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { toast } from 'react-toastify';
 import { Loader } from '@/components/ui/Loader';
+import { uploadToCloudinary } from '@/services/cloudinary.service';
 
 export const Me = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const [isAlertVisible, setAlertVisible] = useState<boolean>(true);
+
   const userUid = localStorage.getItem('user');
 
   const {
@@ -24,27 +28,12 @@ export const Me = () => {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { isValid, dirtyFields },
     reset,
   } = useForm<MeChangeFields>({
-    mode: 'onChange',
+    mode: 'onBlur',
   });
-
-  const [updateUserInfo, { isLoading: isUpdating }] = useUpdateMeInfoMutation();
-
-  const handleSave = async (data: MeChangeFields) => {
-    if (JSON.stringify(dirtyFields) === '{}') return;
-    if (userUid) {
-      try {
-        await updateUserInfo({ id: userUid, data }).unwrap();
-        toast.success('Данные успешно обновлены');
-        setIsEdit(false);
-      } catch (error) {
-        toast.error('Не удалось обновить данные');
-        console.error('Ошибка обновления данных:', error);
-      }
-    }
-  };
 
   useEffect(() => {
     if (user) {
@@ -56,10 +45,60 @@ export const Me = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (avatar) {
+      setValue('avatarUrl', 'uploaded', { shouldDirty: true });
+    }
+  }, [avatar]);
+
+  const [updateUserInfo, { isLoading: isUpdating }] = useUpdateMeInfoMutation();
+
+  const onSubmit = async (data: MeChangeFields) => {
+    if (JSON.stringify(dirtyFields) === '{}') return;
+    if (userUid) {
+      try {
+        let avatarUrl = user?.avatarUrl || '';
+
+        if (avatar) {
+          avatarUrl = await uploadToCloudinary(avatar);
+        }
+
+        const updatedData: MeChangeFields = { ...data };
+        if (avatarUrl) {
+          updatedData.avatarUrl = avatarUrl;
+        }
+        await updateUserInfo({
+          id: userUid,
+          data: updatedData,
+        }).unwrap();
+
+        toast.success('Данные успешно обновлены');
+        setAvatar(null);
+        setAlertVisible(false);
+        setIsEdit(false);
+      } catch (error) {
+        toast.error('Не удалось обновить данные');
+        console.error('Ошибка обновления данных:', error);
+      }
+    }
+  };
+
   if (!user || isLoading || isUpdating) return <Loader />;
 
   return (
-    <div className="flex justify-center p-4 break-words w-full">
+    <div className="flex relative justify-center p-4 break-words w-full">
+      {isEdit && isAlertVisible && (
+        <div className="absolute top-[-10px] z-50">
+          <Alert
+            message="Для изменения аватара наведите на него и нажмите"
+            type="info"
+            showIcon
+            closable
+            onClose={() => setAlertVisible(false)}
+          />
+        </div>
+      )}
+
       <GlassWrapper className={`w-1/2 px-5 py-5 text-center`} style={{ zIndex: 10 }}>
         {error ? (
           <Alert
@@ -71,7 +110,7 @@ export const Me = () => {
         ) : (
           <div className="">
             <Form
-              onFinish={handleSubmit(handleSave)}
+              onFinish={handleSubmit(onSubmit)}
               className="w-full flex flex-col gap-4 text-center"
             >
               <MeProfileActions
@@ -80,14 +119,22 @@ export const Me = () => {
                 isValid={isValid}
                 setIsEdit={setIsEdit}
                 isUpdating={isUpdating}
+                avatar={avatar}
               />
-              <MeAvatar avatarHash={user?.avatarHash} />
+              <MeAvatar
+                currentAvatarUrl={user.avatarUrl}
+                isLoading={isLoading}
+                isEdit={isEdit}
+                setAvatar={setAvatar}
+                avatar={avatar}
+              />
               <MeProfileDetails
                 isEditing={isEdit}
                 control={control}
                 reset={reset}
                 user={user}
                 setIsEdit={setIsEdit}
+                setAvatar={setAvatar}
               />
             </Form>
           </div>

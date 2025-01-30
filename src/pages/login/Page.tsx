@@ -6,8 +6,8 @@ import { MdMail } from 'react-icons/md';
 import { RiLockFill } from 'react-icons/ri';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { useState } from 'react';
-import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
-import { AuthTextLink } from '@/components/Auth/AuthTextLink';
+import { AuthSubmitButton } from '@/components/auth/AuthSubmitButton';
+import { AuthTextLink } from '@/components/auth/AuthTextLink';
 import { ROUTES } from '@/utils/routesConfig';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/redux/auth';
@@ -15,12 +15,12 @@ import { SignInFormValues } from '@/types/auth';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/redux/user';
 import { UserFormValidationRules } from '@/utils/validation';
-import { UserFormInput } from '@/components/Auth/UserFormInput';
+import { UserFormInput } from '@/components/auth/UserFormInput';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const { control, handleSubmit } = useForm<SignInFormValues>({
-    mode: 'onChange',
+    mode: 'onBlur',
   });
   const [login, { isLoading }] = useLoginMutation();
 

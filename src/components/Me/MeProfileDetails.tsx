@@ -7,7 +7,7 @@ import { MdOutlineCancel, MdOutlineEmail } from 'react-icons/md';
 import { FaRegRegistered } from 'react-icons/fa6';
 import { formatUserCreatedAt } from '@/utils/formatUserCreatedAt';
 import { MdPerson, MdOutlinePeople } from 'react-icons/md';
-import { UserFormInput } from '../Auth/UserFormInput';
+import { UserFormInput } from '../auth/UserFormInput';
 
 type Props = {
   control: Control<any>;
@@ -15,15 +15,24 @@ type Props = {
   user: MeData;
   setIsEdit: Dispatch<SetStateAction<boolean>>;
   isEditing: boolean;
+  setAvatar: Dispatch<SetStateAction<File | null>>;
 };
 
-export const MeProfileDetails = ({ isEditing, control, reset, user, setIsEdit }: Props) => {
+export const MeProfileDetails = ({
+  isEditing,
+  control,
+  reset,
+  user,
+  setIsEdit,
+  setAvatar,
+}: Props) => {
   const handleFormsReset = () => {
     reset({
       firstName: user?.firstName || '',
       lastName: user?.lastName || '',
       email: user?.email || '',
     });
+    setAvatar(null);
     setIsEdit(false);
   };
 

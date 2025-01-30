@@ -27,6 +27,7 @@ import {
 import { db, auth } from '@/utils/firebase/firebaseConfig';
 import { FormListOptions, FormListResponse } from '@/types';
 import { generateAvatarHash } from '@/utils/generateAvatarHash';
+import { uploadToCloudinary } from './cloudinary.service';
 
 const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | number): string => {
   if (timestamp) {
@@ -146,20 +147,43 @@ export const firestoreService = {
     throw new Error('Id not found');
   },
 
+  updateAvatar: async (collectionName: string, id: string, file: File): Promise<string> => {
+    const uploadedUrl = await uploadToCloudinary(file);
+
+    const docRef = doc(db, collectionName, id);
+    await updateDoc(docRef, { avatarUrl: uploadedUrl });
+
+    return uploadedUrl;
+  },
+
   update: async (
     collectionName: string,
-    payload: { id: string; [key: string]: unknown }
+    payload: {
+      id: string;
+      avatarUrl?: string;
+      [key: string]: unknown;
+    }
   ): Promise<object> => {
-    const { id, ...updateData } = payload;
+    const { id, avatarUrl, ...updateData } = payload;
     delete updateData?.['userId'];
     delete updateData?.['createAt'];
+
     const docRef = doc(db, collectionName, id);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      await updateDoc(docRef, { ...updateData, updatedAt: serverTimestamp() });
+      const updatedFields: Record<string, unknown> = {
+        ...updateData,
+        updatedAt: serverTimestamp(),
+      };
 
-      return payload;
+      if (avatarUrl) {
+        updatedFields.avatarUrl = avatarUrl;
+      }
+
+      await updateDoc(docRef, updatedFields as Partial<DocumentData>);
+
+      return { id, ...updatedFields };
     }
 
     throw new Error('Id not found');
@@ -185,6 +209,11 @@ export const firestoreService = {
     surname: string
   ): Promise<object> => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+    // const avatarUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${avatarHash}`;
+
+    const defaultAvatar = `https://api.dicebear.com/7.x/initials/svg?seed=${generateAvatarHash()}`;
+
     const user = userCredential.user;
     const docRef = doc(db, collectionName, user.uid);
     await setDoc(docRef, {
@@ -192,7 +221,8 @@ export const firestoreService = {
       firstName: name,
       lastName: surname,
       email,
-      avatarHash: generateAvatarHash(),
+      // avatarHash: generateAvatarHash(),
+      avatarHash: defaultAvatar,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });

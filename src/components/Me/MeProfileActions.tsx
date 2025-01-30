@@ -9,6 +9,7 @@ type Props = {
   isValid: boolean;
   setIsEdit: Dispatch<SetStateAction<boolean>>;
   isUpdating: boolean;
+  avatar: File | null;
 };
 
 export const MeProfileActions = ({
@@ -17,6 +18,7 @@ export const MeProfileActions = ({
   isValid,
   setIsEdit,
   isUpdating,
+  avatar,
 }: Props) => {
   const btnPositionStyles = 'absolute top-4 right-5 p-0 m-0 bg-transparent border-none';
   const submitBtnStyles = `${btnPositionStyles} ${
@@ -24,7 +26,7 @@ export const MeProfileActions = ({
       ? 'opacity-30 cursor-not-allowed'
       : 'opacity-100 cursor-pointer'
   }`;
-  const isSubmitDisabled = !isValid || JSON.stringify(dirtyFields) === '{}';
+  const isSubmitDisabled = !isValid || (JSON.stringify(dirtyFields) === '{}' && !avatar);
 
   return isEdit ? (
     <button type="submit" className={submitBtnStyles} disabled={isSubmitDisabled || isUpdating}>
