@@ -2,11 +2,11 @@ import { Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { AppRouter } from './routes/routes.tsx';
 import { useFirebaseAuth } from './hooks/useFirebaseAuth.ts';
-import { toastConfig } from './shared/utils/toast.config.ts';
+import { toastConfig } from './utils/toast.config.ts';
 import { ConfigProvider } from 'antd';
-import '@/shared/styles/App.css';
+import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { Loader } from './shared/components/ui/Loader/index.tsx';
+import { Loader } from './components/ui/Loader/index.tsx';
 
 export const App = () => {
   useFirebaseAuth();

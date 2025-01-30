@@ -1,6 +1,6 @@
 import { firestoreService } from '@/services/firestore.service';
-import { FormListOptions, FormListResponse, FormResponse } from '@/shared/types';
-import { getFirebaseError } from '@/shared/utils/firebase/getFirebaseError';
+import { FormListOptions, FormListResponse, FormResponse } from '@/types';
+import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';

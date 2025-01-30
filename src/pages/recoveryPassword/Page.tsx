@@ -2,14 +2,14 @@ import { Form, Layout, Spin, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { MdMail } from 'react-icons/md';
-import { AuthSubmitButton } from '@/shared/components/Auth/AuthSubmitButton';
-import { UserFormValidationRules } from '@/shared/utils/validation';
-import { UserFormInput } from '@/shared/components/Auth/UserFormInput';
-import { EmailValue } from '@/shared/types/auth';
+import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
+import { UserFormValidationRules } from '@/utils/validation';
+import { UserFormInput } from '@/components/Auth/UserFormInput';
+import { EmailValue } from '@/types/auth';
 import { useResetPasswordMutation } from '@/redux/auth';
 import { toast } from 'react-toastify';
-import { AuthTextLink } from '@/shared/components/Auth/AuthTextLink';
-import { ROUTES } from '@/shared/utils/routesConfig';
+import { AuthTextLink } from '@/components/Auth/AuthTextLink';
+import { ROUTES } from '@/utils/routesConfig';
 
 export const RecoveryPassword = () => {
   const { control, handleSubmit, reset } = useForm<EmailValue>({

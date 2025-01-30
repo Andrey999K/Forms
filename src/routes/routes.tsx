@@ -1,9 +1,9 @@
 import { createBrowserRouter, Outlet, RouteObject, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import { ROUTES } from '@/shared/utils/routesConfig';
+import { ROUTES } from '@/utils/routesConfig';
 import { ProtectedRoute } from './ProtectedRoute';
-import { ErrorComponent } from '@/shared/components/ui/ErrorComponent/ErrorComponent';
-import { Loader } from '@/shared/components/ui/Loader';
+import { ErrorComponent } from '@/components/ui/ErrorComponent/ErrorComponent';
+import { Loader } from '@/components/ui/Loader';
 import { PageLayout } from '@/layouts/PageLayout';
 
 const Home = lazy(() => import('@/pages/home/Page').then((module) => ({ default: module.Home })));

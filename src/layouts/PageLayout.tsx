@@ -2,10 +2,10 @@ import { useLogoutMutation } from '@/redux/auth/authApi.js';
 import { Button, Dropdown, MenuProps } from 'antd';
 import { ReactNode } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { ROUTES } from '../shared/utils/routesConfig.ts';
+import { ROUTES } from '../utils/routesConfig.ts';
 import { ShapeWrapper } from './GlassLayout.js';
 import { useLocation } from 'react-router-dom';
-import { GlassWrapper } from '@/shared/components/ui/wrapper/GlassWrapper';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
 
 export const PageLayout = ({ children }: { children?: ReactNode }) => {
   const [logout] = useLogoutMutation();

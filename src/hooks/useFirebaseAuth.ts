@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { onAuthStateChanged } from 'firebase/auth';
 import { setIsUserReady, setUser } from '@/redux/user';
-import { auth } from '@/shared/utils/firebase/firebaseConfig';
+import { auth } from '@/utils/firebase/firebaseConfig';
 import { RootState } from '@/redux/store';
 
 export const useFirebaseAuth = () => {

@@ -1,8 +1,8 @@
 import { Navigate } from 'react-router-dom';
-import { ROUTES } from '@/shared/utils/routesConfig';
+import { ROUTES } from '@/utils/routesConfig';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { Loader } from '@/shared/components/ui/Loader';
+import { Loader } from '@/components/ui/Loader';
 import { ReactNode } from 'react';
 
 type Props = {

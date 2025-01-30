@@ -1,6 +1,6 @@
 import { firestoreService } from '@/services/firestore.service';
-import { ConstructorForm, FormData } from '@/shared/types';
-import { getFirebaseError } from '@/shared/utils/firebase/getFirebaseError';
+import { ConstructorForm, FormData } from '@/types';
+import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const COLLECTION = 'form';

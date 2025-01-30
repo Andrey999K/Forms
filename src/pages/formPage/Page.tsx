@@ -4,12 +4,12 @@ import { Button, Form, Typography } from 'antd';
 import { useCreateResponseMutation } from '@/redux/response';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { ResponseSendMessage } from '@/shared/components/FormPage';
-import { StartTimer } from '@/shared/components/FormPage/StartTimer';
-import { Timer } from '@/shared/components/FormPage/Timer';
-import { Loader } from '@/shared/components/ui/Loader';
-import { GlassWrapper } from '@/shared/components/ui/wrapper/GlassWrapper';
-import { renderField } from '@/shared/utils/renderField';
+import { ResponseSendMessage } from '@/components/FormPage';
+import { StartTimer } from '@/components/FormPage/StartTimer';
+import { Timer } from '@/components/FormPage/Timer';
+import { Loader } from '@/components/ui/Loader';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
+import { renderField } from '@/utils/renderField';
 
 export const FormPage = () => {
   const { formId } = useParams();

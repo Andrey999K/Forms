@@ -1,6 +1,6 @@
-import { ConstructorHeader } from '@/shared/components/FormsEdit/ConstructorHeader';
-import { ConstructorWorkArea } from '@/shared/components/FormsEdit/ConstructorWorkArea';
-import { Sidebar } from '@/shared/components/FormsEdit/Sidebar';
+import { ConstructorHeader } from '@/components/FormsEdit/ConstructorHeader';
+import { ConstructorWorkArea } from '@/components/FormsEdit/ConstructorWorkArea';
+import { Sidebar } from '@/components/FormsEdit/Sidebar';
 import {
   useCreateFormMutation,
   useDeleteFormMutation,
@@ -14,8 +14,8 @@ import {
   FieldTypes,
   HandleChangeForm,
   NEW_FORM,
-} from '@/shared/types';
-import { getUUID } from '@/shared/utils/getUUID';
+} from '@/types';
+import { getUUID } from '@/utils/getUUID';
 import { Spin } from 'antd';
 import { FC, useLayoutEffect, useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';

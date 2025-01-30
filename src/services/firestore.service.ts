@@ -24,9 +24,9 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
-import { db, auth } from '@/shared/utils/firebase/firebaseConfig';
-import { FormListOptions, FormListResponse } from '@/shared/types';
-import { generateAvatarHash } from '@/shared/utils/generateAvatarHash';
+import { db, auth } from '@/utils/firebase/firebaseConfig';
+import { FormListOptions, FormListResponse } from '@/types';
+import { generateAvatarHash } from '@/utils/generateAvatarHash';
 
 const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | number): string => {
   if (timestamp) {

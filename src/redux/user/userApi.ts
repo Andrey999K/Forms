@@ -1,6 +1,6 @@
 import { firestoreService } from '@/services/firestore.service';
-import { MeChangeFields, MeData } from '@/shared/types/me';
-import { getFirebaseError } from '@/shared/utils/firebase/getFirebaseError';
+import { MeChangeFields, MeData } from '@/types/me';
+import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const COLLECTION = 'users';

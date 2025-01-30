@@ -2,8 +2,8 @@ import { Button } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { useGetFormQuery } from '@/redux/form';
 import { useGetResponseQuery } from '@/redux/response';
-import { Loader } from '@/shared/components/ui/Loader';
-import { AnswerCard } from '@/shared/components/FormResponse/AnswerCard/AnswerCard';
+import { Loader } from '@/components/ui/Loader';
+import { AnswerCard } from '@/components/FormResponse/AnswerCard/AnswerCard';
 import { NotFound } from '../notFoundPage/Page';
 
 export const FormResponse = () => {
