@@ -35,5 +35,7 @@ jobs:
     if: github.ref == 'refs/heads/dev'
     steps:
       - uses: actions/checkout@v4
+      - name: Install packages
+        run: npm ci
       - name: Deploy
         run: npm run deploy
