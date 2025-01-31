@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { AnswerCard } from '@/components/FormResponse/AnswerCard/AnswerCard.tsx';
+import { AnswerCard } from '@/components/FormResponse/AnswerCard/AnswerCard';
 
 describe('AnswerCard', () => {
   test('Check render AnswerCard', async () => {

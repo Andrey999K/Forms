@@ -1,26 +1,26 @@
 import { Button } from 'antd';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useGetFormQuery } from '@/redux/form';
 import { useGetResponseQuery } from '@/redux/response';
-import { ROUTES } from '@/utils/routesConfig.ts';
 import { Loader } from '@/components/ui/Loader';
 import { AnswerCard } from '@/components/FormResponse/AnswerCard';
+import PageTitle from '@/components/ui/PageTitle/PageTitle';
+import { NotFound } from '../notFoundPage/Page';
 
 export const FormResponse = () => {
   const { formId, responseId } = useParams();
   const { data: form, isLoading: isLoadingForm } = useGetFormQuery(formId || '');
   const { data: response, isLoading: isLoadingResponse } = useGetResponseQuery(responseId || '');
-  const navigate = useNavigate();
 
   if (isLoadingForm || isLoadingResponse) return <Loader />;
 
   if (!form || !response) {
-    navigate(ROUTES.NOT_FOUND);
-    return;
+    return <NotFound />;
   }
 
   return (
     <div className="pt-5 pb-20">
+      <PageTitle title={form?.title ? `Отклик | ${form.title}` : 'Отклик'} />
       <h2 className="font-semibold">Название формы — {form.title}</h2>
       <p className="text-sm mt-2">{form.description}</p>
       <div className="flex flex-col gap-2 mt-8">

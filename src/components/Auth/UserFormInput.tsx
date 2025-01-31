@@ -49,11 +49,9 @@ export const UserFormInput = <T extends FieldValues>({
             <Input
               {...field}
               {...props}
+              status={fieldState.error && 'error'}
               style={{
                 boxShadow: 'none',
-                borderColor: 'transparent',
-                outline: 'none',
-                transition: 'none',
               }}
               className="py-1.5 px-4 rounded-lg bg-[#EFF2F6] placeholder-[#4a4b4d] focus:!outline-none focus:!ring-0 focus:!border-transparent focus:!transition-none !transition-none"
             />

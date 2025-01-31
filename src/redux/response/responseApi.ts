@@ -6,7 +6,7 @@ import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { getUUID } from '@/utils/getUUID.ts';
+import { getUUID } from '@/utils/getUUID';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

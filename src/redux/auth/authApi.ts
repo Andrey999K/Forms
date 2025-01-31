@@ -56,6 +56,7 @@ export const authApi = createApi({
       queryFn: async () => {
         try {
           await firestoreService.logout();
+          localStorage.removeItem('user');
           return { data: undefined };
         } catch (error) {
           return { error: { status: 500, data: error } };

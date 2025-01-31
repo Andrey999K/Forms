@@ -13,8 +13,13 @@ export const AuthSubmitButton = ({
       <Button
         htmlType="submit"
         block
+        style={{
+          boxShadow: 'none',
+          height: '35.81px',
+          borderRadius: '0.5rem',
+        }}
         disabled={disabled}
-        className="bg-[#2A2B34] text-white rounded-lg hover:!bg-[#4C4D5E] hover:!text-slate-200 h-[35.81px] !border-none focus:!outline-none active:!outline-none active:!shadow-none active:!ring-0"
+        type="primary"
       >
         {children}
       </Button>

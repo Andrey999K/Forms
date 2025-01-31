@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { FieldTypes } from '@/types';
 import { render } from '@testing-library/react';
-import { renderField } from '@/utils/renderField.tsx';
+import { renderField } from '@/utils/renderField';
 
 describe('Check render function renderField', () => {
   test('Check render input', () => {

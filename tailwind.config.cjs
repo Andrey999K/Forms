@@ -3,13 +3,13 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        caveat: ['Caveat', 'cursive'],
+      },
       colors: {
         colorPrimary: '#fa9145',
         colorTextBase: '#885028',
         colorBgBase: '#fdf8f4',
-      },
-      backgroundImage: {
-        authImg: "url('/sky.jpg')",
       },
       spacing: {
         'page-layout-offset': '93px',

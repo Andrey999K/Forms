@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+
 #root {
   /* max-width: 1280px; */
   margin: 0 auto;
@@ -70,6 +72,37 @@
   margin-bottom: 0;
 }
 
+/*.ant-form-item:last-child {*/
+/*  margin-bottom: 0 !important;*/
+/*}*/
+
+@media (max-width: 768px) {
+  .ant-form-item {
+    margin-bottom: 10px !important;
+  }
+}
+
+/* Стилизация всего скроллбара */
+::-webkit-scrollbar {
+  width: 10px; /* ширина скроллбара */
+  height: 10px; /* высота скроллбара */
+}
+
+/* Стилизация ползунка скроллбара */
+::-webkit-scrollbar-thumb {
+  background-color: rgba(250, 145, 69, 0.4); /* цвет ползунка */
+  border-radius: 5px; /* закругление углов ползунка */
+}
+
+/* Стилизация дорожки скроллбара */
+::-webkit-scrollbar-track {
+  background-color: #f9f9fd; /* фон дорожки */
+}
+
 /*.custom-form .ant-form-item {*/
 /*  margin-bottom: 40px !important;*/
 /*}*/
+
+.auth-bg-gradient {
+  background: linear-gradient(to bottom, #9da9b3, #d4c6a9, #eea53a);
+}

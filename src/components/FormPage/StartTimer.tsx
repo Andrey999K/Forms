@@ -1,4 +1,4 @@
-import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { Button } from 'antd';
 import { FC } from 'react';
 

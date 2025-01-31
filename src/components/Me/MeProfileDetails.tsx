@@ -1,19 +1,26 @@
 import { UserFormValidationRules } from '@/utils/validation';
 import { Control, UseFormReset } from 'react-hook-form';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, ReactNode, SetStateAction } from 'react';
 import { MeChangeFields, MeData } from '@/types/me';
 import { Button, Divider } from 'antd';
 import { MdOutlineCancel, MdOutlineEmail } from 'react-icons/md';
 import { FaRegRegistered } from 'react-icons/fa6';
 import { formatUserCreatedAt } from '@/utils/formatUserCreatedAt';
 import { MdPerson, MdOutlinePeople } from 'react-icons/md';
-import { UserFormInput } from '../auth/UserFormInput';
+import { UserFormInput } from '../Auth/UserFormInput';
+
+const renderProfileField = (icon: ReactNode, value?: string) => (
+  <div className="flex gap-2 items-start justify-start mb-4">
+    {icon}
+    <span className="w-full break-all text-left">{value}</span>
+  </div>
+);
 
 type Props = {
   control: Control<any>;
   reset: UseFormReset<MeChangeFields>;
   user: MeData;
-  setIsEdit: Dispatch<SetStateAction<boolean>>;
+  setEdit: Dispatch<SetStateAction<boolean>>;
   isEditing: boolean;
   setAvatar: Dispatch<SetStateAction<File | null>>;
 };
@@ -23,7 +30,7 @@ export const MeProfileDetails = ({
   control,
   reset,
   user,
-  setIsEdit,
+  setEdit,
   setAvatar,
 }: Props) => {
   const handleFormsReset = () => {
@@ -33,7 +40,7 @@ export const MeProfileDetails = ({
       email: user?.email || '',
     });
     setAvatar(null);
-    setIsEdit(false);
+    setEdit(false);
   };
 
   return (
@@ -42,22 +49,13 @@ export const MeProfileDetails = ({
       <Divider className="my-0" />
       {!isEditing ? (
         <div className="flex flex-col items-start gap-2">
-          <div className="flex gap-2 items-start justify-start mb-4">
-            <MdPerson size={20} />
-            <span className="w-full break-all text-left">{user?.firstName}</span>
-          </div>
-          <div className="flex gap-2 items-start justify-start mb-4">
-            <MdOutlinePeople size={20} />
-            <span className="w-full break-all text-left">{user?.lastName}</span>
-          </div>
-          <div className="flex gap-2 items-start justify-start mb-4">
-            <MdOutlineEmail size={20} />
-            <span className="w-full break-all text-left">{user?.email}</span>
-          </div>
-          <div className="flex gap-2 items-start justify-start mb-4">
-            <FaRegRegistered size={20} />
-            {`Дата регистрации: ${formatUserCreatedAt(user?.createdAt)}`}
-          </div>
+          {renderProfileField(<MdPerson size={20} />, user?.firstName)}
+          {renderProfileField(<MdOutlinePeople size={20} />, user?.lastName)}
+          {renderProfileField(<MdOutlineEmail size={20} />, user?.email)}
+          {renderProfileField(
+            <FaRegRegistered size={20} />,
+            `Дата регистрации: ${formatUserCreatedAt(user?.createdAt)}`
+          )}
         </div>
       ) : (
         <div>

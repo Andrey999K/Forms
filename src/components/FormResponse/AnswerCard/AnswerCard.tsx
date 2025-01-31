@@ -1,6 +1,6 @@
-import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { FC } from 'react';
-import { ResponseField } from '@/types/response.ts';
+import { ResponseField } from '@/types/response';
 
 type AnswerCardProps = {
   data: ResponseField;
