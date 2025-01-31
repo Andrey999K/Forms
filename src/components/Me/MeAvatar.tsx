@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { Loader } from '../ui/Loader';
 
 type Props = {
-  avatarHash?: string;
   currentAvatarUrl?: string;
   isLoading: boolean;
   isEdit: boolean;
@@ -13,14 +12,7 @@ type Props = {
   setAvatar: Dispatch<SetStateAction<File | null>>;
 };
 
-export const MeAvatar = ({
-  avatarHash,
-  currentAvatarUrl,
-  isLoading,
-  isEdit,
-  setAvatar,
-  avatar,
-}: Props) => {
+export const MeAvatar = ({ currentAvatarUrl, isLoading, isEdit, setAvatar, avatar }: Props) => {
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isHovered, setHovered] = useState<boolean>(false);
@@ -58,7 +50,7 @@ export const MeAvatar = ({
     ? previewUrl
     : currentAvatarUrl
       ? currentAvatarUrl
-      : `https://api.dicebear.com/7.x/initials/svg?seed=${avatarHash}`;
+      : 'https://ui-avatars.com/api/?name=User&background=random';
 
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }}>

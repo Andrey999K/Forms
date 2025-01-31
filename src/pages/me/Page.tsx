@@ -15,8 +15,12 @@ export const Me = () => {
   const [isEdit, setEdit] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
   const [isAlertVisible, setAlertVisible] = useState<boolean>(true);
+  const [userUid, setUserUid] = useState(localStorage.getItem('user'));
 
-  const userUid = localStorage.getItem('user');
+  useEffect(() => {
+    const storedUid = localStorage.getItem('user');
+    if (storedUid) setUserUid(storedUid);
+  }, []);
 
   const {
     data: user,

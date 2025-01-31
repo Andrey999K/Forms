@@ -26,7 +26,6 @@ import {
 } from 'firebase/auth';
 import { db, auth } from '@/utils/firebase/firebaseConfig';
 import { FormListOptions, FormListResponse } from '@/types';
-import { generateAvatarHash } from '@/utils/generateAvatarHash';
 import { uploadToCloudinary } from './cloudinary.service';
 
 const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | number): string => {
@@ -210,7 +209,7 @@ export const firestoreService = {
   ): Promise<object> => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-    const defaultAvatar = `https://api.dicebear.com/7.x/initials/svg?seed=${generateAvatarHash()}`;
+    const defaultAvatar = `https://res.cloudinary.com/dgl60edaq/image/upload/v1738281588/jmkt7m2spadfz9aoqmyi.jpg`;
 
     const user = userCredential.user;
     const docRef = doc(db, collectionName, user.uid);
@@ -219,7 +218,7 @@ export const firestoreService = {
       firstName: name,
       lastName: surname,
       email,
-      avatarHash: defaultAvatar,
+      avatarUrl: defaultAvatar,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });

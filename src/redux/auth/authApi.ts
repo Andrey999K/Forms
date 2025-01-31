@@ -32,13 +32,14 @@ export const authApi = createApi({
     register: builder.mutation<AuthUser, SignUpFormValues>({
       queryFn: async ({ email, password, name, surname }) => {
         try {
-          const result = await firestoreService.register(
+          const result = (await firestoreService.register(
             COLLECTION,
             email,
             password,
             name,
             surname
-          );
+          )) as AuthUser;
+          localStorage.setItem('user', result.uid);
           return { data: result as AuthUser };
         } catch (error: unknown) {
           const firebaseError = error as FirebaseError;
