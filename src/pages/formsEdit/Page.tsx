@@ -50,14 +50,14 @@ export const FormsEdit: FC = () => {
     return isError;
   }, [errors]);
 
-  const handleDropField = (type: FieldType, index?: number) => {
+  const handleDropField = (type: FieldType, index?: number, newId?: string) => {
     setConstructor((prev) => {
       if (!prev) return prev;
       const { fields } = prev;
       const isTypeRadio = type === FieldTypes.RADIO || type === FieldTypes.CHECKBOX;
       const options = isTypeRadio ? { options: [{ id: getUUID(), label: '' }] } : {};
       const newField: ConstructorField = {
-        id: getUUID(),
+        id: newId ? newId : getUUID(),
         type,
         question: '',
         require: false,
@@ -104,7 +104,7 @@ export const FormsEdit: FC = () => {
     });
   };
 
-  const handleCopyField = (id: string, index: 'next' | 'last') => {
+  const handleCopyField = (id: string, index: 'next' | 'last', newId: string) => {
     setConstructor((prev) => {
       if (!prev) return prev;
       const { fields } = prev;
@@ -113,7 +113,7 @@ export const FormsEdit: FC = () => {
       if (!field) return prev;
       const newField: ConstructorField = {
         ...field,
-        id: getUUID(),
+        id: newId,
       };
       if (index === 'next') newFields.splice(newFields.indexOf(field) + 1, 0, newField);
       else newFields.push(newField);

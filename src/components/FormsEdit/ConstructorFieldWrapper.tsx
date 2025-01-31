@@ -3,6 +3,7 @@ import { CloseOutlined, CopyOutlined, HolderOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Input, InputRef, MenuProps, Switch, Tooltip } from 'antd';
 import { ChangeEvent, FC, ReactNode, useEffect, useRef, useState } from 'react';
 import { useConstructorItems } from './useConstructorItems';
+import { getUUID } from '@/utils/getUUID';
 
 type Props = {
   children: ReactNode;
@@ -12,7 +13,7 @@ type Props = {
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
   className?: string;
-  onCopyField: (id: string, index: 'next' | 'last') => void;
+  onCopyField: (id: string, index: 'next' | 'last', newId: string) => void;
 };
 
 export const ConstructorFieldWrapper: FC<Props> = (props) => {
@@ -34,13 +35,13 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
       key: 1,
       label: 'Создать копию снизу',
       icon: <CopyOutlined />,
-      onClick: () => onCopyField(field.id, 'next'),
+      onClick: () => onCopyField(field.id, 'next', getUUID()),
     },
     {
       key: 2,
       label: 'Создать копию в самом низу',
       icon: <CopyOutlined />,
-      onClick: () => onCopyField(field.id, 'last'),
+      onClick: () => onCopyField(field.id, 'last', getUUID()),
     },
   ];
 

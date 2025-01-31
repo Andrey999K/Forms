@@ -1,20 +1,21 @@
 import { ConstructorField, ConstructorForm, FieldType } from '@/types';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Dropdown, MenuProps } from 'antd';
-import { FC, Fragment, useRef } from 'react';
+import { FC, Fragment, useEffect, useRef, useState } from 'react';
 import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 import { ConstructorDraggableField } from './ConstructorDraggableField';
 import { ConstructorDropZone } from './ConstructorDropZone';
 import { useConstructorItems } from './useConstructorItems';
+import { getUUID } from '@/utils/getUUID';
 
 type Props = {
   constructor: ConstructorForm;
   onError: (id: string, updates: boolean) => void;
-  onDropField: (type: FieldType, index?: number) => void;
+  onDropField: (type: FieldType, index?: number, newId?: string) => void;
   onMoveField: (dragIndex: number, hoverIndex: number) => void;
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
-  onCopyField: (id: string, index: 'next' | 'last') => void;
+  onCopyField: (id: string, index: 'next' | 'last', newId: string) => void;
 };
 
 export const ConstructorWorkArea: FC<Props> = (props) => {
@@ -28,12 +29,23 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
     onError,
   } = props;
   const workspaceRef = useRef<HTMLDivElement>(null);
+  const [highlightedFieldId, setHighlightedFieldId] = useState<string | null>(null);
+  const [copiedFields, setCopiedFields] = useState<Set<string>>(new Set());
+  const [sourceFieldId, setSourceFieldId] = useState<string | null>(null);
+  const [sourceFields, setSourceFields] = useState<Set<string>>(new Set());
   const { items } = useConstructorItems();
+
   const menuItems: MenuProps['items'] = Object.entries(items).map(([key, { label, jsxIcon }]) => ({
     key,
     label: label,
     icon: jsxIcon,
-    onClick: () => onDropField(key as FieldType, constructor.fields.length),
+    onClick: () => {
+      const newId = getUUID() as string;
+      onDropField(key as FieldType, constructor.fields.length, newId);
+      setHighlightedFieldId(newId);
+      setCopiedFields((prev) => new Set(prev).add(newId));
+      setTimeout(() => setHighlightedFieldId?.(null), 5000);
+    },
   }));
 
   const isOutsideWorkspace = (x: number, y: number) => {
@@ -41,6 +53,30 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
     const rect = workspaceRef.current.getBoundingClientRect();
     return x < rect.left || x > rect.right || y < rect.top || y > rect.bottom;
   };
+
+  const handleCopyField = (id: string, index: 'next' | 'last', newId: string) => {
+    onCopyField(id, index, newId);
+    setHighlightedFieldId(newId);
+    setSourceFieldId(id);
+    setCopiedFields((prev) => new Set(prev).add(newId));
+    setSourceFields((prev) => new Set(prev).add(id));
+    setTimeout(() => {
+      setHighlightedFieldId?.(null);
+      setSourceFieldId(null);
+    }, 5000);
+  };
+
+  useEffect(() => {
+    if (highlightedFieldId && workspaceRef.current) {
+      const fieldElement = workspaceRef.current.querySelector(
+        `[data-field-id="${highlightedFieldId}"]`
+      );
+
+      if (fieldElement) {
+        fieldElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, [highlightedFieldId]);
 
   return (
     <GlassWrapper
@@ -65,8 +101,12 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
                 onMoveField={onMoveField}
                 onRemoveField={onRemoveField}
                 onUpdateField={onUpdateField}
-                onCopyField={onCopyField}
+                onCopyField={handleCopyField}
                 isOutsideWorkspace={isOutsideWorkspace}
+                highlightedFieldId={highlightedFieldId}
+                copiedFields={copiedFields}
+                sourceFieldId={sourceFieldId}
+                sourceFields={sourceFields}
               />
 
               <ConstructorDropZone

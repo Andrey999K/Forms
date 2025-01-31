@@ -13,7 +13,11 @@ type Props = {
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
   isOutsideWorkspace: (x: number, y: number) => boolean;
-  onCopyField: (id: string, index: 'next' | 'last') => void;
+  onCopyField: (id: string, index: 'next' | 'last', newId: string) => void;
+  highlightedFieldId: string | null;
+  copiedFields: Set<string>;
+  sourceFieldId: string | null;
+  sourceFields: Set<string>;
 };
 
 export const ConstructorDraggableField: FC<Props> = (props) => {
@@ -26,11 +30,19 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
     isOutsideWorkspace,
     onCopyField,
     onError,
+    highlightedFieldId,
+    copiedFields,
+    sourceFieldId,
+    sourceFields,
   } = props;
   const ref = useRef<HTMLDivElement>(null);
   const dragRef = useRef<HTMLButtonElement>(null);
   const [isOverDelete, setIsOverDelete] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
+  const isCopied = field.id === highlightedFieldId;
+  const wasCopied = copiedFields.has(field.id);
+  const isSourceField = field.id === sourceFieldId;
+  const wasSourced = sourceFields.has(field.id);
 
   const handleDelete = (id: string) => {
     setIsDelete(true);
@@ -105,11 +117,6 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
 
   const renderField = () => {
     switch (field.type) {
-      case FieldTypes.INPUT:
-        return;
-      case FieldTypes.TEXTAREA:
-        return;
-      case FieldTypes.RADIO:
       case FieldTypes.CHECKBOX: {
         return <RadioEditor field={field} onUpdateField={onUpdateField} onError={onError} />;
       }
@@ -118,10 +125,26 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
     }
   };
 
+  let animationClass = '';
+  if (isSourceField) {
+    animationClass = 'animate-fadeUpGray';
+  } else if (isCopied) {
+    animationClass = 'animate-scaleUpGreen';
+  } else if (!wasCopied && !wasSourced) {
+    animationClass = 'animate-scaleUp';
+  }
+
   return (
     <GlassWrapper
       ref={ref}
-      className={`relative group w-full flex ${isOverDelete ? 'opacity-50 border-red-500' : ''} ${isDragging ? 'border-dashed border-gray-500' : ''} ${isDelete ? 'animate-scaleDown' : 'animate-scaleUp'}`}
+      className={
+        'relative group w-full flex' +
+        (isOverDelete ? ' opacity-50 border-red-500' : '') +
+        (isDragging ? ' border-dashed border-gray-500' : '') +
+        (isDelete ? ' animate-scaleDown' : '') +
+        (animationClass ? ` ${animationClass}` : '')
+      }
+      data-field-id={field.id}
     >
       <ConstructorFieldWrapper {...commonProps}>{renderField()}</ConstructorFieldWrapper>
     </GlassWrapper>

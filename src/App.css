@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
 
+*,
+html {
+  scroll-behavior: smooth !important;
+}
 #root {
   /* max-width: 1280px; */
   margin: 0 auto;
