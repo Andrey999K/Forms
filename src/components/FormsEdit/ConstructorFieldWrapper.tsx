@@ -1,6 +1,6 @@
 import { ConstructorField } from '@/types';
-import { CloseOutlined, HolderOutlined } from '@ant-design/icons';
-import { Button, Input, InputRef, Switch, Tooltip } from 'antd';
+import { CloseOutlined, CopyOutlined, HolderOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Input, InputRef, MenuProps, Switch, Tooltip } from 'antd';
 import { ChangeEvent, FC, ReactNode, useEffect, useRef, useState } from 'react';
 import { useConstructorItems } from './useConstructorItems';
 
@@ -12,13 +12,37 @@ type Props = {
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
   className?: string;
+  onCopyField: (id: string, index: 'next' | 'last') => void;
 };
 
 export const ConstructorFieldWrapper: FC<Props> = (props) => {
-  const { field, children, dragRef, onRemoveField, onUpdateField, className = '', onError } = props;
+  const {
+    field,
+    children,
+    dragRef,
+    onRemoveField,
+    onUpdateField,
+    className = '',
+    onCopyField,
+    onError,
+  } = props;
   const [errors, setErrors] = useState<Record<string, string>>({});
   const inputRef = useRef<InputRef>(null);
   const { items } = useConstructorItems();
+  const menuItems: MenuProps['items'] = [
+    {
+      key: 1,
+      label: 'Создать копию снизу',
+      icon: <CopyOutlined />,
+      onClick: () => onCopyField(field.id, 'next'),
+    },
+    {
+      key: 2,
+      label: 'Создать копию в самом низу',
+      icon: <CopyOutlined />,
+      onClick: () => onCopyField(field.id, 'last'),
+    },
+  ];
 
   const getErrors = (id: string, label: string): Record<string, string> => {
     if (label.trim() === '') {
@@ -76,6 +100,9 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
             {items[field.type].label}
           </div>
           <div className="flex gap-2 items-center">
+            <Dropdown menu={{ items: menuItems }} placement="top" arrow={{ pointAtCenter: true }}>
+              <Button type="text" icon={<CopyOutlined className="cursor-pointer transition" />} />
+            </Dropdown>
             <Tooltip title="Обязательное поле">
               <Switch
                 size="small"

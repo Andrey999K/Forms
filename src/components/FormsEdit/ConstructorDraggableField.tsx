@@ -13,11 +13,20 @@ type Props = {
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
   isOutsideWorkspace: (x: number, y: number) => boolean;
+  onCopyField: (id: string, index: 'next' | 'last') => void;
 };
 
 export const ConstructorDraggableField: FC<Props> = (props) => {
-  const { field, index, onMoveField, onRemoveField, onUpdateField, isOutsideWorkspace, onError } =
-    props;
+  const {
+    field,
+    index,
+    onMoveField,
+    onRemoveField,
+    onUpdateField,
+    isOutsideWorkspace,
+    onCopyField,
+    onError,
+  } = props;
   const ref = useRef<HTMLDivElement>(null);
   const dragRef = useRef<HTMLButtonElement>(null);
   const [isOverDelete, setIsOverDelete] = useState(false);
@@ -90,6 +99,7 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
     onUpdateField,
     onRemoveField: handleDelete,
     onError,
+    onCopyField,
     index,
   };
 

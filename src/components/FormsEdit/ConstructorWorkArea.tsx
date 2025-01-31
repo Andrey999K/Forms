@@ -14,21 +14,25 @@ type Props = {
   onMoveField: (dragIndex: number, hoverIndex: number) => void;
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
-  onChangeForm: ({ value, name }: { value: string; name: string }) => void;
+  onCopyField: (id: string, index: 'next' | 'last') => void;
 };
 
 export const ConstructorWorkArea: FC<Props> = (props) => {
-  const { constructor, onDropField, onMoveField, onRemoveField, onUpdateField, onError } = props;
+  const {
+    constructor,
+    onDropField,
+    onMoveField,
+    onRemoveField,
+    onUpdateField,
+    onCopyField,
+    onError,
+  } = props;
   const workspaceRef = useRef<HTMLDivElement>(null);
   const { items } = useConstructorItems();
   const menuItems: MenuProps['items'] = Object.entries(items).map(([key, { label, jsxIcon }]) => ({
     key,
-    label: (
-      <div className="flex gap-2 items-center justify-center">
-        {jsxIcon}
-        {label}
-      </div>
-    ),
+    label: label,
+    icon: jsxIcon,
     onClick: () => onDropField(key as FieldType, constructor.fields.length),
   }));
 
@@ -61,6 +65,7 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
                 onMoveField={onMoveField}
                 onRemoveField={onRemoveField}
                 onUpdateField={onUpdateField}
+                onCopyField={onCopyField}
                 isOutsideWorkspace={isOutsideWorkspace}
               />
 

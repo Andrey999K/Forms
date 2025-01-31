@@ -104,6 +104,23 @@ export const FormsEdit: FC = () => {
     });
   };
 
+  const handleCopyField = (id: string, index: 'next' | 'last') => {
+    setConstructor((prev) => {
+      if (!prev) return prev;
+      const { fields } = prev;
+      const newFields = [...fields];
+      const field = fields.find((field) => field.id === id);
+      if (!field) return prev;
+      const newField: ConstructorField = {
+        ...field,
+        id: getUUID(),
+      };
+      if (index === 'next') newFields.splice(newFields.indexOf(field) + 1, 0, newField);
+      else newFields.push(newField);
+      return { ...prev, fields: newFields };
+    });
+  };
+
   const handleSaveForms = async () => {
     if (!constructor) return;
     if (isError) return;
@@ -203,7 +220,7 @@ export const FormsEdit: FC = () => {
               onMoveField={moveField}
               onRemoveField={removeField}
               onUpdateField={updateField}
-              onChangeForm={handleChangeForm}
+              onCopyField={handleCopyField}
             />
           </div>
         </div>
