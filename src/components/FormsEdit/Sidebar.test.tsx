@@ -38,7 +38,7 @@ describe('Sidebar Component', () => {
         />
       </DndProvider>
     );
-    const saveButton = screen.getByText(/Сохранить форму/i);
+    const saveButton = screen.getByRole('button', { name: /Сохранить форму/i });
     expect(saveButton).toBeDisabled();
   });
 
