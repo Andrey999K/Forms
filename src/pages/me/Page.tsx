@@ -8,11 +8,19 @@ import { MeProfileDetails } from '@/components/Me';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { toast } from 'react-toastify';
 import { Loader } from '@/components/ui/Loader';
+import { uploadToCloudinary } from '@/services/cloudinary.service';
 import PageTitle from '@/components/ui/PageTitle/PageTitle';
 
 export const Me = () => {
-  const [isEdit, setIsEdit] = useState<boolean>(false);
-  const userUid = localStorage.getItem('user');
+  const [isEdit, setEdit] = useState<boolean>(false);
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const [isAlertVisible, setAlertVisible] = useState<boolean>(true);
+  const [userUid, setUserUid] = useState(localStorage.getItem('user'));
+
+  useEffect(() => {
+    const storedUid = localStorage.getItem('user');
+    if (storedUid) setUserUid(storedUid);
+  }, []);
 
   const {
     data: user,
@@ -22,30 +30,17 @@ export const Me = () => {
     skip: !userUid,
   });
 
+  const [updateUserInfo, { isLoading: isUpdating }] = useUpdateMeInfoMutation();
+
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { isValid, dirtyFields },
     reset,
   } = useForm<MeChangeFields>({
     mode: 'onBlur',
   });
-
-  const [updateUserInfo, { isLoading: isUpdating }] = useUpdateMeInfoMutation();
-
-  const handleSave = async (data: MeChangeFields) => {
-    if (JSON.stringify(dirtyFields) === '{}') return;
-    if (userUid) {
-      try {
-        await updateUserInfo({ id: userUid, data }).unwrap();
-        toast.success('Данные успешно обновлены');
-        setIsEdit(false);
-      } catch (error) {
-        toast.error('Не удалось обновить данные');
-        console.error('Ошибка обновления данных:', error);
-      }
-    }
-  };
 
   useEffect(() => {
     if (user) {
@@ -58,47 +53,104 @@ export const Me = () => {
   }, [user]);
 
   useEffect(() => {
+    if (avatar) {
+      setValue('avatarUrl', 'uploaded', { shouldDirty: true });
+    }
+  }, [avatar]);
+
+  const onSubmit = async (data: MeChangeFields) => {
+    if (JSON.stringify(dirtyFields) === '{}') return;
+    if (userUid) {
+      try {
+        let avatarUrl = user?.avatarUrl || '';
+
+        if (avatar) {
+          avatarUrl = await uploadToCloudinary(avatar);
+        }
+
+        const updatedData: MeChangeFields = { ...data };
+        if (avatarUrl) {
+          updatedData.avatarUrl = avatarUrl;
+        }
+        await updateUserInfo({
+          id: userUid,
+          data: updatedData,
+        }).unwrap();
+
+        toast.success('Данные успешно обновлены');
+        setAvatar(null);
+        setAlertVisible(false);
+        setEdit(false);
+      } catch (error) {
+        toast.error('Не удалось обновить данные');
+        console.error('Ошибка обновления данных:', error);
+      }
+    }
+  };
+
+  useEffect(() => {
     document.title = 'Профиль';
   }, []);
 
   if (!user || isLoading || isUpdating) return <Loader />;
 
   return (
-    <div className="flex justify-center p-4 break-words w-full">
+    <>
       <PageTitle title="Профиль" />
-      <GlassWrapper className={`w-1/2 px-5 py-5 text-center`} style={{ zIndex: 10 }}>
-        {error ? (
-          <Alert
-            message="Ошибка загрузки данных"
-            description="Не удалось получить информацию о пользователе"
-            type="error"
-            showIcon
-          />
-        ) : (
-          <div className="">
-            <Form
-              onFinish={handleSubmit(handleSave)}
-              className="w-full flex flex-col gap-4 text-center"
-            >
-              <MeProfileActions
-                isEdit={isEdit}
-                dirtyFields={dirtyFields}
-                isValid={isValid}
-                setIsEdit={setIsEdit}
-                isUpdating={isUpdating}
-              />
-              <MeAvatar avatarHash={user?.avatarHash} />
-              <MeProfileDetails
-                isEditing={isEdit}
-                control={control}
-                reset={reset}
-                user={user}
-                setIsEdit={setIsEdit}
-              />
-            </Form>
+      <div className="flex relative justify-center p-4 break-words w-full">
+        {isEdit && isAlertVisible && (
+          <div className="absolute top-[-10px] z-50">
+            <Alert
+              message="Для изменения аватара наведите на него и нажмите"
+              type="info"
+              showIcon
+              closable
+              onClose={() => setAlertVisible(false)}
+            />
           </div>
         )}
-      </GlassWrapper>
-    </div>
+        <GlassWrapper className={`w-1/2 px-5 py-5 text-center`} style={{ zIndex: 10 }}>
+          {error ? (
+            <Alert
+              message="Ошибка загрузки данных"
+              description="Не удалось получить информацию о пользователе"
+              type="error"
+              showIcon
+            />
+          ) : (
+            <div className="">
+              <Form
+                onFinish={handleSubmit(onSubmit)}
+                className="w-full flex flex-col gap-4 text-center"
+              >
+                <MeProfileActions
+                  isEdit={isEdit}
+                  dirtyFields={dirtyFields}
+                  isValid={isValid}
+                  setEdit={setEdit}
+                  isUpdating={isUpdating}
+                  avatar={avatar}
+                />
+                <MeAvatar
+                  currentAvatarUrl={user.avatarUrl}
+                  isLoading={isLoading}
+                  isEdit={isEdit}
+                  setAvatar={setAvatar}
+                  avatar={avatar}
+                />
+                <MeProfileDetails
+                  isEditing={isEdit}
+                  control={control}
+                  reset={reset}
+                  user={user}
+                  setEdit={setEdit}
+                  setAvatar={setAvatar}
+                />
+              </Form>
+            </div>
+          )}
+        </GlassWrapper>
+      </div>
+    </>
   );
 };
