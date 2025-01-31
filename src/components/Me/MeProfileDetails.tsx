@@ -9,7 +9,7 @@ import { formatUserCreatedAt } from '@/utils/formatUserCreatedAt';
 import { MdPerson, MdOutlinePeople } from 'react-icons/md';
 import { UserFormInput } from '../Auth/UserFormInput';
 
-const renderProfileField = (icon: ReactNode, value?: string) => (
+const renderMeProfileField = (icon: ReactNode, value?: string) => (
   <div className="flex gap-2 items-start justify-start mb-4">
     {icon}
     <span className="w-full break-all text-left">{value}</span>
@@ -49,10 +49,10 @@ export const MeProfileDetails = ({
       <Divider className="my-0" />
       {!isEditing ? (
         <div className="flex flex-col items-start gap-2">
-          {renderProfileField(<MdPerson size={20} />, user?.firstName)}
-          {renderProfileField(<MdOutlinePeople size={20} />, user?.lastName)}
-          {renderProfileField(<MdOutlineEmail size={20} />, user?.email)}
-          {renderProfileField(
+          {renderMeProfileField(<MdPerson size={20} />, user?.firstName)}
+          {renderMeProfileField(<MdOutlinePeople size={20} />, user?.lastName)}
+          {renderMeProfileField(<MdOutlineEmail size={20} />, user?.email)}
+          {renderMeProfileField(
             <FaRegRegistered size={20} />,
             `Дата регистрации: ${formatUserCreatedAt(user?.createdAt)}`
           )}
