@@ -29,7 +29,7 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
     onError,
   } = props;
   const workspaceRef = useRef<HTMLDivElement>(null);
-  const [highlightedFieldId, setHighlightedFieldId] = useState<string | null>(null);
+  const [copyFieldsId, setCopyFieldId] = useState<string | null>(null);
   const [copiedFields, setCopiedFields] = useState<Set<string>>(new Set());
   const [sourceFieldId, setSourceFieldId] = useState<string | null>(null);
   const [sourceFields, setSourceFields] = useState<Set<string>>(new Set());
@@ -42,9 +42,9 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
     onClick: () => {
       const newId = getUUID() as string;
       onDropField(key as FieldType, constructor.fields.length, newId);
-      setHighlightedFieldId(newId);
+      setCopyFieldId(newId);
       setCopiedFields((prev) => new Set(prev).add(newId));
-      setTimeout(() => setHighlightedFieldId?.(null), 5000);
+      setTimeout(() => setCopyFieldId?.(null), 5000);
     },
   }));
 
@@ -56,27 +56,31 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
 
   const handleCopyField = (id: string, index: 'next' | 'last', newId: string) => {
     onCopyField(id, index, newId);
-    setHighlightedFieldId(newId);
+    setCopyFieldId(newId);
     setSourceFieldId(id);
     setCopiedFields((prev) => new Set(prev).add(newId));
     setSourceFields((prev) => new Set(prev).add(id));
-    setTimeout(() => {
-      setHighlightedFieldId?.(null);
-      setSourceFieldId(null);
-    }, 5000);
   };
 
   useEffect(() => {
-    if (highlightedFieldId && workspaceRef.current) {
-      const fieldElement = workspaceRef.current.querySelector(
-        `[data-field-id="${highlightedFieldId}"]`
-      );
+    if (copyFieldsId && workspaceRef.current) {
+      const fieldElement = workspaceRef.current.querySelector(`[data-field-id="${copyFieldsId}"]`);
 
       if (fieldElement) {
         fieldElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
-  }, [highlightedFieldId]);
+  }, [copyFieldsId]);
+
+  useEffect(() => {
+    if (sourceFields || copiedFields) {
+      const timeout = setTimeout(() => {
+        setCopyFieldId?.(null);
+        setSourceFieldId(null);
+      }, 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [sourceFields, copiedFields]);
 
   return (
     <GlassWrapper
@@ -103,7 +107,7 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
                 onUpdateField={onUpdateField}
                 onCopyField={handleCopyField}
                 isOutsideWorkspace={isOutsideWorkspace}
-                highlightedFieldId={highlightedFieldId}
+                copyFieldsId={copyFieldsId}
                 copiedFields={copiedFields}
                 sourceFieldId={sourceFieldId}
                 sourceFields={sourceFields}

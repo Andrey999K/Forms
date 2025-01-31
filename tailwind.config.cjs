@@ -28,7 +28,7 @@ module.exports = {
         },
         scaleUpGreen: {
           '0%': { transform: 'scale(0)' },
-          '15%': { transform: 'scale(1)', backgroundColor: 'rgb(0,128,0, 0.4)' },
+          '6%': { transform: 'scale(1)', backgroundColor: 'rgb(0,128,0, 0.4)' },
         },
         scaleUp: {
           '0%': { transform: 'scale(0)' },

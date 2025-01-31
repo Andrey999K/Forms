@@ -1,5 +1,5 @@
 import { ConstructorField, FIELD_EXISTS, FieldTypes } from '@/types';
-import { FC, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 import { ConstructorFieldWrapper } from './ConstructorFieldWrapper';
@@ -14,13 +14,13 @@ type Props = {
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
   isOutsideWorkspace: (x: number, y: number) => boolean;
   onCopyField: (id: string, index: 'next' | 'last', newId: string) => void;
-  highlightedFieldId: string | null;
+  copyFieldsId: string | null;
   copiedFields: Set<string>;
   sourceFieldId: string | null;
   sourceFields: Set<string>;
 };
 
-export const ConstructorDraggableField: FC<Props> = (props) => {
+export const ConstructorDraggableField = memo((props: Props) => {
   const {
     field,
     index,
@@ -30,7 +30,7 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
     isOutsideWorkspace,
     onCopyField,
     onError,
-    highlightedFieldId,
+    copyFieldsId,
     copiedFields,
     sourceFieldId,
     sourceFields,
@@ -39,7 +39,7 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
   const dragRef = useRef<HTMLButtonElement>(null);
   const [isOverDelete, setIsOverDelete] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const isCopied = field.id === highlightedFieldId;
+  const isCopied = field.id === copyFieldsId;
   const wasCopied = copiedFields.has(field.id);
   const isSourceField = field.id === sourceFieldId;
   const wasSourced = sourceFields.has(field.id);
@@ -149,4 +149,5 @@ export const ConstructorDraggableField: FC<Props> = (props) => {
       <ConstructorFieldWrapper {...commonProps}>{renderField()}</ConstructorFieldWrapper>
     </GlassWrapper>
   );
-};
+});
+ConstructorDraggableField.displayName = 'ConstructorDraggableField';
