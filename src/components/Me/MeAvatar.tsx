@@ -15,7 +15,7 @@ type Props = {
 export const MeAvatar = ({ currentAvatarUrl, isLoading, isEdit, setAvatar, avatar }: Props) => {
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [isHovered, setHovered] = useState<boolean>(false);
+  const [isHover, setHover] = useState<boolean>(false);
 
   useEffect(() => {
     if (avatar) {
@@ -65,11 +65,11 @@ export const MeAvatar = ({ currentAvatarUrl, isLoading, isEdit, setAvatar, avata
       <div className="flex flex-col gap-4">
         <div
           className="relative w-36 h-36 rounded-full overflow-hidden shadow-xl"
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
         >
           <img src={image} className="w-full h-full object-cover" alt="avatar" />
-          {isHovered && isEdit && (
+          {isHover && isEdit && (
             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <Upload
                 name="avatar"
