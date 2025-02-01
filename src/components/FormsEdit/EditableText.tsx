@@ -1,7 +1,7 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Input, Tooltip } from 'antd';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 
 type Props = {
   value: string;
@@ -39,21 +39,27 @@ export const EditableText: FC<Props> = (props) => {
     setIsOpen(true);
   };
 
-  const handleBlur = () => {
-    if (isError) return;
+  const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
+    const errors = getErrors(e.target.id, e.target.value);
+    if (errors) return;
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    if (value === '') {
+      setIsOpen(true);
+    }
+  }, []);
 
   return (
     <>
       {isOpen ? (
         <Input
-          autoFocus
+          autoFocus={value === '' ? undefined : true}
           value={value}
           id={id}
           onChange={handleChange}
           onBlur={handleBlur}
-          onPressEnter={handleBlur}
           className="w-full"
           status={isError ? 'error' : undefined}
           placeholder={placeholder}

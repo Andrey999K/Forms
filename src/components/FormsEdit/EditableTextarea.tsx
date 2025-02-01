@@ -1,5 +1,5 @@
 import TextArea from 'antd/es/input/TextArea';
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 
 type Props = {
   value: string;
@@ -35,20 +35,26 @@ export const EditableTextarea: FC<Props> = (props) => {
     setIsOpen(true);
   };
 
-  const handleBlur = () => {
-    if (isError) return;
+  const handleBlur = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const errors = getErrors(e.target.id, e.target.value);
+    if (errors) return;
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    if (value === '') {
+      setIsOpen(true);
+    }
+  }, []);
 
   return (
     <>
       {isOpen ? (
         <TextArea
-          autoFocus
+          autoFocus={value === '' ? undefined : true}
           value={value}
           onChange={handleChange}
           onBlur={handleBlur}
-          onPressEnter={handleBlur}
           className="w-full"
           status={isError ? 'error' : undefined}
           placeholder={placeholder}

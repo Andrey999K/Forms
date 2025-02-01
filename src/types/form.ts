@@ -51,8 +51,8 @@ export const FIELD_EXISTS = 'exists';
 
 export const NEW_FORM: Omit<Form, 'userId'> = {
   fields: [],
-  title: 'Название формы',
-  description: 'Описание формы',
+  title: '',
+  description: '',
   timer: '',
   tags: [],
 };
