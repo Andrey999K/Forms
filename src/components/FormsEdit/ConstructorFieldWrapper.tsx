@@ -1,5 +1,10 @@
 import { ConstructorField } from '@/types';
-import { CloseOutlined, CopyOutlined, HolderOutlined } from '@ant-design/icons';
+import {
+  CloseOutlined,
+  CopyOutlined,
+  ExclamationCircleOutlined,
+  HolderOutlined,
+} from '@ant-design/icons';
 import { Button, Dropdown, Input, InputRef, MenuProps, Switch, Tooltip } from 'antd';
 import { ChangeEvent, FC, ReactNode, useEffect, useRef, useState } from 'react';
 import { useConstructorItems } from './useConstructorItems';
@@ -44,11 +49,12 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
       onClick: () => onCopyField(field.id, 'last', getUUID()),
     },
   ];
+  const isError = Object.keys(errors).length > 0;
 
   const getErrors = (id: string, label: string): Record<string, string> => {
     if (label.trim() === '') {
       onError(id, true);
-      return { ...errors, [id]: 'Поле не может быть пустым' };
+      return { ...errors, [id]: 'Поле не может быть пустым.' };
     } else {
       const newErrors = { ...errors };
       onError(id, false);
@@ -79,10 +85,7 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
   return (
     <div className={`relative w-full flex ${className}`}>
       <div className="w-full flex flex-col">
-        <button ref={dragRef} className={`w-full cursor-move hover:text-orange-500`}>
-          <HolderOutlined className="rotate-90" />
-        </button>
-        <div className="w-full px-4 pb-4 flex flex-col gap-2 items-start">
+        <div className="w-full px-4 py-2 flex flex-col gap-2 items-start">
           <div className="w-full flex gap-2 items-center">
             <Input
               id={field.id}
@@ -91,12 +94,19 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
               placeholder="Вопрос"
               onChange={handleChange}
               ref={inputRef}
+              suffix={
+                isError ? (
+                  <Tooltip title={errors[field.id]}>
+                    <ExclamationCircleOutlined className="text-red-500" />
+                  </Tooltip>
+                ) : null
+              }
             />
           </div>
           {children}
         </div>
         <div className="px-4 border-t flex justify-between">
-          <div className="flex gap-2 items-center text-sm px-1">
+          <div className="flex gap-2 items-center text-sm px-1 text-gray-500">
             {items[field.type].jsxIcon}
             {items[field.type].label}
           </div>
@@ -119,6 +129,14 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
             />
           </div>
         </div>
+      </div>
+      <div>
+        <button
+          ref={dragRef}
+          className={`border-l h-full cursor-move text-gray-500 hover:text-orange-500`}
+        >
+          <HolderOutlined />
+        </button>
       </div>
     </div>
   );

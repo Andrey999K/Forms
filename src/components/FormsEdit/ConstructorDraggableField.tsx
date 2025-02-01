@@ -146,8 +146,8 @@ export const ConstructorDraggableField = memo((props: Props) => {
       ref={ref}
       className={
         'relative group w-full flex' +
-        (isOverDelete ? ' opacity-50 border-red-500' : '') +
-        (isDragging ? ' border-dashed border-gray-500' : '') +
+        (isOverDelete ? ' border-red-500' : '') +
+        (isDragging ? ' border-dashed border-gray-500 opacity-100' : '') +
         (isDelete ? ' animate-scaleDown' : '') +
         (animationClass ? ` ${animationClass}` : '')
       }

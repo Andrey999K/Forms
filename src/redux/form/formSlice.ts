@@ -1,5 +1,5 @@
 import { firestoreService } from '@/services/firestore.service';
-import { CardWithCount, FormListOptions, FormListResponse, FormResponse } from '@/types';
+import { Card, CardWithCount, FormListOptions, FormListResponse, FormResponse } from '@/types';
 import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
@@ -71,6 +71,14 @@ const formsSlice = createSlice({
   reducers: {
     resetStore: () => {
       return initialState;
+    },
+    createLocalForm: (state, action: PayloadAction<CardWithCount>) => {
+      state.data = [...state.data, action.payload];
+    },
+    updateLocalForm: (state, action: PayloadAction<Card>) => {
+      const index = state.data.findIndex((form) => form.id === action.payload.id);
+      if (index === -1) return;
+      state.data[index] = { ...state.data[index], ...action.payload };
     },
     deleteLocalForm: (state, action: PayloadAction<string>) => {
       state.data = state.data.filter((form) => form.id !== action.payload);
