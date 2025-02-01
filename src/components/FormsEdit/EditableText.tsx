@@ -41,7 +41,7 @@ export const EditableText: FC<Props> = (props) => {
 
   const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
     const errors = getErrors(e.target.id, e.target.value);
-    if (errors) return;
+    if (Object.keys(errors).length !== 0) return;
     setIsOpen(false);
   };
 

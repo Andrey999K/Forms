@@ -37,7 +37,9 @@ export const EditableTextarea: FC<Props> = (props) => {
 
   const handleBlur = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const errors = getErrors(e.target.id, e.target.value);
-    if (errors) return;
+    console.log('handleBlur', errors, Object.keys(errors).length === 0);
+
+    if (Object.keys(errors).length !== 0) return;
     setIsOpen(false);
   };
 
