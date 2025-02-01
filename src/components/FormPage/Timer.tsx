@@ -8,9 +8,10 @@ const { Countdown } = Statistic;
 type TimerProps = {
   value?: string;
   onFinish: () => void;
+  isLoading?: boolean;
 };
 
-export const Timer: FC<TimerProps> = ({ value, onFinish }) => {
+export const Timer: FC<TimerProps> = ({ value, onFinish, isLoading }) => {
   const { formId } = useParams<{ formId: string }>();
   const { value: formLocalStorage, update } = useLocalStorage<{
     formId: string;
@@ -43,10 +44,13 @@ export const Timer: FC<TimerProps> = ({ value, onFinish }) => {
 
   useEffect(() => {
     return () => {
-      if (formLocalStorage && typeof formLocalStorage === 'object') {
-        update({ ...formLocalStorage, timer: deadline - Date.now() });
-      } else if (formId) {
-        update({ formId, timer: deadline - Date.now() });
+      const currentTimeForm = deadline - Date.now();
+      if (currentTimeForm > 0) {
+        if (formLocalStorage && typeof formLocalStorage === 'object') {
+          update({ ...formLocalStorage, timer: currentTimeForm });
+        } else if (formId) {
+          update({ formId, timer: currentTimeForm });
+        }
       }
     };
   }, []);
@@ -56,6 +60,7 @@ export const Timer: FC<TimerProps> = ({ value, onFinish }) => {
       title="Осталось времени"
       value={deadline}
       onFinish={handleFinish}
+      loading={isLoading}
       className="flex flex-col custom-timer text-nowrap"
     />
   );

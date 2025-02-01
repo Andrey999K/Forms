@@ -3,7 +3,7 @@ import { incrementResponseCount, useGetFormQuery } from '@/redux/form';
 import { Loader } from '@/components/ui/Loader';
 import { Form, Typography } from 'antd';
 import { useCreateResponseMutation } from '@/redux/response';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { ResponseSendMessage } from '@/components/FormPage';
 import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
@@ -23,7 +23,7 @@ export const FormPage = () => {
   const [createFormResponse, { isLoading: isLoadingCreateResponse }] = useCreateResponseMutation();
   const [form] = Form.useForm();
   const { remove } = useLocalStorage('form');
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [timerStart, setTimerStart] = useState(false);
 
   const startTimer = () => {
@@ -68,8 +68,8 @@ export const FormPage = () => {
         const result = await createFormResponse(answersData).unwrap();
         if (result) {
           clearLocalStorageForm();
-          setFormSubmitted(true);
           dispatch(incrementResponseCount({ id: formId ?? '' }));
+          setIsFormSubmitted(true);
         }
       } catch (error: any) {
         toast.error('Произошла неизвестная ошибка!');
@@ -83,6 +83,12 @@ export const FormPage = () => {
   };
 
   usePageTitle(formData?.title ? `Форма | ${formData.title}` : 'Форма');
+
+  useEffect(() => {
+    if (isFormSubmitted) {
+      clearLocalStorageForm();
+    }
+  }, [isFormSubmitted]);
 
   if (!formId) {
     return <h2>Форма не найдена!</h2>;
@@ -102,7 +108,7 @@ export const FormPage = () => {
 
   return (
     <div className="pt-5 relative">
-      {formSubmitted ? (
+      {isFormSubmitted ? (
         <ResponseSendMessage />
       ) : (
         <div className="flex gap-4 items-start w-full">
@@ -119,7 +125,11 @@ export const FormPage = () => {
           </GlassWrapper>
           {formData?.timer && timerStart && (
             <GlassWrapper className="p-10">
-              <Timer value={formData.timer} onFinish={sendFormAfterTimer} />
+              <Timer
+                value={formData.timer}
+                onFinish={sendFormAfterTimer}
+                isLoading={isLoadingCreateResponse}
+              />
             </GlassWrapper>
           )}
         </div>
