@@ -23,6 +23,13 @@ module.exports = {
           '0%': { opacity: '1' },
           '100%': { opacity: '0' },
         },
+        fadeUpGray: {
+          '0%': { backgroundColor: 'rgb(192,192,192, 0.5)' },
+        },
+        scaleUpGreen: {
+          '0%': { transform: 'scale(0)' },
+          '6%': { transform: 'scale(1)', backgroundColor: 'rgb(0,128,0, 0.4)' },
+        },
         scaleUp: {
           '0%': { transform: 'scale(0)' },
           '100%': { transform: 'scale(1)' },
@@ -35,6 +42,8 @@ module.exports = {
       animation: {
         opacityUp: 'opacityUp 0.3s ease-in-out forwards',
         opacityDown: 'opacityDown 0.15s ease-in-out forwards',
+        fadeUpGray: 'fadeUpGray 5s ease-in-out forwards',
+        scaleUpGreen: 'scaleUpGreen 5s ease-in-out forwards',
         scaleUp: 'scaleUp 0.3s ease-in-out forwards',
         scaleDown: 'scaleDown 0.15s ease-in-out forwards',
       },
