@@ -3,7 +3,7 @@ import { useGetFormQuery } from '@/redux/form';
 import { Loader } from '@/components/ui/Loader';
 import { Button, Form, Typography } from 'antd';
 import { useCreateResponseMutation } from '@/redux/response';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ResponseSendMessage } from '@/components/FormPage';
 import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
@@ -91,12 +91,6 @@ export const FormPage = () => {
   const sendFormAfterTimer = async () => {
     await sendForm(form.getFieldsValue(true));
   };
-
-  useEffect(() => {
-    if (formData) {
-      document.title = formData.title;
-    }
-  }, [formData]);
 
   if (!formId) {
     return (

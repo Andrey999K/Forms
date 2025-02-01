@@ -1,14 +1,9 @@
 import PageTitle from '@/components/ui/PageTitle/PageTitle';
 import { Button, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 
 export const NotFound = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    document.title = 'Страница не найдена';
-  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-theme(spacing.page-layout-offset))]">
