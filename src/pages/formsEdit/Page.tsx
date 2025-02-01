@@ -248,7 +248,11 @@ export const FormsEdit: FC = () => {
             onChangeForm={handleChangeForm}
           />
           <div className="flex flex-col w-full relative gap-4 ">
-            <ConstructorHeader constructor={constructor} onChangeForm={handleChangeForm} />
+            <ConstructorHeader
+              constructor={constructor}
+              onChangeForm={handleChangeForm}
+              onError={handleError}
+            />
             <ConstructorWorkArea
               constructor={constructor}
               onError={handleError}

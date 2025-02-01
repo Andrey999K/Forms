@@ -83,6 +83,12 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
     return () => clearTimeout(timeout);
   }, [sourceFields, copiedFields]);
 
+  useEffect(() => {
+    constructor.fields.forEach((field) => {
+      setCopiedFields((prev) => new Set(prev).add(field.id));
+    });
+  }, []);
+
   return (
     <GlassWrapper
       ref={workspaceRef}

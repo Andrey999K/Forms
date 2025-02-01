@@ -165,7 +165,7 @@ export const firestoreService = {
   ): Promise<object> => {
     const { id, avatarUrl, ...updateData } = payload;
     delete updateData?.['userId'];
-    delete updateData?.['createAt'];
+    delete updateData?.['createdAt'];
 
     const docRef = doc(db, collectionName, id);
     const docSnap = await getDoc(docRef);
