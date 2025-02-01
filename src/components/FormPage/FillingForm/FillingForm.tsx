@@ -1,8 +1,9 @@
 import { Button, Form, FormInstance } from 'antd';
 import { renderField } from '@/utils/renderField.tsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetFormQuery } from '@/redux/form';
 import { useParams } from 'react-router-dom';
+import useLocalStorage from '@/hooks/useLocalStorage.ts';
 
 type FillingFormProps = {
   form: FormInstance;
@@ -13,13 +14,20 @@ export const FillingForm = ({ form, onSend }: FillingFormProps) => {
   const { formId } = useParams();
   const { data: formData } = useGetFormQuery(formId || '');
   const [isFormValid, setIsFormValid] = useState(false);
+  const { value: draft, update } = useLocalStorage('draft');
 
   const onFinish = async (values: { [key: string]: string }) => {
     onSend(values);
   };
 
+  const saveDraft = () => {
+    const formValues = form.getFieldsValue();
+    update(formValues);
+  };
+
   // Обработчик изменения формы
   const onValuesChange = () => {
+    saveDraft();
     // Проверяем наличие обязательных полей
     const requiredFields = formData?.fields.filter((field) => field.require);
     // Проверяем валидность всех обязательных полей
@@ -34,6 +42,13 @@ export const FillingForm = ({ form, onSend }: FillingFormProps) => {
     });
     setIsFormValid(isValid);
   };
+
+  useEffect(() => {
+    if (draft && Object.keys(draft).length > 0) {
+      form.setFieldsValue(draft);
+      setIsFormValid(true);
+    }
+  }, []);
 
   if (!formData) return false;
 
