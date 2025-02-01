@@ -16,7 +16,6 @@ interface Props {
 export const SettingTags: React.FC<Props> = (props) => {
   const { constructor, onChangeForm } = props;
   const { token } = theme.useToken();
-  const [tags, setTags] = useState<TagForm[]>(constructor.tags);
   const [inputVisible, setInputVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [editInputIndex, setEditInputIndex] = useState<string>('');
@@ -28,13 +27,9 @@ export const SettingTags: React.FC<Props> = (props) => {
     editInputRef.current?.focus();
   }, [editInputValue]);
 
-  useEffect(() => {
-    onChangeForm?.({ name: 'settings', value: { tags } });
-  }, [tags]);
-
   const handleClose = (tagId: string) => {
-    const newTags = tags.filter((tag) => tag.id !== tagId);
-    setTags(newTags);
+    const newTags = constructor.tags.filter((tag) => tag.id !== tagId);
+    onChangeForm?.({ name: 'tags', value: newTags });
   };
 
   const showInput = () => {
@@ -46,13 +41,13 @@ export const SettingTags: React.FC<Props> = (props) => {
   };
 
   const handleInputConfirm = () => {
-    if (inputValue && !tags.some((tag) => tag.label === inputValue)) {
+    if (inputValue && !constructor.tags.some((tag) => tag.label === inputValue)) {
       const newTag: TagForm = {
         id: getUUID(),
         label: inputValue,
         color: editTagColor,
       };
-      setTags([...tags, newTag]);
+      onChangeForm?.({ name: 'tags', value: [...constructor.tags, newTag] });
     }
     setInputVisible(false);
     setInputValue('');
@@ -64,11 +59,11 @@ export const SettingTags: React.FC<Props> = (props) => {
   };
 
   const handleEditInputConfirm = () => {
-    const newTags = [...tags];
+    const newTags = [...constructor.tags];
     const index = newTags.findIndex((tag) => tag.id === editInputIndex);
     newTags[index] = { ...newTags[index], label: editInputValue, color: editTagColor };
 
-    setTags(newTags);
+    onChangeForm?.({ name: 'tags', value: newTags });
     setEditInputIndex('');
     setEditInputValue('');
     setEditTagColor(token.colorPrimary);
@@ -78,14 +73,10 @@ export const SettingTags: React.FC<Props> = (props) => {
     setEditTagColor(color);
   };
 
-  useEffect(() => {
-    setTags(constructor.tags);
-  }, []);
-
   return (
     <div className="flex justify-start flex-wrap gap-2 items-center">
       <span>Теги:</span>
-      {tags.map((tag) => {
+      {constructor.tags.map((tag) => {
         if (editInputIndex === tag.id) {
           return (
             <AutoWidthInput

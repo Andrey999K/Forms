@@ -5,6 +5,7 @@ import { FC, useEffect, useState } from 'react';
 import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 import { ConstructorTab } from './ConstructorTab';
 import { SettingsTab } from './SettingsTab';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   constructor: ConstructorForm;
@@ -31,6 +32,7 @@ export const Sidebar: FC<Props> = (props) => {
     onChangeForm,
   } = props;
   const [isSticky, setIsSticky] = useState(false);
+  const navigate = useNavigate();
   const TABS_ITEMS = [
     {
       key: 'constructor',
@@ -73,6 +75,16 @@ export const Sidebar: FC<Props> = (props) => {
       <div>
         <h3 className="text-base font-medium mb-4">Действия</h3>
         <div className="flex flex-col gap-2">
+          {!isNew && (
+            <Button
+              variant="filled"
+              className="w-full"
+              loading={isDeleting}
+              onClick={() => navigate(`/forms/${constructor.id}`)}
+            >
+              Просмотр
+            </Button>
+          )}
           <Button
             color="default"
             variant="solid"

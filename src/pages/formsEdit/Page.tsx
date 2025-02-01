@@ -16,6 +16,7 @@ import {
   FieldTypes,
   HandleChangeForm,
   NEW_FORM,
+  Tag,
 } from '@/types';
 import { getUUID } from '@/utils/getUUID';
 import { Spin } from 'antd';
@@ -165,6 +166,18 @@ export const FormsEdit: FC = () => {
 
   useLayoutEffect(() => {
     if (formData) {
+      if ('settings' in formData) {
+        let newFormData = { ...formData };
+        const settings = formData.settings as { tags?: Tag[]; timer?: string };
+        newFormData = {
+          ...formData,
+          tags: settings.tags || [],
+          timer: settings.timer || '',
+        };
+        delete newFormData.settings;
+        setConstructor(() => newFormData);
+        return;
+      }
       setConstructor(() => formData);
     } else if (newFormId) {
       setConstructor(() => ({
