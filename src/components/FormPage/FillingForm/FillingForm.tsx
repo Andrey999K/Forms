@@ -8,9 +8,10 @@ import useLocalStorage from '@/hooks/useLocalStorage.ts';
 type FillingFormProps = {
   form: FormInstance;
   onSend: (_values: { [key: string]: string | string[] }, strict?: boolean) => void;
+  isLoading: boolean;
 };
 
-export const FillingForm = ({ form, onSend }: FillingFormProps) => {
+export const FillingForm = ({ form, onSend, isLoading }: FillingFormProps) => {
   const { formId } = useParams();
   const { data: formData } = useGetFormQuery(formId || '');
   const [isFormValid, setIsFormValid] = useState(false);
@@ -75,13 +76,13 @@ export const FillingForm = ({ form, onSend }: FillingFormProps) => {
               field.require ? [{ required: true, message: 'Поле обязательно к заполнению!' }] : []
             }
           >
-            {renderField(field)}
+            {renderField(field, isLoading)}
           </Form.Item>
         ))}
       </div>
       <div className="mb-0 py-5 relative h-full block border-t-[1px] border-solid border-gray-200">
         <div className="flex justify-start">
-          <Button type="primary" htmlType="submit" disabled={!isFormValid}>
+          <Button type="primary" htmlType="submit" disabled={!isFormValid} loading={isLoading}>
             Отправить форму
           </Button>
         </div>

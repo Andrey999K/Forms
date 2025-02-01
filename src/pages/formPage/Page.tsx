@@ -13,6 +13,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { FillingForm } from '@/components/FormPage/FillingForm';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
+import useLocalStorage from '@/hooks/useLocalStorage.ts';
 
 export const FormPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,12 +22,16 @@ export const FormPage = () => {
   const { data: formData, isLoading } = useGetFormQuery(formId || '');
   const [createFormResponse, { isLoading: isLoadingCreateResponse }] = useCreateResponseMutation();
   const [form] = Form.useForm();
-
+  const { remove } = useLocalStorage('form');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [timerStart, setTimerStart] = useState(false);
 
   const startTimer = () => {
     setTimerStart(true);
+  };
+
+  const clearLocalStorageForm = () => {
+    remove();
   };
 
   const sendForm = async (_values: { [key: string]: string | string[] }, strict?: boolean) => {
@@ -62,6 +67,7 @@ export const FormPage = () => {
       try {
         const result = await createFormResponse(answersData).unwrap();
         if (result) {
+          clearLocalStorageForm();
           setFormSubmitted(true);
           dispatch(incrementResponseCount({ id: formId ?? '' }));
         }
@@ -96,11 +102,6 @@ export const FormPage = () => {
 
   return (
     <div className="pt-5 relative">
-      {isLoadingCreateResponse && (
-        <div className="absolute h-full inset-0 bg-white/90 flex justify-center items-center z-10">
-          <Loader />
-        </div>
-      )}
       {formSubmitted ? (
         <ResponseSendMessage />
       ) : (
@@ -114,11 +115,11 @@ export const FormPage = () => {
                 </Typography.Text>
               </div>
             </div>
-            <FillingForm form={form} onSend={sendForm} />
+            <FillingForm form={form} onSend={sendForm} isLoading={isLoadingCreateResponse} />
           </GlassWrapper>
           {formData?.timer && timerStart && (
             <GlassWrapper className="p-10">
-              <Timer onFinish={sendFormAfterTimer} />
+              <Timer value={formData.timer} onFinish={sendFormAfterTimer} />
             </GlassWrapper>
           )}
         </div>
