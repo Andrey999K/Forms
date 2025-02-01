@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useGetFormQuery } from '@/redux/form';
 import { Loader } from '@/components/ui/Loader';
-import { Button, Form, Typography } from 'antd';
+import { Form, Typography } from 'antd';
 import { useCreateResponseMutation } from '@/redux/response';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -9,15 +9,15 @@ import { ResponseSendMessage } from '@/components/FormPage';
 import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
 import { Timer } from '@/components/FormPage/Timer.tsx';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
-import { renderField } from '@/utils/renderField.tsx';
 import PageTitle from '@/components/ui/PageTitle/PageTitle';
+import { FillingForm } from '@/components/FormPage/FillingForm';
 
 export const FormPage = () => {
   const { formId } = useParams();
   const { data: formData, isLoading } = useGetFormQuery(formId || '');
   const [createFormResponse, { isLoading: isLoadingCreateResponse }] = useCreateResponseMutation();
   const [form] = Form.useForm();
-  const [isFormValid, setIsFormValid] = useState(false);
+
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [timerStart, setTimerStart] = useState(false);
 
@@ -65,27 +65,6 @@ export const FormPage = () => {
         console.error('Error', error.data);
       }
     }
-  };
-
-  const onFinish = async (values: { [key: string]: string }) => {
-    await sendForm(values);
-  };
-
-  // Обработчик изменения формы
-  const onValuesChange = () => {
-    // Проверяем наличие обязательных полей
-    const requiredFields = formData?.fields.filter((field) => field.require);
-    // Проверяем валидность всех обязательных полей
-    const isValid = !!requiredFields?.every((field) => {
-      const value = form.getFieldValue(field.id);
-      if (field.type === 'checkbox') {
-        // Для чекбоксов проверяем, что хотя бы одно значение выбрано
-        return Array.isArray(value) && value.length > 0;
-      }
-      // Для остальных типов полей просто проверяем на наличие значения
-      return !!value;
-    });
-    setIsFormValid(isValid);
   };
 
   const sendFormAfterTimer = async () => {
@@ -149,37 +128,7 @@ export const FormPage = () => {
                 </Typography.Text>
               </div>
             </div>
-            <Form
-              form={form}
-              onFinish={onFinish}
-              className="mt-5 custom-form flex flex-col h-full max-h-full"
-              layout="vertical"
-              onValuesChange={onValuesChange}
-            >
-              <div className="overflow-auto h-full max-h-[calc(100dvh-440px)] pr-2">
-                {formData.fields.map((field) => (
-                  <Form.Item
-                    key={field.id}
-                    label={field.question}
-                    name={field.id}
-                    rules={
-                      field.require
-                        ? [{ required: true, message: 'Поле обязательно к заполнению!' }]
-                        : []
-                    }
-                  >
-                    {renderField(field)}
-                  </Form.Item>
-                ))}
-              </div>
-              <div className="mb-0 py-5 relative h-full block border-t-[1px] border-solid border-gray-200">
-                <div className="flex justify-start">
-                  <Button type="primary" htmlType="submit" disabled={!isFormValid}>
-                    Отправить форму
-                  </Button>
-                </div>
-              </div>
-            </Form>
+            <FillingForm form={form} onSend={sendForm} />
           </GlassWrapper>
           {formData?.timer && timerStart && (
             <GlassWrapper className="p-10">
