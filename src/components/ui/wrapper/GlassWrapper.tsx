@@ -1,9 +1,9 @@
-import { ReactNode, forwardRef } from 'react';
+import { HTMLAttributes, ReactNode, forwardRef } from 'react';
 
-type Props = {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   className?: string;
-};
+}
 
 export const GlassWrapper = forwardRef<HTMLDivElement, Props>(
   ({ children, className, ...rest }, ref) => {

@@ -58,10 +58,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
   return (
     <header>
       <ShapeWrapper>
-        <GlassWrapper
-          settings={{ rounded: 0 }}
-          className="p-5 flex items-center justify-center border-b-[1px] border-solid border-gray-200"
-        >
+        <GlassWrapper className="p-5 flex items-center justify-center border-b-[1px] border-solid border-gray-200 !rounded-none">
           <NavLink to={ROUTES.HOME}>
             <div className="absolute top-1.5 text-[35px] font-bold text-[#f97316] font-caveat hidden sm:block">
               Конструктор форм
