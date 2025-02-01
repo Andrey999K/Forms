@@ -39,7 +39,7 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
     },
     {
       key: 2,
-      label: 'Создать копию в самом низу',
+      label: 'Создать копию в конце',
       icon: <CopyOutlined />,
       onClick: () => onCopyField(field.id, 'last', getUUID()),
     },

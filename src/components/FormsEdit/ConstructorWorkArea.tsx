@@ -73,13 +73,14 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
   }, [copyFieldsId]);
 
   useEffect(() => {
-    if (sourceFields || copiedFields) {
-      const timeout = setTimeout(() => {
+    const timeout = setTimeout(() => {
+      if (sourceFields || copiedFields) {
         setCopyFieldId?.(null);
         setSourceFieldId(null);
-      }, 5000);
-      return () => clearTimeout(timeout);
-    }
+      }
+    }, 5000);
+
+    return () => clearTimeout(timeout);
   }, [sourceFields, copiedFields]);
 
   return (
