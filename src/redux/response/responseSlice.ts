@@ -31,6 +31,24 @@ export const fetchResponseSlice = createAsyncThunk<
   }
 });
 
+export const fetchAllResponses = createAsyncThunk<
+  {
+    data: FormListResponse<FormResponse[]>['data'];
+  },
+  FormListOptions,
+  { state: RootState }
+>('responseSlice/fetchAllResponses', async (payload: FormListOptions, thunkApi) => {
+  try {
+    const result = await firestoreService.getAll<FormResponse[]>(COLLECTION, payload, true);
+
+    return {
+      data: result.data,
+    };
+  } catch (error) {
+    throw thunkApi.rejectWithValue({ error: getFirebaseError(error) });
+  }
+});
+
 type InitialState = {
   error: FetchBaseQueryError | null;
   status: 'pending' | 'success' | 'rejected' | null;
@@ -44,7 +62,7 @@ const initialState: InitialState = {
   data: [],
 };
 
-const responseSlice = createSlice({
+export const responseSlice = createSlice({
   name: 'responseSlice',
   initialState,
   reducers: {
@@ -67,5 +85,3 @@ const responseSlice = createSlice({
       });
   },
 });
-
-export { responseSlice };

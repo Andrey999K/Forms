@@ -70,36 +70,36 @@ export const firestoreService = {
 
   getAll: async <T>(
     collectionName: string,
-    options: FormListOptions,
+    options?: FormListOptions,
     canEmpty?: boolean
   ): Promise<FormListResponse<T>> => {
     const collectionRef = collection(db, collectionName);
 
     const constrains: QueryConstraint[] = [];
 
-    if (options.sort) {
+    if (options?.sort) {
       constrains.push(orderBy(options.sort.field, options.sort.type));
     }
 
-    if (options.limit) {
+    if (options?.limit) {
       constrains.push(limit(options.limit));
     }
 
-    if (options.lastVisible) {
+    if (options?.lastVisible) {
       constrains.push(startAfter(options.lastVisible));
     }
 
-    if (options.search) {
+    if (options?.search) {
       constrains.push(where(options.search.key ?? 'title', '==', options.search.value));
     }
 
-    if (options.filters?.length) {
+    if (options?.filters?.length) {
       options.filters.forEach((filter) => {
         constrains.push(where(filter.key, filter.operator, filter.value));
       });
     }
 
-    if (options.reference) {
+    if (options?.reference) {
       const reference = doc(db, options.reference.collectionName, options.reference.id);
       constrains.push(where(options.reference.key, '==', reference));
     }

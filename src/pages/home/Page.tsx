@@ -156,12 +156,7 @@ export const Home = () => {
     <>
       <PageTitle title="Главная страница" />
       <div data-testid="home-page">
-        <Flex
-          justify="space-between"
-          gap={12}
-          vertical
-          className="mb-4 px-5 lg:px-0 sm:flex-row sm:mb-8"
-        >
+        <Flex justify="space-between" gap={12} vertical className="mb-4 sm:flex-row sm:mb-8">
           <Search defaultValue={search} onSearch={onSearch} className="w-full sm:w-[300px]" />
           <Select
             value={order}
