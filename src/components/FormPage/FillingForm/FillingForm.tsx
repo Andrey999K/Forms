@@ -14,15 +14,20 @@ export const FillingForm = ({ form, onSend }: FillingFormProps) => {
   const { formId } = useParams();
   const { data: formData } = useGetFormQuery(formId || '');
   const [isFormValid, setIsFormValid] = useState(false);
-  const { value: draft, update } = useLocalStorage('draft');
-
-  const onFinish = async (values: { [key: string]: string }) => {
-    onSend(values);
-  };
+  const { value: draft, update, remove } = useLocalStorage('draft');
 
   const saveDraft = () => {
     const formValues = form.getFieldsValue();
     update(formValues);
+  };
+
+  const deleteDraft = () => {
+    remove();
+  };
+
+  const onFinish = async (values: { [key: string]: string }) => {
+    onSend(values);
+    deleteDraft();
   };
 
   // Обработчик изменения формы
@@ -46,7 +51,7 @@ export const FillingForm = ({ form, onSend }: FillingFormProps) => {
   useEffect(() => {
     if (draft && Object.keys(draft).length > 0) {
       form.setFieldsValue(draft);
-      setIsFormValid(true);
+      onValuesChange();
     }
   }, []);
 
