@@ -117,6 +117,13 @@ export const ConstructorDraggableField = memo((props: Props) => {
 
   const renderField = () => {
     switch (field.type) {
+      case FieldTypes.INPUT: {
+        return;
+      }
+      case FieldTypes.TEXTAREA: {
+        return;
+      }
+      case FieldTypes.RADIO:
       case FieldTypes.CHECKBOX: {
         return <RadioEditor field={field} onUpdateField={onUpdateField} onError={onError} />;
       }
