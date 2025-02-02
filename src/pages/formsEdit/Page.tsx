@@ -2,12 +2,15 @@ import { ConstructorHeader } from '@/components/FormsEdit/ConstructorHeader';
 import { ConstructorWorkArea } from '@/components/FormsEdit/ConstructorWorkArea';
 import { Sidebar } from '@/components/FormsEdit/Sidebar';
 import {
+  createLocalForm,
+  deleteLocalForm,
+  updateLocalForm,
   useCreateFormMutation,
   useDeleteFormMutation,
   useGetFormQuery,
   useUpdateFormMutation,
 } from '@/redux/form';
-import { RootState } from '@/redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import {
   ConstructorField,
   ConstructorForm,
@@ -23,7 +26,7 @@ import { HTML5toTouch } from 'rdndmb-html5-to-touch';
 import { FC, useLayoutEffect, useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { MultiBackend } from 'react-dnd-multi-backend';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { NotFound } from '../notFoundPage/Page';
@@ -31,6 +34,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 
 export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const location = useLocation();
   const newFormId: string = location.state?.id;
@@ -127,11 +131,29 @@ export const FormsEdit: FC = () => {
     if (isError) return;
 
     try {
-      if ('createAt' in constructor) {
+      if ('createdAt' in constructor) {
         await updateForm(constructor).unwrap();
+        const updConstructor = {
+          ...constructor,
+          responseCount: 0,
+          createdAt: constructor.createdAt
+            ? new Date(constructor.createdAt).getTime()
+            : new Date().getTime(),
+          updatedAt: constructor.updatedAt
+            ? new Date(constructor.updatedAt).getTime()
+            : new Date().getTime(),
+        };
+        dispatch(updateLocalForm(updConstructor));
         toast.success('Форма успешно обновлена ');
       } else {
         await createForm(constructor).unwrap();
+        const newConstructor = {
+          ...constructor,
+          responseCount: 0,
+          createdAt: new Date().getTime(),
+          updatedAt: new Date().getTime(),
+        };
+        dispatch(createLocalForm(newConstructor));
         toast.success('Форма успешно сохранена');
       }
     } catch (error) {
@@ -144,6 +166,7 @@ export const FormsEdit: FC = () => {
     try {
       if (formId) {
         await deleteForm(formId).unwrap();
+        dispatch(deleteLocalForm(formId));
         toast.success('Форма удалена');
         navigate('/');
       }
@@ -219,7 +242,11 @@ export const FormsEdit: FC = () => {
           onChangeForm={handleChangeForm}
         />
         <div className="flex flex-col w-full relative gap-4 ">
-          <ConstructorHeader constructor={constructor} onChangeForm={handleChangeForm} />
+          <ConstructorHeader
+            constructor={constructor}
+            onChangeForm={handleChangeForm}
+            onError={handleError}
+          />
           <ConstructorWorkArea
             constructor={constructor}
             onError={handleError}

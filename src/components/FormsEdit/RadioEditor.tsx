@@ -1,7 +1,7 @@
 import { ConstructorField, FieldTypes } from '@/types';
 import { getUUID } from '@/utils/getUUID';
-import { MinusCircleOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Input, InputRef, Radio, Select } from 'antd';
+import { ExclamationCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Input, InputRef, Radio, Select, Tooltip } from 'antd';
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 
 type Props = {
@@ -97,6 +97,13 @@ export const RadioEditor: FC<Props> = (props) => {
             onChange={handleChange}
             onBlur={handleBlur}
             ref={handleRef}
+            suffix={
+              errors[option.id] ? (
+                <Tooltip title={errors[option.id]}>
+                  <ExclamationCircleOutlined className="text-red-500" />
+                </Tooltip>
+              ) : null
+            }
           />
 
           {options.length > 1 && (

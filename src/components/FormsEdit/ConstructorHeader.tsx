@@ -1,32 +1,42 @@
-import { FC } from 'react';
-import { ConstructorNameModal } from './ConstructorNameModal';
 import { ConstructorForm } from '@/types';
+import { FC } from 'react';
 import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
+import { EditableText } from './EditableText';
+import { EditableTextarea } from './EditableTextarea';
 
 type Props = {
   constructor: ConstructorForm;
   onChangeForm: ({ value, name }: { value: string; name: string }) => void;
+  onError: (id: string, updates: boolean) => void;
 };
 
-export const ConstructorHeader: FC<Props> = ({ constructor, onChangeForm }) => {
+export const ConstructorHeader: FC<Props> = (props) => {
+  const { constructor, onChangeForm, onError } = props;
   return (
     <GlassWrapper className="flex flex-col gap-2 p-4">
-      <ConstructorNameModal
+      <EditableText
         value={constructor.title}
         name="title"
-        title="Название"
+        placeholder="Название"
         onChange={onChangeForm}
+        onError={onError}
+        size="large"
       >
-        <h1 className="text-lg font-medium">{constructor.title}</h1>
-      </ConstructorNameModal>
-      <ConstructorNameModal
+        <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-colorPrimary rounded">
+          <h1 className="text-lg font-medium">{constructor.title}</h1>
+        </div>
+      </EditableText>
+      <EditableTextarea
         value={constructor.description}
         name="description"
-        title="Описание"
+        placeholder="Описание"
         onChange={onChangeForm}
+        onError={onError}
       >
-        <h2 className="text-sm text-gray-600">{constructor.description}</h2>
-      </ConstructorNameModal>
+        <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-colorPrimary rounded">
+          <h2 className="text-sm text-gray-600">{constructor.description}</h2>
+        </div>
+      </EditableTextarea>
     </GlassWrapper>
   );
 };

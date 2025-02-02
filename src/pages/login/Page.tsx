@@ -2,10 +2,9 @@ import { Form, Layout, Spin, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { FiLogIn } from 'react-icons/fi';
-import { MdMail } from 'react-icons/md';
+import { MdMail, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { RiLockFill } from 'react-icons/ri';
-import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
 import { AuthTextLink } from '@/components/Auth/AuthTextLink';
 import { ROUTES } from '@/utils/routesConfig';
@@ -41,10 +40,6 @@ export const Login = () => {
       dispatch(setLoading(false));
     }
   };
-
-  useEffect(() => {
-    document.title = 'Вход';
-  }, []);
 
   usePageTitle('Авторизация');
 

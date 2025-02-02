@@ -105,12 +105,6 @@ export const FormResponses = () => {
   });
 
   useEffect(() => {
-    if (form) {
-      document.title = `Отклики на — Форма ${form.title}`;
-    }
-  }, [form]);
-
-  useEffect(() => {
     const query: { sort: SortKeys; start?: string; end?: string } = { sort };
     if (dates.start) {
       query.start = dates.start.unix().toString();
