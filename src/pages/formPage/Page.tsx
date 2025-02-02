@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useGetFormQuery } from '@/redux/form';
+import { incrementResponseCount, useGetFormQuery } from '@/redux/form';
 import { Loader } from '@/components/ui/Loader';
 import { Form, Typography } from 'antd';
 import { useCreateResponseMutation } from '@/redux/response';
@@ -11,8 +11,12 @@ import { Timer } from '@/components/FormPage/Timer.tsx';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { FillingForm } from '@/components/FormPage/FillingForm';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
 
 export const FormPage = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const { formId } = useParams();
   const { data: formData, isLoading } = useGetFormQuery(formId || '');
   const [createFormResponse, { isLoading: isLoadingCreateResponse }] = useCreateResponseMutation();
@@ -59,6 +63,7 @@ export const FormPage = () => {
         const result = await createFormResponse(answersData).unwrap();
         if (result) {
           setFormSubmitted(true);
+          dispatch(incrementResponseCount({ id: formId ?? '' }));
         }
       } catch (error: any) {
         toast.error('Произошла неизвестная ошибка!');

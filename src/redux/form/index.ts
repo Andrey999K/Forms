@@ -19,5 +19,11 @@ export const {
 } = formApi;
 
 export const {
-  actions: { resetStore, deleteLocalForm, createLocalForm, updateLocalForm },
+  actions: {
+    resetStore,
+    deleteLocalForm,
+    createLocalForm,
+    updateLocalForm,
+    incrementResponseCount,
+  },
 } = formsSlice;
