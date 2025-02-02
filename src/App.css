@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Poppins:ital,wght@1,300&display=swap');
 
 #root {
   /* max-width: 1280px; */
@@ -105,4 +105,8 @@
 
 .auth-bg-gradient {
   background: linear-gradient(to bottom, #9da9b3, #d4c6a9, #eea53a);
+}
+
+.font-golos {
+  font-family: 'Golos Text', sans-serif;
 }

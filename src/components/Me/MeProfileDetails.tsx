@@ -2,11 +2,11 @@ import { UserFormValidationRules } from '@/utils/validation';
 import { Control, UseFormReset } from 'react-hook-form';
 import { Dispatch, ReactNode, SetStateAction } from 'react';
 import { MeChangeFields, MeData } from '@/types/me';
-import { Button, Divider } from 'antd';
+import { Button } from 'antd';
 import { MdOutlineCancel, MdOutlineEmail } from 'react-icons/md';
 import { FaRegRegistered } from 'react-icons/fa6';
 import { formatUserCreatedAt } from '@/utils/formatUserCreatedAt';
-import { MdPerson, MdOutlinePeople } from 'react-icons/md';
+import { MdPerson } from 'react-icons/md';
 import { UserFormInput } from '../Auth/UserFormInput';
 
 const renderMeProfileField = (icon: ReactNode, value?: string) => (
@@ -35,8 +35,9 @@ export const MeProfileDetails = ({
 }: Props) => {
   const handleFormsReset = () => {
     reset({
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
+      // firstName: user?.firstName || '',
+      // lastName: user?.lastName || '',
+      displayName: user?.displayName || '',
       email: user?.email || '',
     });
     setAvatar(null);
@@ -45,16 +46,15 @@ export const MeProfileDetails = ({
 
   return (
     <>
-      <div className="text-base mb-4 font-medium">Информация о пользователе</div>
-      <Divider className="my-0" />
+      {/* <Divider className="my-0" /> */}
       {!isEditing ? (
         <div className="flex flex-col items-start gap-2">
-          {renderMeProfileField(<MdPerson size={20} />, user?.firstName)}
-          {renderMeProfileField(<MdOutlinePeople size={20} />, user?.lastName)}
+          {renderMeProfileField(<MdPerson size={20} />, user?.displayName)}
+          {/* {renderMeProfileField(<MdOutlinePeople size={20} />, user?.lastName)} */}
           {renderMeProfileField(<MdOutlineEmail size={20} />, user?.email)}
           {renderMeProfileField(
             <FaRegRegistered size={20} />,
-            `Дата регистрации: ${formatUserCreatedAt(user?.createdAt)}`
+            `Дата регистрации: ${formatUserCreatedAt(user?.creationTime)}`
           )}
         </div>
       ) : (
@@ -64,15 +64,15 @@ export const MeProfileDetails = ({
             label="Имя"
             name="firstName"
             placeholder="Имя"
-            rules={UserFormValidationRules.name}
+            rules={UserFormValidationRules.displayName}
           />
-          <UserFormInput
+          {/* <UserFormInput
             control={control}
             name="lastName"
             placeholder="Фамилия"
             label="Фамилия"
             rules={UserFormValidationRules.surname}
-          />
+          /> */}
           <UserFormInput
             control={control}
             name="email"

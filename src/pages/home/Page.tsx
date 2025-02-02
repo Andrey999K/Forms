@@ -69,7 +69,8 @@ export const Home = () => {
   const status = useSelector<RootState, 'pending' | 'success' | 'rejected' | null>(
     (state) => state.formSlice.status
   );
-  const user = useSelector((state: RootState) => state.user.user);
+  // const user = useSelector((state: RootState) => state.user.user);
+  const user = useSelector((state: RootState) => state.user);
   const savedOrder = useSelector((state: RootState) => state.formSlice.order);
   const savedSearch = useSelector((state: RootState) => state.formSlice.search);
   const formsList = useSelector((state: RootState) => state.formSlice.data);

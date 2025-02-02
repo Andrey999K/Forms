@@ -23,6 +23,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from 'firebase/auth';
 import { db, auth } from '@/utils/firebase/firebaseConfig';
 import { FormListOptions, FormListResponse } from '@/types';
@@ -194,38 +195,68 @@ export const firestoreService = {
     return true;
   },
 
-  login: async (email: string, password: string): Promise<object> => {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    return { uid: user.uid, email: user.email };
+  // login: async (email: string, password: string): Promise<object> => {
+  //   const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  //   const user = userCredential.user;
+  //   return { uid: user.uid, email: user.email };
+  // },
+
+  login: async (email: string, password: string) => {
+    const { user } = await signInWithEmailAndPassword(auth, email, password);
+    return {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+    };
   },
 
-  register: async (
-    collectionName: string,
-    email: string,
-    password: string,
-    name: string,
-    surname: string
-  ): Promise<object> => {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  // register: async (
+  //   collectionName: string,
+  //   email: string,
+  //   password: string,
+  //   name: string,
+  //   surname: string
+  // ): Promise<object> => {
+  //   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-    const defaultAvatar = `https://res.cloudinary.com/dgl60edaq/image/upload/v1738281588/jmkt7m2spadfz9aoqmyi.jpg`;
+  //   const defaultAvatar = `https://res.cloudinary.com/dgl60edaq/image/upload/v1738281588/jmkt7m2spadfz9aoqmyi.jpg`;
 
-    const user = userCredential.user;
-    const docRef = doc(db, collectionName, user.uid);
-    await setDoc(docRef, {
-      uid: user.uid,
-      firstName: name,
-      lastName: surname,
-      email,
-      avatarUrl: defaultAvatar,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
+  //   const user = userCredential.user;
+  //   const docRef = doc(db, collectionName, user.uid);
+  //   await setDoc(docRef, {
+  //     uid: user.uid,
+  //     firstName: name,
+  //     lastName: surname,
+  //     email,
+  //     avatarUrl: defaultAvatar,
+  //     createdAt: serverTimestamp(),
+  //     updatedAt: serverTimestamp(),
+  //   });
+
+  //   return {
+  //     uid: user.uid,
+  //     email: user.email,
+  //   };
+  // },
+
+  register: async (email: string, password: string, name: string, surname: string) => {
+    const { user } = await createUserWithEmailAndPassword(auth, email, password);
+
+    const defaultAvatar =
+      'https://res.cloudinary.com/dgl60edaq/image/upload/v1738281588/jmkt7m2spadfz9aoqmyi.jpg';
+
+    await updateProfile(user, {
+      displayName: `${name} ${surname}`,
+      photoURL: defaultAvatar,
     });
 
     return {
       uid: user.uid,
       email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      creationTime: user.metadata.creationTime,
     };
   },
 

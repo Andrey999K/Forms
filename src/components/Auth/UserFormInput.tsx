@@ -45,7 +45,7 @@ export const UserFormInput = <T extends FieldValues>({
           }
         >
           <div className="flex flex-col items-start">
-            {label && <Typography.Text className="ml-2">{label}</Typography.Text>}{' '}
+            {label && <Typography.Text className="ml-2">{label}</Typography.Text>}
             <Input
               {...field}
               {...props}

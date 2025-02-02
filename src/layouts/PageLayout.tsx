@@ -1,11 +1,11 @@
 import { useLogoutMutation } from '@/redux/auth/authApi.js';
-import { Button, Dropdown, MenuProps } from 'antd';
 import { ReactNode } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { ROUTES } from '../utils/routesConfig.ts';
 import { ShapeWrapper } from './GlassLayout.js';
 import { useLocation } from 'react-router-dom';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
+import { FiLogOut } from 'react-icons/fi';
 
 export const PageLayout = ({ children }: { children?: ReactNode }) => {
   const [logout] = useLogoutMutation();
@@ -19,6 +19,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
     }
   };
 
+  /*
   const menuItems: MenuProps['items'] = [
     {
       key: '1',
@@ -37,6 +38,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
       ),
     },
   ];
+  */
 
   const pages = [
     {
@@ -47,64 +49,63 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
       title: 'Новая форма',
       href: ROUTES.FORMS_NEW,
     },
+    // {
+    //   title: 'Мой аккаунт',
+    //   dropdown: true,
+    //   menu: menuItems,
+    //   active: location.pathname === ROUTES.ME,
+    // },
     {
-      title: 'Мой аккаунт',
-      dropdown: true,
-      menu: menuItems,
-      active: location.pathname === ROUTES.ME,
+      title: 'Профиль',
+      href: ROUTES.ME,
+    },
+    {
+      title: (
+        // TODO:
+        <span onClick={handleExit}>
+          <FiLogOut size={20} />
+        </span>
+      ),
+      href: ROUTES.FORMS_NEW,
     },
   ];
 
   return (
-    <header>
-      <ShapeWrapper>
+    <ShapeWrapper>
+      <header>
         <GlassWrapper
           settings={{ rounded: 0 }}
-          className="p-5 flex items-center justify-center border-b-[1px] border-solid border-gray-200"
+          className="py-5 flex m-auto items-center justify-center border-b-[1px] border-solid border-gray-200"
         >
-          <NavLink to={ROUTES.HOME}>
-            <div className="absolute top-1.5 text-[35px] font-bold text-[#f97316] font-caveat hidden sm:block">
-              Конструктор форм
-            </div>
-          </NavLink>
-          <div className="flex items-center gap-5 w-full max-w-screen-lg justify-end mr-8">
-            <div className="flex items-center gap-8 ">
-              {pages.map((page) =>
-                page.dropdown ? (
-                  <Dropdown key={page.title} menu={{ items: page.menu }} placement="bottom">
-                    <div
-                      className={`cursor-pointer transition-colors ${
-                        page.active ? 'text-orange-500' : 'hover:text-orange-500 text-gray-700'
-                      }`}
-                    >
-                      {page.title}
-                    </div>
-                  </Dropdown>
-                ) : (
-                  page.href && (
-                    <NavLink
-                      to={page.href}
-                      key={page.href}
-                      className={({ isActive }) =>
-                        `hover:text-orange-500 transition-colors ${
-                          isActive ||
-                          (page.href === ROUTES.FORMS_NEW && location.pathname.startsWith('/forms'))
-                            ? 'text-orange-500'
-                            : 'text-gray-700'
-                        }`
-                      }
-                      end
-                    >
-                      {page.title}
-                    </NavLink>
-                  )
-                )
-              )}
+          <div className="flex justify-between items-center gap-5 px-8 w-full max-w-screen-lg">
+            <NavLink to={ROUTES.HOME}>
+              <div className="absolute top-1.5 text-[35px] font-bold text-[#f97316] font-golos hidden sm:block">
+                Forms
+              </div>
+            </NavLink>
+            <div className="flex items-center gap-8">
+              {pages.map((page) => (
+                <NavLink
+                  to={page.href}
+                  key={page.href}
+                  className={({ isActive }) =>
+                    `hover:text-orange-500 transition-colors ${
+                      isActive ||
+                      (page.href === ROUTES.FORMS_NEW && location.pathname.startsWith('/forms'))
+                        ? 'text-orange-500 font-medium'
+                        : 'text-gray-700'
+                    }`
+                  }
+                  end
+                >
+                  {page.title}
+                </NavLink>
+              ))}
             </div>
           </div>
         </GlassWrapper>
-        <div className="mt-5 w-full max-w-screen-lg m-auto px-4">{children || <Outlet />}</div>
-      </ShapeWrapper>
-    </header>
+      </header>
+      <div className="mt-5 w-full max-w-screen-lg m-auto px-4">{children || <Outlet />}</div>
+    </ShapeWrapper>
   );
 };

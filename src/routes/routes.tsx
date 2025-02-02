@@ -41,6 +41,7 @@ const NotFoundPage = lazy(() =>
 export const AppRouter = () => {
   const routes: RouteObject[] = [
     {
+      errorElement: <ErrorComponent />,
       element: (
         <Suspense fallback={<Loader />}>
           <ProtectedRoute>
@@ -55,7 +56,6 @@ export const AppRouter = () => {
         { path: ROUTES.FORMS_EDIT, element: <FormsEdit /> },
         { path: ROUTES.FORM_RESPONSES, element: <FormResponses /> },
         { path: ROUTES.FORM_RESPONSE, element: <FormResponse /> },
-        { path: ROUTES.FORM_PAGE, element: <FormPage /> },
         { path: '*', element: <NotFoundPage /> },
       ],
     },
@@ -75,6 +75,17 @@ export const AppRouter = () => {
         { path: ROUTES.SIGNUP, element: <Signup /> },
         { path: ROUTES.RECOVERY_PASSWORD, element: <RecoveryPassword /> },
       ],
+    },
+    {
+      errorElement: <ErrorComponent />,
+      path: ROUTES.FORM_PAGE,
+      element: (
+        <Suspense fallback={<Loader />}>
+          <PageLayout>
+            <FormPage />
+          </PageLayout>
+        </Suspense>
+      ),
     },
   ];
 

@@ -1,36 +1,30 @@
-import { Alert, Form } from 'antd';
+import { Alert, Form, Input, Typography } from 'antd';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useGetMeInfoQuery, useUpdateMeInfoMutation } from '@/redux/user';
-import { MeChangeFields } from '@/types/me';
-import { MeProfileActions, MeAvatar } from '@/components/Me';
-import { MeProfileDetails } from '@/components/Me';
+import { Controller, useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { updateEmail, updateProfile } from 'firebase/auth';
+import { auth } from '@/utils/firebase/firebaseConfig';
+import { MeProfileActions, MeAvatar, MeProfileDetails } from '@/components/Me';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { toast } from 'react-toastify';
 import { Loader } from '@/components/ui/Loader';
 import { uploadToCloudinary } from '@/services/cloudinary.service';
 import PageTitle from '@/components/ui/PageTitle/PageTitle';
+import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
 
 export const Me = () => {
-  const [isEdit, setEdit] = useState<boolean>(false);
+  const [isEdit, setEdit] = useState(false);
   const [avatar, setAvatar] = useState<File | null>(null);
-  const [isAlertVisible, setAlertVisible] = useState<boolean>(true);
-  const [userUid, setUserUid] = useState(localStorage.getItem('user'));
+  const [isAlertVisible, setAlertVisible] = useState(true);
+
+  const user = useSelector((state: RootState) => state.user);
+
+  console.log('####: user', user);
 
   useEffect(() => {
-    const storedUid = localStorage.getItem('user');
-    if (storedUid) setUserUid(storedUid);
+    document.title = 'Профиль';
   }, []);
-
-  const {
-    data: user,
-    error,
-    isLoading,
-  } = useGetMeInfoQuery(userUid || '', {
-    skip: !userUid,
-  });
-
-  const [updateUserInfo, { isLoading: isUpdating }] = useUpdateMeInfoMutation();
 
   const {
     control,
@@ -38,19 +32,19 @@ export const Me = () => {
     setValue,
     formState: { isValid, dirtyFields },
     reset,
-  } = useForm<MeChangeFields>({
+  } = useForm({
     mode: 'onBlur',
   });
 
   useEffect(() => {
-    if (user) {
+    if (user.isUserReady) {
       reset({
-        firstName: user?.firstName || '',
-        lastName: user?.lastName || '',
-        email: user?.email || '',
+        firstName: user.displayName?.split(' ')[0] || '',
+        lastName: user.displayName?.split(' ')[1] || '',
+        email: user.email || '',
       });
     }
-  }, [user]);
+  }, [user, reset]);
 
   useEffect(() => {
     if (avatar) {
@@ -58,45 +52,45 @@ export const Me = () => {
     }
   }, [avatar]);
 
-  const onSubmit = async (data: MeChangeFields) => {
+  const onSubmit = async (data: { firstName: string; lastName: string }) => {
     if (JSON.stringify(dirtyFields) === '{}') return;
-    if (userUid) {
-      try {
-        let avatarUrl = user?.avatarUrl || '';
 
-        if (avatar) {
-          avatarUrl = await uploadToCloudinary(avatar);
-        }
+    try {
+      if (!auth.currentUser) throw new Error('Пользователь не найден');
 
-        const updatedData: MeChangeFields = { ...data };
-        if (avatarUrl) {
-          updatedData.avatarUrl = avatarUrl;
-        }
-        await updateUserInfo({
-          id: userUid,
-          data: updatedData,
-        }).unwrap();
-
-        toast.success('Данные успешно обновлены');
-        setAvatar(null);
-        setAlertVisible(false);
-        setEdit(false);
-      } catch (error) {
-        toast.error('Не удалось обновить данные');
-        console.error('Ошибка обновления данных:', error);
+      let avatarUrl = user.photoURL || '';
+      if (avatar) {
+        avatarUrl = await uploadToCloudinary(avatar);
       }
+
+      const displayName = `${data.firstName} ${data.lastName}`;
+
+      await updateProfile(auth.currentUser, {
+        displayName,
+        photoURL: avatarUrl,
+      });
+
+      if (dirtyFields.email) {
+        await updateEmail(auth.currentUser, data.email);
+        toast.success('Почта успешно обновлена. Необходимо заново войти.');
+      }
+
+      toast.success('Данные успешно обновлены');
+      setAvatar(null);
+      setAlertVisible(false);
+      setEdit(false);
+    } catch (error) {
+      toast.error('Не удалось обновить данные');
+      console.error('Ошибка обновления данных:', error);
     }
   };
 
-  useEffect(() => {
-    document.title = 'Профиль';
-  }, []);
-
-  if (!user || isLoading || isUpdating) return <Loader />;
+  if (!user.isUserReady) return <Loader />;
 
   return (
     <>
       <PageTitle title="Профиль" />
+
       <div className="flex relative justify-center p-4 break-words w-full">
         {isEdit && isAlertVisible && (
           <div className="absolute top-[-10px] z-50">
@@ -109,16 +103,9 @@ export const Me = () => {
             />
           </div>
         )}
-        <GlassWrapper className={`w-1/2 px-5 py-5 text-center`} style={{ zIndex: 10 }}>
-          {error ? (
-            <Alert
-              message="Ошибка загрузки данных"
-              description="Не удалось получить информацию о пользователе"
-              type="error"
-              showIcon
-            />
-          ) : (
-            <div className="">
+        <div className="flex gap-4 w-full">
+          <GlassWrapper className="w-2/3 px-5 py-5 text-center" style={{ zIndex: 10 }}>
+            {user ? (
               <Form
                 onFinish={handleSubmit(onSubmit)}
                 className="w-full flex flex-col gap-4 text-center"
@@ -128,12 +115,11 @@ export const Me = () => {
                   dirtyFields={dirtyFields}
                   isValid={isValid}
                   setEdit={setEdit}
-                  isUpdating={isUpdating}
                   avatar={avatar}
                 />
                 <MeAvatar
-                  currentAvatarUrl={user.avatarUrl}
-                  isLoading={isLoading}
+                  currentAvatarUrl={user.photoURL}
+                  isLoading={false}
                   isEdit={isEdit}
                   setAvatar={setAvatar}
                   avatar={avatar}
@@ -147,9 +133,47 @@ export const Me = () => {
                   setAvatar={setAvatar}
                 />
               </Form>
+            ) : (
+              <Alert
+                message="Ошибка загрузки данных"
+                description="Не удалось получить информацию о пользователе"
+                type="error"
+                showIcon
+              />
+            )}
+          </GlassWrapper>
+
+          <GlassWrapper className="w-1/2 h-1/2 px-5 py-5 text-center" style={{ zIndex: 10 }}>
+            <div className="flex h-full w-full flex-col justify-between">
+              <Typography.Title level={4}>Изменить пароль</Typography.Title>
+              <Controller
+                name="password"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Form.Item
+                    validateStatus={fieldState.error ? 'error' : undefined}
+                    help={
+                      fieldState.error && (
+                        <Typography.Text type="danger" className="text-red-500 text-sm ml-2">
+                          {fieldState.error.message}
+                        </Typography.Text>
+                      )
+                    }
+                  >
+                    <div className="flex flex-col items-start w-full">
+                      <Input
+                        placeholder="Введите новый пароль"
+                        {...field}
+                        status={fieldState.error && 'error'}
+                      />
+                    </div>
+                  </Form.Item>
+                )}
+              />
+              <AuthSubmitButton disabled={false}>Изменить</AuthSubmitButton>
             </div>
-          )}
-        </GlassWrapper>
+          </GlassWrapper>
+        </div>
       </div>
     </>
   );
