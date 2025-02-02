@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
-import { Flex, Input, Select, Spin } from 'antd';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Button, Flex, Input, Select, Spin } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { DefaultOptionType } from 'antd/es/select';
 import { useInView } from 'react-intersection-observer';
@@ -14,6 +14,7 @@ import { HomeList } from '@/components/Home/HomeList/HomeList';
 import { FormListOptions, Sort } from '@/types';
 import { toast } from 'react-toastify';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { ROUTES } from '@/utils/routesConfig';
 
 const { Search } = Input;
 
@@ -170,7 +171,15 @@ export const Home = () => {
         {formsList.length > 0 ? (
           <HomeList items={formsList.filter((item) => item !== null)} onDelete={onDelete} />
         ) : (
-          status !== 'pending' && !showTrigger && <Title level={2}>Нет доступных форм.</Title>
+          status !== 'pending' &&
+          !showTrigger && (
+            <div className="flex flex-col gap-4">
+              <Title className="!text-2xl md:!text-3xl">Нет доступных форм.</Title>
+              <Link to={ROUTES.FORMS_NEW}>
+                <Button type="primary">Создать форму</Button>
+              </Link>
+            </div>
+          )
         )}
       </div>
 
