@@ -9,7 +9,7 @@ import { ResponseSendMessage } from '@/components/FormPage';
 import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
 import { Timer } from '@/components/FormPage/Timer.tsx';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
-import PageTitle from '@/components/ui/PageTitle/PageTitle';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { FillingForm } from '@/components/FormPage/FillingForm';
 
 export const FormPage = () => {
@@ -71,45 +71,26 @@ export const FormPage = () => {
     await sendForm(form.getFieldsValue(true));
   };
 
+  usePageTitle(formData?.title ? `Форма | ${formData.title}` : 'Форма');
+
   if (!formId) {
-    return (
-      <>
-        <PageTitle title="Форма" />
-        <h2>Форма не найдена!</h2>
-      </>
-    );
+    return <h2>Форма не найдена!</h2>;
   }
 
   if (isLoading) {
-    return (
-      <>
-        <PageTitle title="Форма" />
-        <Loader />
-      </>
-    );
+    return <Loader />;
   }
 
   if (!formData) {
-    return (
-      <>
-        <PageTitle title="Форма" />
-        <h2>Нет данных!</h2>
-      </>
-    );
+    return <h2>Нет данных!</h2>;
   }
 
   if (!timerStart && formData?.timer) {
-    return (
-      <>
-        <PageTitle title={formData?.title ? `Форма | ${formData.title}` : 'Форма'} />
-        <StartTimer onStart={startTimer} />
-      </>
-    );
+    return <StartTimer onStart={startTimer} />;
   }
 
   return (
     <div className="pt-5 relative">
-      <PageTitle title={formData?.title ? `Форма | ${formData.title}` : 'Форма'} />
       {isLoadingCreateResponse && (
         <div className="absolute h-full inset-0 bg-white/90 flex justify-center items-center z-10">
           <Loader />

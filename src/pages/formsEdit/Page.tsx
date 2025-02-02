@@ -1,7 +1,6 @@
 import { ConstructorHeader } from '@/components/FormsEdit/ConstructorHeader';
 import { ConstructorWorkArea } from '@/components/FormsEdit/ConstructorWorkArea';
 import { Sidebar } from '@/components/FormsEdit/Sidebar';
-import PageTitle from '@/components/ui/PageTitle/PageTitle';
 import {
   createLocalForm,
   deleteLocalForm,
@@ -31,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { NotFound } from '../notFoundPage/Page';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -211,6 +211,8 @@ export const FormsEdit: FC = () => {
     }
   }, [formData]);
 
+  usePageTitle(formData?.title ? `Изменение формы | ${formData.title}` : 'Изменение формы');
+
   if (isLoadingForm) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -226,41 +228,36 @@ export const FormsEdit: FC = () => {
   if (!constructor) return <div>Ошибка при создании конструктора.</div>;
 
   return (
-    <>
-      <PageTitle
-        title={formData?.title ? `Изменение формы | ${formData.title}` : 'Изменение формы'}
-      />
-      <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-        <div className="flex gap-4 items-start p-4">
-          <Sidebar
+    <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+      <div className="flex gap-4 items-start p-4">
+        <Sidebar
+          constructor={constructor}
+          isCreating={isCreating}
+          isUpdating={isUpdating}
+          isDeleting={isDeleting}
+          isError={isError}
+          isNew={!('createdAt' in constructor)}
+          onSaveConstructor={handleSaveForms}
+          onRemoveConstructor={handleRemoveForms}
+          onChangeForm={handleChangeForm}
+        />
+        <div className="flex flex-col w-full relative gap-4 ">
+          <ConstructorHeader
             constructor={constructor}
-            isCreating={isCreating}
-            isUpdating={isUpdating}
-            isDeleting={isDeleting}
-            isError={isError}
-            isNew={!('createdAt' in constructor)}
-            onSaveConstructor={handleSaveForms}
-            onRemoveConstructor={handleRemoveForms}
             onChangeForm={handleChangeForm}
+            onError={handleError}
           />
-          <div className="flex flex-col w-full relative gap-4 ">
-            <ConstructorHeader
-              constructor={constructor}
-              onChangeForm={handleChangeForm}
-              onError={handleError}
-            />
-            <ConstructorWorkArea
-              constructor={constructor}
-              onError={handleError}
-              onDropField={handleDropField}
-              onMoveField={moveField}
-              onRemoveField={removeField}
-              onUpdateField={updateField}
-              onCopyField={handleCopyField}
-            />
-          </div>
+          <ConstructorWorkArea
+            constructor={constructor}
+            onError={handleError}
+            onDropField={handleDropField}
+            onMoveField={moveField}
+            onRemoveField={removeField}
+            onUpdateField={updateField}
+            onCopyField={handleCopyField}
+          />
         </div>
-      </DndProvider>
-    </>
+      </div>
+    </DndProvider>
   );
 };
