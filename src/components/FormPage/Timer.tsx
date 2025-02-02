@@ -13,7 +13,11 @@ type TimerProps = {
 
 export const Timer: FC<TimerProps> = ({ value, onFinish, isLoading }) => {
   const { formId } = useParams<{ formId: string }>();
-  const { value: formLocalStorage, update } = useLocalStorage<{
+  const {
+    value: formLocalStorage,
+    get: getForm,
+    update,
+  } = useLocalStorage<{
     formId: string;
     timer: number;
   } | null>('form');
@@ -46,9 +50,12 @@ export const Timer: FC<TimerProps> = ({ value, onFinish, isLoading }) => {
     return () => {
       const currentTimeForm = deadline - Date.now();
       if (currentTimeForm > 0) {
-        if (formLocalStorage && typeof formLocalStorage === 'object') {
-          update({ ...formLocalStorage, timer: currentTimeForm });
+        const currentLocalForm = getForm();
+        if (currentLocalForm && typeof currentLocalForm === 'object') {
+          console.log('Меняем существующий объект', currentLocalForm);
+          update({ ...currentLocalForm, timer: currentTimeForm });
         } else if (formId) {
+          console.log('Создаём новый объект');
           update({ formId, timer: currentTimeForm });
         }
       }

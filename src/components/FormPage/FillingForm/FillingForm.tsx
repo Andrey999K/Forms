@@ -15,15 +15,19 @@ export const FillingForm = ({ form, onSend, isLoading }: FillingFormProps) => {
   const { formId } = useParams();
   const { data: formData } = useGetFormQuery(formId || '');
   const [isFormValid, setIsFormValid] = useState(false);
-  const { value: draft, update, remove } = useLocalStorage('draft');
-
-  const saveDraft = () => {
-    const formValues = form.getFieldsValue();
-    update(formValues);
-  };
+  const { value: formLocal, update, remove } = useLocalStorage('form');
 
   const deleteDraft = () => {
     remove();
+  };
+
+  const saveDraft = () => {
+    const formValues = form.getFieldsValue();
+    if (formLocal && typeof formLocal === 'object') {
+      update({ ...formLocal, fields: formValues });
+    } else {
+      update({ formId, fields: formValues });
+    }
   };
 
   const onFinish = async (values: { [key: string]: string }) => {
@@ -50,8 +54,13 @@ export const FillingForm = ({ form, onSend, isLoading }: FillingFormProps) => {
   };
 
   useEffect(() => {
-    if (draft && Object.keys(draft).length > 0) {
-      form.setFieldsValue(draft);
+    if (
+      formLocal &&
+      Object.keys(formLocal).length > 0 &&
+      typeof formLocal === 'object' &&
+      'fields' in formLocal
+    ) {
+      form.setFieldsValue(formLocal.fields);
       onValuesChange();
     }
   }, []);
