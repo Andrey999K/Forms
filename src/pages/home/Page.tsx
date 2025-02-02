@@ -13,7 +13,7 @@ import { HomeList } from '@/components/Home/HomeList/HomeList';
 
 import { FormListOptions, Sort } from '@/types';
 import { toast } from 'react-toastify';
-import PageTitle from '@/components/ui/PageTitle/PageTitle';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 const { Search } = Input;
 
@@ -152,44 +152,43 @@ export const Home = () => {
 
   const showTrigger = (status === 'success' || status === null) && hasNext;
 
+  usePageTitle('Главная страница');
+
   return (
-    <>
-      <PageTitle title="Главная страница" />
-      <div data-testid="home-page">
-        <Flex justify="space-between" gap={12} vertical className="mb-4 sm:flex-row sm:mb-8">
-          <Search defaultValue={search} onSearch={onSearch} className="w-full sm:w-[300px]" />
-          <Select
-            value={order}
-            options={sortOptions}
-            onChange={onChangeSort}
-            className="w-full sm:w-[200px]"
-          />
-        </Flex>
+    <div data-testid="home-page">
+      <Flex justify="space-between" gap={12} vertical className="mb-4 sm:flex-row sm:mb-8">
+        <Search defaultValue={search} onSearch={onSearch} className="w-full sm:w-[300px]" />
+        <Select
+          value={order}
+          options={sortOptions}
+          onChange={onChangeSort}
+          className="w-full sm:w-[200px]"
+        />
+      </Flex>
 
-        <div className="pb-5">
-          {formsList.length > 0 ? (
-            <HomeList items={formsList.filter((item) => item !== null)} onDelete={onDelete} />
-          ) : (
-            status !== 'pending' && !showTrigger && <Title level={2}>Нет доступных форм.</Title>
-          )}
-        </div>
-
-        {status === 'pending' && (
-          <div className="mb-5 mt-4">
-            <Spin />
-          </div>
-        )}
-
-        {showTrigger && (
-          <div ref={intersectionRef} className="mt-4 mb-5">
-            <Spin />
-          </div>
-        )}
-
-        {status === 'rejected' && !formsList.length && (
-          <Title level={2}>Произошла ошибка, попробуйте обновить страницу</Title>
+      <div className="pb-5">
+        {formsList.length > 0 ? (
+          <HomeList items={formsList.filter((item) => item !== null)} onDelete={onDelete} />
+        ) : (
+          status !== 'pending' && !showTrigger && <Title level={2}>Нет доступных форм.</Title>
         )}
       </div>
-    </>
+
+      {status === 'pending' && (
+        <div className="mb-5 mt-4">
+          <Spin />
+        </div>
+      )}
+
+      {showTrigger && (
+        <div ref={intersectionRef} className="mt-4 mb-5">
+          <Spin />
+        </div>
+      )}
+
+      {status === 'rejected' && !formsList.length && (
+        <Title level={2}>Произошла ошибка, попробуйте обновить страницу</Title>
+      )}
+    </div>
   );
 };

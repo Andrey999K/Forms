@@ -32,7 +32,7 @@ function useLocalStorage<T>(key: string, initialValue?: T) {
 
   useEffect(() => {
     const item = get();
-    if (item) setValue(JSON.parse(item));
+    if (item) setValue(item);
   }, [key]);
 
   return { value, update, remove };

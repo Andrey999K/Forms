@@ -9,7 +9,7 @@ import { Button, Card, DatePicker, Select, Spin } from 'antd';
 import typography from 'antd/es/typography';
 import { useInView } from 'react-intersection-observer';
 import dayjs, { Dayjs } from 'dayjs';
-import PageTitle from '@/components/ui/PageTitle/PageTitle';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { DownloadOutlined } from '@ant-design/icons';
 import { fetchAllResponses } from '@/redux/response/responseSlice';
 import { useSaveCsv } from '@/hooks/useSaveCsv';
@@ -110,12 +110,6 @@ export const FormResponses = () => {
   });
 
   useEffect(() => {
-    if (form) {
-      document.title = `Отклики на — Форма ${form.title}`;
-    }
-  }, [form]);
-
-  useEffect(() => {
     const query: { sort: SortKeys; start?: string; end?: string } = { sort };
     if (dates.start) {
       query.start = dates.start.unix().toString();
@@ -198,9 +192,10 @@ export const FormResponses = () => {
 
   const showTrigger = (status === 'success' || status === null) && hasNext;
 
+  usePageTitle(form ? `Отклики | ${form.title}` : 'Отклики');
+
   return (
     <>
-      <PageTitle title={form ? `Отклики | ${form.title}` : 'Отклики'} />
       <Title className="mt-10 px-5 !text-2xl lg:px-0 md:!text-4xl">
         Отклики формы <br /> &quot;{form?.title}&quot;
       </Title>

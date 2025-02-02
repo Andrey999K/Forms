@@ -9,7 +9,7 @@ import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { toast } from 'react-toastify';
 import { Loader } from '@/components/ui/Loader';
 import { uploadToCloudinary } from '@/services/cloudinary.service';
-import PageTitle from '@/components/ui/PageTitle/PageTitle';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export const Me = () => {
   const [isEdit, setEdit] = useState<boolean>(false);
@@ -88,69 +88,64 @@ export const Me = () => {
     }
   };
 
-  useEffect(() => {
-    document.title = 'Профиль';
-  }, []);
+  usePageTitle('Профиль');
 
   if (!user || isLoading || isUpdating) return <Loader />;
 
   return (
-    <>
-      <PageTitle title="Профиль" />
-      <div className="flex relative justify-center p-4 break-words w-full">
-        {isEdit && isAlertVisible && (
-          <div className="absolute top-[-10px] z-50">
-            <Alert
-              message="Для изменения аватара наведите на него и нажмите"
-              type="info"
-              showIcon
-              closable
-              onClose={() => setAlertVisible(false)}
-            />
+    <div className="flex relative justify-center p-4 break-words w-full">
+      {isEdit && isAlertVisible && (
+        <div className="absolute top-[-10px] z-50">
+          <Alert
+            message="Для изменения аватара наведите на него и нажмите"
+            type="info"
+            showIcon
+            closable
+            onClose={() => setAlertVisible(false)}
+          />
+        </div>
+      )}
+      <GlassWrapper className={`w-1/2 px-5 py-5 text-center`} style={{ zIndex: 10 }}>
+        {error ? (
+          <Alert
+            message="Ошибка загрузки данных"
+            description="Не удалось получить информацию о пользователе"
+            type="error"
+            showIcon
+          />
+        ) : (
+          <div className="">
+            <Form
+              onFinish={handleSubmit(onSubmit)}
+              className="w-full flex flex-col gap-4 text-center"
+            >
+              <MeProfileActions
+                isEdit={isEdit}
+                dirtyFields={dirtyFields}
+                isValid={isValid}
+                setEdit={setEdit}
+                isUpdating={isUpdating}
+                avatar={avatar}
+              />
+              <MeAvatar
+                currentAvatarUrl={user.avatarUrl}
+                isLoading={isLoading}
+                isEdit={isEdit}
+                setAvatar={setAvatar}
+                avatar={avatar}
+              />
+              <MeProfileDetails
+                isEditing={isEdit}
+                control={control}
+                reset={reset}
+                user={user}
+                setEdit={setEdit}
+                setAvatar={setAvatar}
+              />
+            </Form>
           </div>
         )}
-        <GlassWrapper className={`w-1/2 px-5 py-5 text-center`} style={{ zIndex: 10 }}>
-          {error ? (
-            <Alert
-              message="Ошибка загрузки данных"
-              description="Не удалось получить информацию о пользователе"
-              type="error"
-              showIcon
-            />
-          ) : (
-            <div className="">
-              <Form
-                onFinish={handleSubmit(onSubmit)}
-                className="w-full flex flex-col gap-4 text-center"
-              >
-                <MeProfileActions
-                  isEdit={isEdit}
-                  dirtyFields={dirtyFields}
-                  isValid={isValid}
-                  setEdit={setEdit}
-                  isUpdating={isUpdating}
-                  avatar={avatar}
-                />
-                <MeAvatar
-                  currentAvatarUrl={user.avatarUrl}
-                  isLoading={isLoading}
-                  isEdit={isEdit}
-                  setAvatar={setAvatar}
-                  avatar={avatar}
-                />
-                <MeProfileDetails
-                  isEditing={isEdit}
-                  control={control}
-                  reset={reset}
-                  user={user}
-                  setEdit={setEdit}
-                  setAvatar={setAvatar}
-                />
-              </Form>
-            </div>
-          )}
-        </GlassWrapper>
-      </div>
-    </>
+      </GlassWrapper>
+    </div>
   );
 };
