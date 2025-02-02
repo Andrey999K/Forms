@@ -5,11 +5,14 @@ import { FormListOptions, FormResponse, Sort } from '@/types';
 import { ComponentProps, useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, DatePicker, Select, Spin } from 'antd';
+import { Button, Card, DatePicker, Select, Spin } from 'antd';
 import typography from 'antd/es/typography';
 import { useInView } from 'react-intersection-observer';
 import dayjs, { Dayjs } from 'dayjs';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { DownloadOutlined } from '@ant-design/icons';
+import { fetchAllResponses } from '@/redux/response/responseSlice';
+import { useSaveCsv } from '@/hooks/useSaveCsv';
 
 const { Text, Title } = typography;
 
@@ -68,6 +71,8 @@ export const FormResponses = () => {
     end: searchParams.get('end') ? dayjs.unix(Number(searchParams.get('end'))) : null,
   });
   const [hasNext, setHasNext] = useState<boolean>(true);
+
+  const saveCsv = useSaveCsv();
 
   const filters: FormListOptions['filters'] = (() => {
     const newFilters: FormListOptions['filters'] = [];
@@ -154,6 +159,37 @@ export const FormResponses = () => {
     setList([]);
   };
 
+  const handleLoadCsv = () => {
+    dispatch(
+      fetchAllResponses({
+        reference: { collectionName: 'form', id: formId ?? '', key: 'formId' },
+        filters,
+        sort: sortType[sort],
+      })
+    )
+      .unwrap()
+      .then((res) => {
+        if (res.data.length) {
+          const savedData = res.data.map<Record<string, string>>((item) => {
+            const fields = item.fields.reduce<Record<string, string>>((acc, field) => {
+              acc[field.question] = Array.isArray(field.answer)
+                ? field.answer.join(', ')
+                : field.answer;
+              return acc;
+            }, {});
+            return {
+              id: item.id.toString(),
+              ...fields,
+              updateAt: dayjs(item.updatedAt).toDate().toDateString(),
+              createdAt: dayjs(item.createdAt).toDate().toDateString(),
+            };
+          });
+          saveCsv(savedData, `${form?.title}_responses`);
+        }
+      })
+      .catch(() => console.error('Cannot load csv'));
+  };
+
   const showTrigger = (status === 'success' || status === null) && hasNext;
 
   usePageTitle(form ? `Отклики | ${form.title}` : 'Отклики');
@@ -164,7 +200,7 @@ export const FormResponses = () => {
         Отклики формы <br /> &quot;{form?.title}&quot;
       </Title>
 
-      <div className="flex flex-col w-full gap-2 mt-10 px-5 mb-4 lg:px-0 sm:justify-between sm:flex-row">
+      <div className="flex flex-col w-full gap-2 mt-10 mb-4 sm:justify-between sm:flex-row">
         <Select
           defaultValue={sort}
           onChange={handleChangeSort}
@@ -172,18 +208,25 @@ export const FormResponses = () => {
           disabled={!list.length}
           className="w-full sm:w-[200px] text-left"
         />
-        <RangePicker
-          defaultValue={[dates.start, dates.end]}
-          onChange={handleEditDates}
-          className="w-full sm:max-w-[300px]"
-          format={dateFormat}
-          allowEmpty
-          disabled={!list.length}
-          maxDate={dayjs()}
-        />
+        <div className="flex gap-2 sm:justify-between">
+          <RangePicker
+            defaultValue={[dates.start, dates.end]}
+            onChange={handleEditDates}
+            className="w-full sm:max-w-[300px]"
+            format={dateFormat}
+            allowEmpty
+            maxDate={dayjs()}
+          />
+          <Button
+            type="primary"
+            disabled={list.length === 0}
+            icon={<DownloadOutlined />}
+            onClick={handleLoadCsv}
+          />
+        </div>
       </div>
 
-      <div className="flex flex-col gap-4 mb-4 px-5 lg:px-0">
+      <div className="flex flex-col gap-4 mb-4">
         {list.length
           ? list.map((response, index) => (
               <Link to={`/forms/${formId}/responses/${response.id}`} key={response.id}>
