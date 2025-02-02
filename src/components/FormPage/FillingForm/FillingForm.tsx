@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useGetFormQuery } from '@/redux/form';
 import { useParams } from 'react-router-dom';
 import useLocalStorage from '@/hooks/useLocalStorage.ts';
+import { FormLocal } from '@/types/form.ts';
 
 type FillingFormProps = {
   form: FormInstance;
@@ -12,10 +13,10 @@ type FillingFormProps = {
 };
 
 export const FillingForm = ({ form, onSend, isLoading }: FillingFormProps) => {
-  const { formId } = useParams();
+  const { formId } = useParams<{ formId: string }>();
   const { data: formData } = useGetFormQuery(formId || '');
   const [isFormValid, setIsFormValid] = useState(false);
-  const { value: formLocal, update, remove } = useLocalStorage('form');
+  const { value: formsLocal, update, remove } = useLocalStorage<FormLocal[]>('form');
 
   const deleteDraft = () => {
     remove();
@@ -23,10 +24,20 @@ export const FillingForm = ({ form, onSend, isLoading }: FillingFormProps) => {
 
   const saveDraft = () => {
     const formValues = form.getFieldsValue();
-    if (formLocal && typeof formLocal === 'object') {
-      update({ ...formLocal, fields: formValues });
-    } else {
-      update({ formId, fields: formValues });
+    if (formsLocal && typeof formsLocal === 'object') {
+      if (formsLocal.find((currentForm) => currentForm.formId === formId)) {
+        const newData = formsLocal.map((currentForm) => {
+          if (currentForm.formId === formId) {
+            return { ...currentForm, fields: formValues };
+          }
+          return currentForm;
+        });
+        update(newData);
+      } else if (formId) {
+        update([...formsLocal, { formId, fields: formValues }]);
+      }
+    } else if (formId) {
+      update([{ formId, fields: formValues }]);
     }
   };
 
@@ -54,13 +65,11 @@ export const FillingForm = ({ form, onSend, isLoading }: FillingFormProps) => {
   };
 
   useEffect(() => {
-    if (
-      formLocal &&
-      Object.keys(formLocal).length > 0 &&
-      typeof formLocal === 'object' &&
-      'fields' in formLocal
-    ) {
-      form.setFieldsValue(formLocal.fields);
+    if (formsLocal && formsLocal.length > 0 && typeof formsLocal === 'object') {
+      const currentLocalForm = formsLocal.find((currentForm) => currentForm.formId === formId);
+      if (currentLocalForm) {
+        form.setFieldsValue(currentLocalForm.fields);
+      }
       onValuesChange();
     }
   }, []);

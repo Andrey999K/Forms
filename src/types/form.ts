@@ -58,3 +58,9 @@ export const NEW_FORM: Omit<Form, 'userId'> = {
 };
 
 export const BASE_AVATAR_URL = 'https://api.dicebear.com/6.x/avataaars/svg';
+
+export type FormLocal = {
+  formId: string;
+  timer?: number;
+  fields?: ConstructorField[];
+};
