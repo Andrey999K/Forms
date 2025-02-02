@@ -235,7 +235,7 @@ export const FormResponses = () => {
                     <Title italic level={5} style={{ margin: 0 }}>
                       Отклик #{index + 1}
                     </Title>
-                    <Text>{dayjs(response.updatedAt).toString()}</Text>
+                    <Text>{dayjs(response.updatedAt).format('DD.MM.YYYY HH:mm:ss')}</Text>
                   </div>
                 </Card>
               </Link>
