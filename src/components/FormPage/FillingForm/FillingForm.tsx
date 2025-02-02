@@ -4,25 +4,41 @@ import { useEffect, useState } from 'react';
 import { useGetFormQuery } from '@/redux/form';
 import { useParams } from 'react-router-dom';
 import useLocalStorage from '@/hooks/useLocalStorage.ts';
+import { FormLocal } from '@/types/form.ts';
 
 type FillingFormProps = {
   form: FormInstance;
   onSend: (_values: { [key: string]: string | string[] }, strict?: boolean) => void;
+  isLoading: boolean;
 };
 
-export const FillingForm = ({ form, onSend }: FillingFormProps) => {
-  const { formId } = useParams();
+export const FillingForm = ({ form, onSend, isLoading }: FillingFormProps) => {
+  const { formId } = useParams<{ formId: string }>();
   const { data: formData } = useGetFormQuery(formId || '');
   const [isFormValid, setIsFormValid] = useState(false);
-  const { value: draft, update, remove } = useLocalStorage('draft');
-
-  const saveDraft = () => {
-    const formValues = form.getFieldsValue();
-    update(formValues);
-  };
+  const { value: formsLocal, update, remove } = useLocalStorage<FormLocal[]>('form');
 
   const deleteDraft = () => {
     remove();
+  };
+
+  const saveDraft = () => {
+    const formValues = form.getFieldsValue();
+    if (formsLocal && typeof formsLocal === 'object') {
+      if (formsLocal.find((currentForm) => currentForm.formId === formId)) {
+        const newData = formsLocal.map((currentForm) => {
+          if (currentForm.formId === formId) {
+            return { ...currentForm, fields: formValues };
+          }
+          return currentForm;
+        });
+        update(newData);
+      } else if (formId) {
+        update([...formsLocal, { formId, fields: formValues }]);
+      }
+    } else if (formId) {
+      update([{ formId, fields: formValues }]);
+    }
   };
 
   const onFinish = async (values: { [key: string]: string }) => {
@@ -49,8 +65,11 @@ export const FillingForm = ({ form, onSend }: FillingFormProps) => {
   };
 
   useEffect(() => {
-    if (draft && Object.keys(draft).length > 0) {
-      form.setFieldsValue(draft);
+    if (formsLocal && formsLocal.length > 0 && typeof formsLocal === 'object') {
+      const currentLocalForm = formsLocal.find((currentForm) => currentForm.formId === formId);
+      if (currentLocalForm) {
+        form.setFieldsValue(currentLocalForm.fields);
+      }
       onValuesChange();
     }
   }, []);
@@ -75,13 +94,13 @@ export const FillingForm = ({ form, onSend }: FillingFormProps) => {
               field.require ? [{ required: true, message: 'Поле обязательно к заполнению!' }] : []
             }
           >
-            {renderField(field)}
+            {renderField(field, isLoading)}
           </Form.Item>
         ))}
       </div>
       <div className="mb-0 py-5 relative h-full block border-t-[1px] border-solid border-gray-200">
         <div className="flex justify-start">
-          <Button type="primary" htmlType="submit" disabled={!isFormValid}>
+          <Button type="primary" htmlType="submit" disabled={!isFormValid} loading={isLoading}>
             Отправить форму
           </Button>
         </div>

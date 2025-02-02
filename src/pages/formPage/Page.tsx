@@ -3,7 +3,7 @@ import { incrementResponseCount, useGetFormQuery } from '@/redux/form';
 import { Loader } from '@/components/ui/Loader';
 import { Form, Typography } from 'antd';
 import { useCreateResponseMutation } from '@/redux/response';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { ResponseSendMessage } from '@/components/FormPage';
 import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
@@ -13,6 +13,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { FillingForm } from '@/components/FormPage/FillingForm';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
+import useLocalStorage from '@/hooks/useLocalStorage.ts';
 
 export const FormPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,12 +22,16 @@ export const FormPage = () => {
   const { data: formData, isLoading } = useGetFormQuery(formId || '');
   const [createFormResponse, { isLoading: isLoadingCreateResponse }] = useCreateResponseMutation();
   const [form] = Form.useForm();
-
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const { remove } = useLocalStorage('form');
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [timerStart, setTimerStart] = useState(false);
 
   const startTimer = () => {
     setTimerStart(true);
+  };
+
+  const clearLocalStorageForm = () => {
+    remove();
   };
 
   const sendForm = async (_values: { [key: string]: string | string[] }, strict?: boolean) => {
@@ -62,8 +67,9 @@ export const FormPage = () => {
       try {
         const result = await createFormResponse(answersData).unwrap();
         if (result) {
-          setFormSubmitted(true);
+          clearLocalStorageForm();
           dispatch(incrementResponseCount({ id: formId ?? '' }));
+          setIsFormSubmitted(true);
         }
       } catch (error: any) {
         toast.error('Произошла неизвестная ошибка!');
@@ -77,6 +83,12 @@ export const FormPage = () => {
   };
 
   usePageTitle(formData?.title ? `Форма | ${formData.title}` : 'Форма');
+
+  useEffect(() => {
+    if (isFormSubmitted) {
+      clearLocalStorageForm();
+    }
+  }, [isFormSubmitted]);
 
   if (!formId) {
     return <h2>Форма не найдена!</h2>;
@@ -96,12 +108,7 @@ export const FormPage = () => {
 
   return (
     <div className="pt-5 relative">
-      {isLoadingCreateResponse && (
-        <div className="absolute h-full inset-0 bg-white/90 flex justify-center items-center z-10">
-          <Loader />
-        </div>
-      )}
-      {formSubmitted ? (
+      {isFormSubmitted ? (
         <ResponseSendMessage />
       ) : (
         <div className="flex gap-4 items-start w-full">
@@ -114,11 +121,15 @@ export const FormPage = () => {
                 </Typography.Text>
               </div>
             </div>
-            <FillingForm form={form} onSend={sendForm} />
+            <FillingForm form={form} onSend={sendForm} isLoading={isLoadingCreateResponse} />
           </GlassWrapper>
           {formData?.timer && timerStart && (
             <GlassWrapper className="p-10">
-              <Timer onFinish={sendFormAfterTimer} />
+              <Timer
+                value={formData.timer}
+                onFinish={sendFormAfterTimer}
+                isLoading={isLoadingCreateResponse}
+              />
             </GlassWrapper>
           )}
         </div>

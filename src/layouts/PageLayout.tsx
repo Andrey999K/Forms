@@ -85,7 +85,9 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
                       className={({ isActive }) =>
                         `hover:text-orange-500 transition-colors ${
                           isActive ||
-                          (page.href === ROUTES.FORMS_NEW && location.pathname.startsWith('/forms'))
+                          (page.href === ROUTES.FORMS_NEW &&
+                            location.pathname.startsWith('/forms') &&
+                            location.pathname.endsWith('/edit'))
                             ? 'text-orange-500'
                             : 'text-gray-700'
                         }`

@@ -35,7 +35,7 @@ function useLocalStorage<T>(key: string, initialValue?: T) {
     if (item) setValue(item);
   }, [key]);
 
-  return { value, update, remove };
+  return { get, value, update, remove };
 }
 
 export default useLocalStorage;
