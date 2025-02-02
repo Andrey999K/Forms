@@ -80,6 +80,12 @@ const formsSlice = createSlice({
       if (index === -1) return;
       state.data[index] = { ...state.data[index], ...action.payload };
     },
+    incrementResponseCount: (state, action: PayloadAction<{ id: string }>) => {
+      const index = state.data.findIndex((form) => form.id === action.payload.id);
+      if (index === -1) return;
+
+      state.data[index].responseCount += 1;
+    },
     deleteLocalForm: (state, action: PayloadAction<string>) => {
       state.data = state.data.filter((form) => form.id !== action.payload);
     },
