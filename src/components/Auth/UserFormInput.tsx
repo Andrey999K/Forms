@@ -27,6 +27,7 @@ export const UserFormInput = <T extends FieldValues>({
       rules={rules}
       render={({ field, fieldState }) => (
         <Form.Item
+          className="input-item"
           validateStatus={fieldState.error ? 'error' : undefined}
           help={
             fieldState.error && (
@@ -37,7 +38,7 @@ export const UserFormInput = <T extends FieldValues>({
                   display: 'block',
                   lineHeight: '1.4',
                 }}
-                className="text-red-500 text-sm ml-2"
+                className="text-red-500 text-xs md:text-sm ml-2 "
               >
                 {fieldState.error.message}
               </Typography.Text>
@@ -45,7 +46,7 @@ export const UserFormInput = <T extends FieldValues>({
           }
         >
           <div className="flex flex-col items-start">
-            {label && <Typography.Text className="ml-2">{label}</Typography.Text>}{' '}
+            {label && <Typography.Text className="ml-2">{label}</Typography.Text>}
             <Input
               {...field}
               {...props}

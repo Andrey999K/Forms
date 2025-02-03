@@ -105,7 +105,7 @@ export const Me = () => {
           />
         </div>
       )}
-      <GlassWrapper className={`w-1/2 px-5 py-5 text-center`} style={{ zIndex: 10 }}>
+      <GlassWrapper className="w-full md:w-1/2 px-5 py-5 text-center" style={{ zIndex: 10 }}>
         {error ? (
           <Alert
             message="Ошибка загрузки данных"

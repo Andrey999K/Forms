@@ -45,7 +45,7 @@ export const Login = () => {
 
   return (
     <Layout className="min-h-screen auth-bg-gradient overflow-hidden">
-      <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
+      <Content className="flex justify-center items-center min-h-screen overflow-y-auto px-8">
         <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
           <div className="mb-6">
             <div className="flex justify-center mb-2">
@@ -53,7 +53,6 @@ export const Login = () => {
                 <FiLogIn size={30} color="#808897" />
               </div>
             </div>
-
             <Typography.Title
               level={2}
               style={{

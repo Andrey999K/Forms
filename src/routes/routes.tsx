@@ -1,9 +1,8 @@
 import { createHashRouter, Outlet, RouteObject, RouterProvider } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import { lazy } from 'react';
 import { ROUTES } from '@/utils/routesConfig';
 import { ProtectedRoute } from './ProtectedRoute';
 import { ErrorComponent } from '@/components/ui/ErrorComponent/ErrorComponent';
-import { Loader } from '@/components/ui/Loader';
 import { PageLayout } from '@/layouts/PageLayout';
 
 const Home = lazy(() => import('@/pages/home/Page').then((module) => ({ default: module.Home })));
@@ -41,12 +40,11 @@ const NotFoundPage = lazy(() =>
 export const AppRouter = () => {
   const routes: RouteObject[] = [
     {
+      errorElement: <ErrorComponent />,
       element: (
-        <Suspense fallback={<Loader />}>
-          <ProtectedRoute>
-            <PageLayout />
-          </ProtectedRoute>
-        </Suspense>
+        <ProtectedRoute>
+          <PageLayout />
+        </ProtectedRoute>
       ),
       children: [
         { path: ROUTES.HOME, element: <Home /> },
@@ -55,26 +53,30 @@ export const AppRouter = () => {
         { path: ROUTES.FORMS_EDIT, element: <FormsEdit /> },
         { path: ROUTES.FORM_RESPONSES, element: <FormResponses /> },
         { path: ROUTES.FORM_RESPONSE, element: <FormResponse /> },
-        { path: ROUTES.FORM_PAGE, element: <FormPage /> },
         { path: '*', element: <NotFoundPage /> },
       ],
     },
     {
       errorElement: <ErrorComponent />,
       element: (
-        <>
-          <Suspense fallback={<Loader />}>
-            <ProtectedRoute inverted>
-              <Outlet />
-            </ProtectedRoute>
-          </Suspense>
-        </>
+        <ProtectedRoute inverted>
+          <Outlet />
+        </ProtectedRoute>
       ),
       children: [
         { path: ROUTES.LOGIN, element: <Login /> },
         { path: ROUTES.SIGNUP, element: <Signup /> },
         { path: ROUTES.RECOVERY_PASSWORD, element: <RecoveryPassword /> },
       ],
+    },
+    {
+      errorElement: <ErrorComponent />,
+      path: ROUTES.FORM_PAGE,
+      element: (
+        <PageLayout>
+          <FormPage />
+        </PageLayout>
+      ),
     },
   ];
 

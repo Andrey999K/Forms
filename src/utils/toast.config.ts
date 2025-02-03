@@ -13,4 +13,5 @@ export const toastConfig: ToastContainerProps = {
   theme: 'colored',
   style: { zIndex: 10000 },
   transition: Flip,
+  className: 'px-4 md:px-0',
 };

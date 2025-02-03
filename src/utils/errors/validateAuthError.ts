@@ -1,29 +1,29 @@
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { normalizeFirebaseError } from './normalizeFirebaseError';
 
 export const validateAuthError = (error?: string): FetchBaseQueryError => {
-  if (!error) {
-    return { status: 500, data: 'Произошла неизвестная ошибка.' };
-  }
-  if (error.includes('Auth/invalid-email')) {
+  error = normalizeFirebaseError(error);
+
+  if (error.includes('auth/invalid-email')) {
     return { status: 400, data: 'Пожалуйста, введите корректный email.' };
   }
-  if (error.includes('Auth/missing-password')) {
+  if (error.includes('auth/missing-password')) {
     return { status: 400, data: 'Пожалуйста, заполните пароль.' };
   }
   if (
-    error.includes('Auth/invalid-credential') ||
-    error.includes('Auth/wrong-password') ||
-    error.includes('Auth/user-not-found')
+    error.includes('auth/invalid-credential') ||
+    error.includes('auth/wrong-password') ||
+    error.includes('auth/user-not-found')
   ) {
     return { status: 401, data: 'Введены неверные учетные данные.' };
   }
-  if (error.includes('Auth/email-already-in-use')) {
+  if (error.includes('auth/email-already-in-use')) {
     return { status: 409, data: 'Введенный email уже используется.' };
   }
-  if (error.includes('Auth/weak-password')) {
+  if (error.includes('auth/weak-password')) {
     return { status: 400, data: 'Введенный пароль должен содержать более 8 символов.' };
   }
-  if (error.includes('Auth/too-many-requests')) {
+  if (error.includes('auth/too-many-requests')) {
     return { status: 429, data: 'Слишком много неудачных попыток. Попробуйте позже.' };
   }
   return { status: 500, data: 'Произошла неизвестная ошибка.' };
