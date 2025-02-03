@@ -1,15 +1,13 @@
-import { Alert, Form } from 'antd';
+import { MeAvatar, MeProfileActions, MeProfileDetails } from '@/components/Me';
+import { Loader } from '@/components/ui/Loader';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import { useGetMeInfoQuery, useUpdateMeInfoMutation } from '@/redux/user';
+import { uploadToCloudinary } from '@/services/cloudinary.service';
+import { MeChangeFields } from '@/types/me';
+import { Alert, Form, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useGetMeInfoQuery, useUpdateMeInfoMutation } from '@/redux/user';
-import { MeChangeFields } from '@/types/me';
-import { MeProfileActions, MeAvatar } from '@/components/Me';
-import { MeProfileDetails } from '@/components/Me';
-import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
-import { toast } from 'react-toastify';
-import { Loader } from '@/components/ui/Loader';
-import { uploadToCloudinary } from '@/services/cloudinary.service';
-import { usePageTitle } from '@/hooks/usePageTitle';
 
 export const Me = () => {
   const [isEdit, setEdit] = useState<boolean>(false);
@@ -77,12 +75,12 @@ export const Me = () => {
           data: updatedData,
         }).unwrap();
 
-        toast.success('Данные успешно обновлены');
+        notification.success({ message: 'Успешно', description: 'Данные обновлены' });
         setAvatar(null);
         setAlertVisible(false);
         setEdit(false);
       } catch (error) {
-        toast.error('Не удалось обновить данные');
+        notification.error({ message: 'Не удалось обновить данные' });
         console.error('Ошибка обновления данных:', error);
       }
     }

@@ -1,19 +1,18 @@
-import { useParams } from 'react-router-dom';
-import { incrementResponseCount, useGetFormQuery } from '@/redux/form';
-import { Loader } from '@/components/ui/Loader';
-import { Form, Typography } from 'antd';
-import { useCreateResponseMutation } from '@/redux/response';
-import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { ResponseSendMessage } from '@/components/FormPage';
+import { FillingForm } from '@/components/FormPage/FillingForm';
 import { StartTimer } from '@/components/FormPage/StartTimer.tsx';
 import { Timer } from '@/components/FormPage/Timer.tsx';
+import { Loader } from '@/components/ui/Loader';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
-import { usePageTitle } from '@/hooks/usePageTitle';
-import { FillingForm } from '@/components/FormPage/FillingForm';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/redux/store';
 import useLocalStorage from '@/hooks/useLocalStorage.ts';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import { incrementResponseCount, useGetFormQuery } from '@/redux/form';
+import { useCreateResponseMutation } from '@/redux/response';
+import { AppDispatch } from '@/redux/store';
+import { Form, notification, Typography } from 'antd';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 export const FormPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -72,7 +71,8 @@ export const FormPage = () => {
           setIsFormSubmitted(true);
         }
       } catch (error: any) {
-        toast.error('Произошла неизвестная ошибка!');
+        notification.error({ message: 'Произошла неизвестная ошибка!' });
+
         console.error('Error', error.data);
       }
     }

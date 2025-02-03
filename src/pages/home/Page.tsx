@@ -1,19 +1,18 @@
+import { Button, Flex, Input, notification, Select, Spin } from 'antd';
+import { DefaultOptionType } from 'antd/es/select';
+import Title from 'antd/es/typography/Title';
 import { useEffect, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Button, Flex, Input, Select, Spin } from 'antd';
-import Title from 'antd/es/typography/Title';
-import { DefaultOptionType } from 'antd/es/select';
-import { useInView } from 'react-intersection-observer';
 
+import { deleteLocalForm, fetchFormsSlice, resetStore, useDeleteFormMutation } from '@/redux/form';
 import { AppDispatch, RootState } from '@/redux/store';
-import { resetStore, deleteLocalForm, useDeleteFormMutation, fetchFormsSlice } from '@/redux/form';
 
 import { HomeList } from '@/components/Home/HomeList/HomeList';
 
-import { FormListOptions, Sort } from '@/types';
-import { toast } from 'react-toastify';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { FormListOptions, Sort } from '@/types';
 import { ROUTES } from '@/utils/routesConfig';
 
 const { Search } = Input;
@@ -137,7 +136,7 @@ export const Home = () => {
 
   const handleLoadMore = () => {
     if (!user) {
-      toast.error('Не найдены данные пользователя');
+      notification.error({ message: 'Не найдены данные пользователя' });
       return;
     }
 

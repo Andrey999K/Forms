@@ -1,7 +1,6 @@
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { Upload, UploadProps } from 'antd';
+import { notification, Upload, UploadProps } from 'antd';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { Loader } from '../ui/Loader';
 
 type Props = {
@@ -31,13 +30,19 @@ export const MeAvatar = ({ currentAvatarUrl, isLoading, isEdit, setAvatar, avata
     const isJpgOrPng =
       file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/webp';
     if (!isJpgOrPng) {
-      toast.error('Можно загружать только JPG/PNG/WEBP!');
+      notification.error({
+        message: 'Ошибка',
+        description: 'Можно загружать только JPG/PNG/WEBP!',
+      });
       return false;
     }
 
     const isLt2M = file.size / 1024 / 1024 < 8;
     if (!isLt2M) {
-      toast.error('Файл должен быть меньше 8MB!');
+      notification.error({
+        message: 'Ошибка',
+        description: 'Файл должен быть меньше 8MB!',
+      });
       return false;
     }
 

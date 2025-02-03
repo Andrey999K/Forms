@@ -22,14 +22,13 @@ import {
   Tag,
 } from '@/types';
 import { getUUID } from '@/utils/getUUID';
-import { Spin } from 'antd';
+import { notification, Spin } from 'antd';
 import { HTML5toTouch } from 'rdndmb-html5-to-touch';
 import { FC, useCallback, useLayoutEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { MultiBackend } from 'react-dnd-multi-backend';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { NotFound } from '../notFoundPage/Page';
 
 export const FormsEdit: FC = () => {
@@ -150,7 +149,10 @@ export const FormsEdit: FC = () => {
             : new Date().getTime(),
         };
         dispatch(updateLocalForm(updConstructor));
-        toast.success('Форма успешно обновлена ');
+        notification.success({
+          message: 'Успешно',
+          description: 'Форма обновлена.',
+        });
       } else {
         await createForm(constructor).unwrap();
         const newConstructor = {
@@ -160,11 +162,14 @@ export const FormsEdit: FC = () => {
           updatedAt: new Date().getTime(),
         };
         dispatch(createLocalForm(newConstructor));
-        toast.success('Форма успешно сохранена');
+        notification.success({
+          message: 'Успешно',
+          description: 'Форма сохранена',
+        });
       }
     } catch (error) {
       console.log('Error', error);
-      toast.error('Ошибка сохранения');
+      notification.error({ message: 'Ошибка' });
     }
   };
 
@@ -173,12 +178,17 @@ export const FormsEdit: FC = () => {
       if (formId) {
         await deleteForm(formId).unwrap();
         dispatch(deleteLocalForm(formId));
-        toast.success('Форма удалена');
+        notification.info({
+          message: 'Успешно',
+          description: 'Форма удалена',
+        });
         navigate('/');
       }
     } catch (error) {
       console.log('Error', error);
-      toast.error('Ошибка при удалении');
+      notification.error({
+        message: 'Ошибка',
+      });
     }
   };
 
