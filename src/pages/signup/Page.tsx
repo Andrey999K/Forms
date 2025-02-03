@@ -1,4 +1,4 @@
-import { Button, Form, Layout, Spin, Typography } from 'antd';
+import { Button, Form, Layout, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { MdMail, MdPerson, MdPersonAddAlt1, MdVisibility, MdVisibilityOff } from 'react-icons/md';
@@ -48,7 +48,7 @@ export const Signup = () => {
 
   return (
     <Layout className="min-h-screen auth-bg-gradient overflow-hidden">
-      <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
+      <Content className="flex justify-center items-center min-h-screen overflow-y-auto px-8">
         <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
           <div className="mb-6">
             <div className="flex justify-center mb-2">
@@ -129,10 +129,10 @@ export const Signup = () => {
                 </span>
               }
             />
-            <AuthSubmitButton disabled={isLoading}>
-              {isLoading ? <Spin size="small" /> : 'Зарегистрироваться'}
+            <AuthSubmitButton disabled={isLoading} loading={isLoading}>
+              Зарегистрироваться
             </AuthSubmitButton>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
               <Form.Item className="flex justify-end ml-1 mb-0">
                 <Button onClick={() => reset()} color="default" variant="solid">
                   Очистить форму

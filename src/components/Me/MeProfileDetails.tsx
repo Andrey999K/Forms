@@ -1,20 +1,13 @@
 import { UserFormValidationRules } from '@/utils/validation';
 import { Control, UseFormReset } from 'react-hook-form';
-import { Dispatch, ReactNode, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { MeChangeFields, MeData } from '@/types/me';
-import { Button, Divider } from 'antd';
+import { Button } from 'antd';
 import { MdOutlineCancel, MdOutlineEmail } from 'react-icons/md';
 import { FaRegRegistered } from 'react-icons/fa6';
 import { formatUserCreatedAt } from '@/utils/formatUserCreatedAt';
-import { MdPerson, MdOutlinePeople } from 'react-icons/md';
+import { MdPerson } from 'react-icons/md';
 import { UserFormInput } from '../Auth/UserFormInput';
-
-const renderMeProfileField = (icon: ReactNode, value?: string) => (
-  <div className="flex gap-2 items-start justify-start mb-4">
-    {icon}
-    <span className="w-full break-all text-left">{value}</span>
-  </div>
-);
 
 type Props = {
   control: Control<any>;
@@ -46,16 +39,22 @@ export const MeProfileDetails = ({
   return (
     <>
       <div className="text-base mb-4 font-medium">Информация о пользователе</div>
-      <Divider className="my-0" />
       {!isEditing ? (
         <div className="flex flex-col items-start gap-2">
-          {renderMeProfileField(<MdPerson size={20} />, user?.firstName)}
-          {renderMeProfileField(<MdOutlinePeople size={20} />, user?.lastName)}
-          {renderMeProfileField(<MdOutlineEmail size={20} />, user?.email)}
-          {renderMeProfileField(
-            <FaRegRegistered size={20} />,
-            `Дата регистрации: ${formatUserCreatedAt(user?.createdAt)}`
-          )}
+          <div className="flex gap-2 items-start justify-start mb-4">
+            <MdPerson size={20} />
+            <span className="w-full break-all text-left">
+              {`${user?.firstName} ${user?.lastName}`}
+            </span>
+          </div>
+          <div className="flex gap-2 items-start justify-start mb-4">
+            <MdOutlineEmail size={20} />
+            <span className="w-full break-all text-left">{user?.email}</span>
+          </div>
+          <div className="flex gap-2 items-start justify-start mb-4">
+            <FaRegRegistered size={20} />
+            {`Дата регистрации: ${formatUserCreatedAt(user?.createdAt)}`}
+          </div>
         </div>
       ) : (
         <div>

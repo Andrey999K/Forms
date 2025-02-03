@@ -61,7 +61,7 @@ export const MeAvatar = ({ currentAvatarUrl, isLoading, isEdit, setAvatar, avata
   if (isLoading) return <Loader />;
 
   return (
-    <div className="flex justify-center w-full mb-4">
+    <div className="flex justify-center w-full">
       <div className="flex flex-col gap-4">
         <div
           className="relative w-36 h-36 rounded-full overflow-hidden shadow-xl"

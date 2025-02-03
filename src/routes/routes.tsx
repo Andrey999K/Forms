@@ -3,8 +3,8 @@ import { lazy, Suspense } from 'react';
 import { ROUTES } from '@/utils/routesConfig';
 import { ProtectedRoute } from './ProtectedRoute';
 import { ErrorComponent } from '@/components/ui/ErrorComponent/ErrorComponent';
-import { Loader } from '@/components/ui/Loader';
 import { PageLayout } from '@/layouts/PageLayout';
+import { Loader } from '@/components/ui/Loader';
 
 const Home = lazy(() => import('@/pages/home/Page').then((module) => ({ default: module.Home })));
 const Me = lazy(() => import('@/pages/me/Page').then((module) => ({ default: module.Me })));
@@ -41,6 +41,7 @@ const NotFoundPage = lazy(() =>
 export const AppRouter = () => {
   const routes: RouteObject[] = [
     {
+      errorElement: <ErrorComponent />,
       element: (
         <Suspense fallback={<Loader />}>
           <ProtectedRoute>
@@ -55,26 +56,34 @@ export const AppRouter = () => {
         { path: ROUTES.FORMS_EDIT, element: <FormsEdit /> },
         { path: ROUTES.FORM_RESPONSES, element: <FormResponses /> },
         { path: ROUTES.FORM_RESPONSE, element: <FormResponse /> },
-        { path: ROUTES.FORM_PAGE, element: <FormPage /> },
         { path: '*', element: <NotFoundPage /> },
       ],
     },
     {
       errorElement: <ErrorComponent />,
       element: (
-        <>
-          <Suspense fallback={<Loader />}>
-            <ProtectedRoute inverted>
-              <Outlet />
-            </ProtectedRoute>
-          </Suspense>
-        </>
+        <Suspense fallback={<Loader />}>
+          <ProtectedRoute inverted>
+            <Outlet />
+          </ProtectedRoute>
+        </Suspense>
       ),
       children: [
         { path: ROUTES.LOGIN, element: <Login /> },
         { path: ROUTES.SIGNUP, element: <Signup /> },
         { path: ROUTES.RECOVERY_PASSWORD, element: <RecoveryPassword /> },
       ],
+    },
+    {
+      errorElement: <ErrorComponent />,
+      path: ROUTES.FORM_PAGE,
+      element: (
+        <Suspense fallback={<Loader />}>
+          <PageLayout>
+            <FormPage />
+          </PageLayout>
+        </Suspense>
+      ),
     },
   ];
 

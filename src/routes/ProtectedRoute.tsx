@@ -14,7 +14,12 @@ export const ProtectedRoute = ({ children, inverted = false }: Props) => {
   const user = useSelector((state: RootState) => state.user.user);
   const isUserReady = useSelector((state: RootState) => state.user.isUserReady);
 
-  if (!isUserReady) return <Loader />;
+  if (!isUserReady)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader />
+      </div>
+    );
 
   if (inverted) {
     return user ? <Navigate to={ROUTES.HOME} /> : children;

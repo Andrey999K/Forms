@@ -30,7 +30,7 @@ export const MeProfileActions = ({
 
   return isEdit ? (
     <button type="submit" className={submitBtnStyles} disabled={isSubmitDisabled || isUpdating}>
-      <FaRegCheckCircle size={35} color={isSubmitDisabled ? '#808080' : '#0E8B57'} />
+      <FaRegCheckCircle size={35} />
     </button>
   ) : (
     <button className={btnPositionStyles} onClick={() => setEdit(true)}>
