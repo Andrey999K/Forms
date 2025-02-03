@@ -7,11 +7,11 @@ import { EditableTextarea } from './EditableTextarea';
 type Props = {
   constructor: ConstructorForm;
   onChangeForm: ({ value, name }: { value: string; name: string }) => void;
-  onError: (id: string, updates: boolean) => void;
+  errors: { [key: string]: string[] };
 };
 
 export const ConstructorHeader: FC<Props> = (props) => {
-  const { constructor, onChangeForm, onError } = props;
+  const { constructor, onChangeForm, errors } = props;
   return (
     <GlassWrapper className="flex flex-col gap-2 p-4">
       <EditableText
@@ -19,7 +19,7 @@ export const ConstructorHeader: FC<Props> = (props) => {
         name="title"
         placeholder="Название"
         onChange={onChangeForm}
-        onError={onError}
+        errors={errors}
         size="large"
       >
         <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-colorPrimary rounded">
@@ -31,7 +31,7 @@ export const ConstructorHeader: FC<Props> = (props) => {
         name="description"
         placeholder="Описание"
         onChange={onChangeForm}
-        onError={onError}
+        errors={errors}
       >
         <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-colorPrimary rounded">
           <h2 className="text-sm text-gray-600">{constructor.description}</h2>

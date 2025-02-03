@@ -45,7 +45,7 @@ export const ConstructorDropZone: FC<Props> = (props) => {
       >
         <div className="w-full border-2 border-colorPrimary rounded-xl" />
       </div>
-      {children}
+      {!isOverNewItem && children}
     </div>
   );
 };

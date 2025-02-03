@@ -1,34 +1,22 @@
-import TextArea from 'antd/es/input/TextArea';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import TextArea, { TextAreaRef } from 'antd/es/input/TextArea';
+import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 
 type Props = {
   value: string;
   name: string;
   placeholder?: string;
   onChange: ({ value, name }: { value: string; name: string }) => void;
-  onError: (id: string, updates: boolean) => void;
+  errors: { [key: string]: string[] };
   children: React.ReactNode;
 };
 
 export const EditableTextarea: FC<Props> = (props) => {
-  const { value, name, placeholder, onChange, children } = props;
+  const { value, name, placeholder, onChange, children, errors } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const isError = Object.keys(errors).length > 0;
-
-  const getErrors = (id: string, label: string): Record<string, string> => {
-    if (label.trim() === '') {
-      return { ...errors, [id]: 'Поле не может быть пустым' };
-    } else {
-      const newErrors = { ...errors };
-      delete newErrors[id];
-      return newErrors;
-    }
-  };
+  const textareaRef = useRef<TextAreaRef>(null);
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     onChange({ name, value: e.target.value });
-    setErrors(getErrors(e.target.id, e.target.value));
   };
 
   const handleClick = () => {
@@ -36,10 +24,7 @@ export const EditableTextarea: FC<Props> = (props) => {
   };
 
   const handleBlur = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const errors = getErrors(e.target.id, e.target.value);
-    console.log('handleBlur', errors, Object.keys(errors).length === 0);
-
-    if (Object.keys(errors).length !== 0) return;
+    if (errors[name] || e.target.value.trim() === '') return;
     setIsOpen(false);
   };
 
@@ -47,7 +32,10 @@ export const EditableTextarea: FC<Props> = (props) => {
     if (value === '') {
       setIsOpen(true);
     }
-  }, []);
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [value]);
 
   return (
     <>
@@ -58,9 +46,17 @@ export const EditableTextarea: FC<Props> = (props) => {
           onChange={handleChange}
           onBlur={handleBlur}
           className="w-full"
-          status={isError ? 'error' : undefined}
+          status={errors[name] ? 'error' : undefined}
           placeholder={placeholder}
+          ref={textareaRef}
           rows={1}
+          // suffix={
+          //   isError ? (
+          //     <Tooltip title={errors[id]}>
+          //       <ExclamationCircleOutlined className="text-red-500" />
+          //     </Tooltip>
+          //   ) : null
+          // }
         />
       ) : (
         <div onClick={handleClick} className="cursor-pointer">

@@ -1,6 +1,7 @@
 import { ConstructorHeader } from '@/components/FormsEdit/ConstructorHeader';
 import { ConstructorWorkArea } from '@/components/FormsEdit/ConstructorWorkArea';
 import { Sidebar } from '@/components/FormsEdit/Sidebar';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import {
   createLocalForm,
   deleteLocalForm,
@@ -23,14 +24,13 @@ import {
 import { getUUID } from '@/utils/getUUID';
 import { Spin } from 'antd';
 import { HTML5toTouch } from 'rdndmb-html5-to-touch';
-import { FC, useLayoutEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useLayoutEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { MultiBackend } from 'react-dnd-multi-backend';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { NotFound } from '../notFoundPage/Page';
-import { usePageTitle } from '@/hooks/usePageTitle';
 
 export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
@@ -46,14 +46,7 @@ export const FormsEdit: FC = () => {
   const [updateForm, { isLoading: isUpdating }] = useUpdateFormMutation();
   const [deleteForm, { isLoading: isDeleting }] = useDeleteFormMutation();
   const user = useSelector((state: RootState) => state.user.user);
-  const [errors, setErrors] = useState<Record<string, boolean>>({});
-  const isError = useMemo(() => {
-    let isError = false;
-    Object.keys(errors).forEach((key) => {
-      if (!isError && errors[key]) isError = true;
-    });
-    return isError;
-  }, [errors]);
+  const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
 
   const handleDropField = (type: FieldType, index?: number, newId?: string) => {
     setConstructor((prev) => {
@@ -71,6 +64,7 @@ export const FormsEdit: FC = () => {
       const newFields = [...fields];
       if (index !== undefined) newFields.splice(index, 0, newField);
       else newFields.push(newField);
+      updateFieldErrors('fields', 'delete');
       return { ...prev, fields: newFields };
     });
   };
@@ -86,23 +80,33 @@ export const FormsEdit: FC = () => {
     });
   };
 
-  const updateField = (id: string, updates: Partial<ConstructorField>) => {
+  const updateField = useCallback((id: string, updates: Partial<ConstructorField>) => {
     setConstructor((prev) => {
       if (!prev) return prev;
       const { fields } = prev;
-      const newFields = fields.map((field) => (field.id === id ? { ...field, ...updates } : field));
+
+      const newFields = fields.map((field) => {
+        if (field.id === id) {
+          console.log(updates, updates.question, field.question);
+
+          if (updates.question) updateFieldErrors(id, 'delete');
+          if (field.options) {
+            field.options.forEach((option) => updateFieldErrors(option.id, 'delete'));
+          }
+          return { ...field, ...updates };
+        }
+        return field;
+      });
       return { ...prev, fields: newFields };
     });
-  };
+  }, []);
 
   const removeField = (id: string) => {
     setConstructor((prev) => {
       if (!prev) return prev;
       const { fields } = prev;
       const newFields = fields.filter((field) => {
-        if (field.options) {
-          field.options.forEach((option) => setErrors((prev) => ({ ...prev, [option.id]: false })));
-        }
+        updateFieldErrors(id, 'delete');
         return field.id !== id;
       });
       return { ...prev, fields: newFields };
@@ -128,7 +132,9 @@ export const FormsEdit: FC = () => {
 
   const handleSaveForms = async () => {
     if (!constructor) return;
-    if (isError) return;
+    const errorsList = validateForm();
+    setErrors(errorsList);
+    if (Object.keys(errorsList).length > 0) return;
 
     try {
       if ('createdAt' in constructor) {
@@ -179,12 +185,65 @@ export const FormsEdit: FC = () => {
   const handleChangeForm = ({ value, name }: HandleChangeForm) => {
     setConstructor((prev) => {
       if (!prev) return prev;
+      updateFieldErrors(name, 'delete');
       return { ...prev, [name]: value };
     });
   };
 
-  const handleError = (id: string, updates: boolean) => {
-    setErrors((prev) => ({ ...prev, [id]: updates }));
+  const updateFieldErrors = (fieldId: string, value: string) => {
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
+
+      if (value.trim() === '') newErrors[fieldId] = ['Поле не может быть пустым.'];
+      else delete newErrors[fieldId];
+
+      return newErrors;
+    });
+  };
+
+  const validateForm = (): { [key: string]: string[] } => {
+    const errors: { [key: string]: string[] } = {};
+
+    if (!constructor) return errors;
+
+    if (constructor.fields && Array.isArray(constructor.fields)) {
+      if (constructor.fields.length === 0) {
+        errors['fields'] = ['Добавьте как минимум 1 вопрос.'];
+      } else if (errors['fields']) {
+        delete errors['fields'];
+      }
+
+      constructor.fields.forEach((field) => {
+        if (field.question?.trim() === '') {
+          errors[field.id] = ['Поле не может быть пустым.'];
+        } else if (errors[field.id] && field.question?.trim() !== '') {
+          delete errors[field.id];
+        }
+        if (field.type === FieldTypes.RADIO || field.type === FieldTypes.CHECKBOX) {
+          field.options?.forEach((option) => {
+            if (option.label.trim() === '') {
+              errors[option.id] = ['Поле не может быть пустым.'];
+            } else if (errors[option.id] && option.label.trim() !== '') {
+              delete errors[option.id];
+            }
+          });
+        }
+      });
+    }
+
+    if (constructor.title?.trim() === '') {
+      errors['title'] = ['Поле не может быть пустым.'];
+    } else if (errors['title'] && constructor.title?.trim() !== '') {
+      delete errors['title'];
+    }
+
+    if (constructor.description?.trim() === '') {
+      errors['description'] = ['Поле не может быть пустым.'];
+    } else if (errors['description'] && constructor.description?.trim() !== '') {
+      delete errors['description'];
+    }
+
+    return errors;
   };
 
   useLayoutEffect(() => {
@@ -235,7 +294,7 @@ export const FormsEdit: FC = () => {
           isCreating={isCreating}
           isUpdating={isUpdating}
           isDeleting={isDeleting}
-          isError={isError}
+          isError={Object.keys(errors).length > 0}
           isNew={!('createdAt' in constructor)}
           onSaveConstructor={handleSaveForms}
           onRemoveConstructor={handleRemoveForms}
@@ -245,11 +304,11 @@ export const FormsEdit: FC = () => {
           <ConstructorHeader
             constructor={constructor}
             onChangeForm={handleChangeForm}
-            onError={handleError}
+            errors={errors}
           />
           <ConstructorWorkArea
             constructor={constructor}
-            onError={handleError}
+            errors={errors}
             onDropField={handleDropField}
             onMoveField={moveField}
             onRemoveField={removeField}
