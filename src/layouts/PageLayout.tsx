@@ -66,7 +66,8 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
                           `hover:text-orange-500 transition-colors ${
                             isActive ||
                             (page.href === ROUTES.FORMS_NEW &&
-                              location.pathname.startsWith('/forms'))
+                              location.pathname.startsWith('/forms') &&
+                              location.pathname.endsWith('/edit'))
                               ? 'text-orange-500'
                               : 'text-gray-700'
                           }`
@@ -104,7 +105,8 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
                             `hover:text-orange-500 transition-colors ${
                               isActive ||
                               (page.href === ROUTES.FORMS_NEW &&
-                                location.pathname.startsWith('/forms'))
+                                location.pathname.startsWith('/forms') &&
+                                location.pathname.endsWith('/edit'))
                                 ? 'text-orange-500'
                                 : 'text-gray-700'
                             }`
