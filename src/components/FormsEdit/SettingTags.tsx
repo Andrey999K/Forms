@@ -1,33 +1,19 @@
-import React, { useState } from 'react';
-import { Select, Tag, Tooltip, ColorPicker } from 'antd';
+import { ConstructorForm, HandleChangeForm, Tag as TagType } from '@/types';
 import { getUUID } from '@/utils/getUUID';
+import { ColorPicker, Select, Tag, Tooltip } from 'antd';
+import React, { useState } from 'react';
 
-interface Tag {
-  id: string;
-  label: string;
-  color: string; // Ensuring the color is stored as a string (e.g., '#ff0000')
-}
-
-interface ConstructorForm {
-  tags: Tag[];
-}
-
-interface HandleChangeForm {
-  value: unknown;
-  name: string;
-}
-
-interface Props {
+type Props = {
   constructor: ConstructorForm;
   onChangeForm: ({ value, name }: HandleChangeForm) => void;
-}
+};
 
-interface CustomTagProps {
+type CustomTagProps = {
   label: React.ReactNode;
   value: string;
   closable: boolean;
   onClose: (event?: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-}
+};
 
 const MAX_TAG_DISPLAY_LENGTH = 20;
 const DEFAULT_COLOR = '#fa9145';
@@ -39,7 +25,7 @@ export const SettingTags: React.FC<Props> = ({ constructor, onChangeForm }) => {
     label.length > MAX_TAG_DISPLAY_LENGTH ? `${label.slice(0, MAX_TAG_DISPLAY_LENGTH)}...` : label;
 
   const handleSelect = (value: string) => {
-    const newTag: Tag = {
+    const newTag: TagType = {
       id: getUUID(),
       label: value,
       color: DEFAULT_COLOR,
@@ -84,8 +70,8 @@ export const SettingTags: React.FC<Props> = ({ constructor, onChangeForm }) => {
       <div className="flex items-center m-[2px]">
         {isEditing && (
           <ColorPicker
-            value={selectedTag?.color ?? DEFAULT_COLOR} // Ensure the color is in the correct format
-            onChange={(color) => handleColorChange(value, color.toHexString())} // Convert color to hex string
+            value={selectedTag?.color ?? DEFAULT_COLOR}
+            onChange={(color) => handleColorChange(value, color.toHexString())}
             size="small"
             className="border-none p-1"
           />
