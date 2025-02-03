@@ -1,1 +1,0 @@
-import{al as a,b as r,am as i,j as s,S as o}from"./index-Bg_GU3kN.js";import{u as m}from"./usePageTitle-D_Ny1V0R.js";const f=()=>{const t=a();return r.useEffect(()=>{const e=i();e&&t(`/forms/${e}/edit`,{state:{id:e}})},[]),m("Новая форма"),s.jsx("div",{className:"flex justify-center items-center",children:s.jsx(o,{})})};export{f as FormsNew};
