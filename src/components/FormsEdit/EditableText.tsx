@@ -1,38 +1,26 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Input, Tooltip } from 'antd';
+import { Input, InputRef, Tooltip } from 'antd';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 
 type Props = {
   value: string;
   name: string;
   placeholder?: string;
   onChange: ({ value, name }: { value: string; name: string }) => void;
-  onError: (id: string, updates: boolean) => void;
+  errors: { [key: string]: string[] };
   children: React.ReactNode;
   size?: SizeType;
   id?: string;
 };
 
 export const EditableText: FC<Props> = (props) => {
-  const { value, name, placeholder, onChange, children, size, id = props.name } = props;
+  const { value, name, placeholder, onChange, children, size, id = props.name, errors } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const isError = Object.keys(errors).length > 0;
-
-  const getErrors = (id: string, label: string): Record<string, string> => {
-    if (label.trim() === '') {
-      return { ...errors, [id]: 'Поле не может быть пустым.' };
-    } else {
-      const newErrors = { ...errors };
-      delete newErrors[id];
-      return newErrors;
-    }
-  };
+  const inputRef = useRef<InputRef>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange({ name, value: e.target.value });
-    setErrors(getErrors(e.target.id, e.target.value));
   };
 
   const handleClick = () => {
@@ -40,8 +28,7 @@ export const EditableText: FC<Props> = (props) => {
   };
 
   const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
-    const errors = getErrors(e.target.id, e.target.value);
-    if (Object.keys(errors).length !== 0) return;
+    if (errors[name] || e.target.value.trim() === '') return;
     setIsOpen(false);
   };
 
@@ -49,7 +36,10 @@ export const EditableText: FC<Props> = (props) => {
     if (value === '') {
       setIsOpen(true);
     }
-  }, []);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [value]);
 
   return (
     <>
@@ -61,11 +51,12 @@ export const EditableText: FC<Props> = (props) => {
           onChange={handleChange}
           onBlur={handleBlur}
           className="w-full"
-          status={isError ? 'error' : undefined}
+          status={errors[name] ? 'error' : undefined}
           placeholder={placeholder}
           size={size}
+          ref={inputRef}
           suffix={
-            isError ? (
+            errors[name] ? (
               <Tooltip title={errors[id]}>
                 <ExclamationCircleOutlined className="text-red-500" />
               </Tooltip>

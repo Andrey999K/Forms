@@ -13,6 +13,7 @@ export const SettingTimer = ({ constructor, onChangeForm }: Props) => {
       <div className="flex gap-2 items-center justify-between">
         <span>Лимит:</span>
         <TimePicker
+          className="w-full"
           placeholder="Время"
           needConfirm
           hourStep={1}

@@ -1,4 +1,5 @@
 import { ConstructorField } from '@/types';
+import { getUUID } from '@/utils/getUUID';
 import {
   CloseOutlined,
   CopyOutlined,
@@ -6,15 +7,14 @@ import {
   HolderOutlined,
 } from '@ant-design/icons';
 import { Button, Dropdown, Input, InputRef, MenuProps, Switch, Tooltip } from 'antd';
-import { ChangeEvent, FC, ReactNode, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FC, ReactNode, useEffect, useRef } from 'react';
 import { useConstructorItems } from './useConstructorItems';
-import { getUUID } from '@/utils/getUUID';
 
 type Props = {
   children: ReactNode;
   dragRef: React.RefObject<HTMLButtonElement>;
   field: ConstructorField;
-  onError: (id: string, updates: boolean) => void;
+  errors: { [key: string]: string | string[] };
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
   className?: string;
@@ -30,9 +30,8 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
     onUpdateField,
     className = '',
     onCopyField,
-    onError,
+    errors,
   } = props;
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const inputRef = useRef<InputRef>(null);
   const { items } = useConstructorItems();
   const menuItems: MenuProps['items'] = [
@@ -49,38 +48,20 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
       onClick: () => onCopyField(field.id, 'last', getUUID()),
     },
   ];
-  const isError = Object.keys(errors).length > 0;
-
-  const getErrors = (id: string, label: string): Record<string, string> => {
-    if (label.trim() === '') {
-      onError(id, true);
-      return { ...errors, [id]: 'Поле не может быть пустым.' };
-    } else {
-      const newErrors = { ...errors };
-      onError(id, false);
-      delete newErrors[id];
-      return newErrors;
-    }
-  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setErrors(getErrors(e.target.id, e.target.value));
     onUpdateField(field.id, { question: e.target.value });
   };
 
-  const handleRemove = (id: string) => {
+  const handleRemove = () => {
     onRemoveField(field.id);
-    onError(id, false);
   };
 
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
-      if (inputRef.current.input) {
-        getErrors(inputRef.current.input.id, inputRef.current.input.value);
-      }
     }
-  }, []);
+  }, [field.question]);
 
   return (
     <div className={`relative w-full flex ${className}`}>
@@ -89,13 +70,13 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
           <div className="w-full flex gap-2 items-center">
             <Input
               id={field.id}
-              status={Object.keys(errors).length > 0 ? 'error' : undefined}
+              status={errors[field.id] ? 'error' : undefined}
               value={field.question}
               placeholder="Вопрос"
               onChange={handleChange}
               ref={inputRef}
               suffix={
-                isError ? (
+                errors[field.id] ? (
                   <Tooltip title={errors[field.id]}>
                     <ExclamationCircleOutlined className="text-red-500" />
                   </Tooltip>
@@ -121,12 +102,7 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
                 onChange={(require) => onUpdateField(field.id, { require })}
               />
             </Tooltip>
-            <Button
-              type="text"
-              danger
-              icon={<CloseOutlined />}
-              onClick={() => handleRemove(field.id)}
-            />
+            <Button type="text" danger icon={<CloseOutlined />} onClick={handleRemove} />
           </div>
         </div>
       </div>

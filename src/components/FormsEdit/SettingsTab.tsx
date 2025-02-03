@@ -1,7 +1,7 @@
 import { ConstructorForm, HandleChangeForm } from '@/types';
 import { FC } from 'react';
-import { SettingTimer } from './SettingTimer';
 import { SettingTags } from './SettingTags';
+import { SettingTimer } from './SettingTimer';
 
 type Props = {
   constructor: ConstructorForm;
