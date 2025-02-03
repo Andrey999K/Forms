@@ -1,4 +1,4 @@
-import { Form, Layout, Spin, Typography } from 'antd';
+import { Form, Layout, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { FiLogIn } from 'react-icons/fi';
@@ -95,8 +95,8 @@ export const Login = () => {
                 </span>
               }
             />
-            <AuthSubmitButton disabled={isLoading}>
-              {isLoading ? <Spin size="small" /> : 'Войти'}
+            <AuthSubmitButton disabled={isLoading} loading={isLoading}>
+              Войти
             </AuthSubmitButton>
             <AuthTextLink
               text="Забыли пароль?"

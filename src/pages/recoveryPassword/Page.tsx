@@ -1,4 +1,4 @@
-import { Form, Layout, Spin, Typography } from 'antd';
+import { Form, Layout, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { MdMail } from 'react-icons/md';
@@ -60,8 +60,8 @@ export const RecoveryPassword = () => {
               rules={UserFormValidationRules.email}
               prefix={<MdMail color="#808897" size={20} className="mr-1" />}
             />
-            <AuthSubmitButton disabled={isLoading}>
-              {isLoading ? <Spin size="small" /> : 'Сбросить пароль'}
+            <AuthSubmitButton disabled={isLoading} loading={isLoading}>
+              Сбросить пароль
             </AuthSubmitButton>
             <AuthTextLink linkText="На страницу входа" linkTo={ROUTES.LOGIN} />
           </Form>

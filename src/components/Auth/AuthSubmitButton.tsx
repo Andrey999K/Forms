@@ -1,13 +1,13 @@
 import { Button, Form } from 'antd';
 import { ReactNode } from 'react';
 
-export const AuthSubmitButton = ({
-  children,
-  disabled,
-}: {
+type Props = {
   children: ReactNode;
   disabled?: boolean;
-}) => {
+  loading?: boolean;
+};
+
+export const AuthSubmitButton = ({ children, disabled, loading }: Props) => {
   return (
     <Form.Item className="mb-2">
       <Button
@@ -19,6 +19,7 @@ export const AuthSubmitButton = ({
           borderRadius: '0.5rem',
         }}
         disabled={disabled}
+        loading={loading}
         type="primary"
       >
         {children}

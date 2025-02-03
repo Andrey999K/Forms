@@ -48,7 +48,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
         {user && (
           <header className="sticky top-0 z-50">
             <GlassWrapper className="relative py-5 flex m-auto items-center justify-center border-b-[1px] border-solid border-gray-200 ">
-              <div className="flex justify-between items-center gap-5 px-8 w-full max-w-screen-lg">
+              <div className="flex justify-between items-center gap-5 px-4 w-full max-w-screen-lg">
                 {/* //logo */}
                 <NavLink to={ROUTES.HOME}>
                   <div className="absolute top-1.5 text-[35px] font-bold text-[#f97316] font-quicksand">
@@ -125,7 +125,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
                         }}
                         className="hover:text-orange-500 text-gray-700 transition-colors"
                       >
-                        Выход
+                        Выйти из приложения
                       </button>
                     </li>
                   </ul>
