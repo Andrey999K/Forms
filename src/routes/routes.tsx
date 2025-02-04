@@ -5,6 +5,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { ErrorComponent } from '@/components/ui/ErrorComponent/ErrorComponent';
 import { PageLayout } from '@/layouts/PageLayout';
 import { Loader } from '@/components/ui/Loader';
+import { FallbackLoader } from '@/components/FallbackLoader';
 
 const Home = lazy(() => import('@/pages/home/Page').then((module) => ({ default: module.Home })));
 const Me = lazy(() => import('@/pages/me/Page').then((module) => ({ default: module.Me })));
@@ -43,7 +44,7 @@ export const AppRouter = () => {
     {
       errorElement: <ErrorComponent />,
       element: (
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={<FallbackLoader />}>
           <ProtectedRoute>
             <PageLayout />
           </ProtectedRoute>
@@ -62,7 +63,7 @@ export const AppRouter = () => {
     {
       errorElement: <ErrorComponent />,
       element: (
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={<FallbackLoader />}>
           <ProtectedRoute inverted>
             <Outlet />
           </ProtectedRoute>
