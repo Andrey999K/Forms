@@ -1,16 +1,15 @@
-import { Form, Layout, Typography } from 'antd';
+import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
+import { AuthTextLink } from '@/components/Auth/AuthTextLink';
+import { UserFormInput } from '@/components/Auth/UserFormInput';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import { useResetPasswordMutation } from '@/redux/auth';
+import { EmailValue } from '@/types/auth';
+import { ROUTES } from '@/utils/routesConfig';
+import { UserFormValidationRules } from '@/utils/validation';
+import { Form, Layout, notification, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { MdMail } from 'react-icons/md';
-import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
-import { UserFormValidationRules } from '@/utils/validation';
-import { UserFormInput } from '@/components/Auth/UserFormInput';
-import { EmailValue } from '@/types/auth';
-import { useResetPasswordMutation } from '@/redux/auth';
-import { toast } from 'react-toastify';
-import { AuthTextLink } from '@/components/Auth/AuthTextLink';
-import { ROUTES } from '@/utils/routesConfig';
-import { usePageTitle } from '@/hooks/usePageTitle';
 
 export const RecoveryPassword = () => {
   const { control, handleSubmit, reset } = useForm<EmailValue>({
@@ -21,7 +20,7 @@ export const RecoveryPassword = () => {
   const onSubmit: SubmitHandler<EmailValue> = async ({ email }) => {
     try {
       await resetPassword(email).unwrap();
-      toast.success('Письмо для сброса пароля отправлено на указанный email');
+      notification.success({ message: 'Письмо для сброса пароля отправлено на указанный email' });
       reset();
     } catch (error) {
       console.error('Ошибка сброса пароля:', error);
