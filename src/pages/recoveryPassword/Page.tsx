@@ -20,10 +20,7 @@ export const RecoveryPassword = () => {
   const onSubmit: SubmitHandler<EmailValue> = async ({ email }) => {
     try {
       await resetPassword(email).unwrap();
-      notification.success({
-        message: 'Успешно',
-        description: 'Письмо для сброса пароля отправлено на указанный email',
-      });
+      notification.success({ message: 'Письмо для сброса пароля отправлено на указанный email' });
       reset();
     } catch (error) {
       console.error('Ошибка сброса пароля:', error);

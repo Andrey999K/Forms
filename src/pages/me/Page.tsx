@@ -75,7 +75,7 @@ export const Me = () => {
           data: updatedData,
         }).unwrap();
 
-        notification.success({ message: 'Успешно', description: 'Данные обновлены' });
+        notification.success({ message: 'Данные успешно обновлены' });
         setAvatar(null);
         setAlertVisible(false);
         setEdit(false);

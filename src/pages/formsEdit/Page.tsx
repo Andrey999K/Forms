@@ -149,10 +149,7 @@ export const FormsEdit: FC = () => {
             : new Date().getTime(),
         };
         dispatch(updateLocalForm(updConstructor));
-        notification.success({
-          message: 'Успешно',
-          description: 'Форма обновлена.',
-        });
+        notification.success({ message: 'Форма успешно обновлена' });
       } else {
         await createForm(constructor).unwrap();
         const newConstructor = {
@@ -162,10 +159,7 @@ export const FormsEdit: FC = () => {
           updatedAt: new Date().getTime(),
         };
         dispatch(createLocalForm(newConstructor));
-        notification.success({
-          message: 'Успешно',
-          description: 'Форма сохранена',
-        });
+        notification.success({ message: 'Форма успешно сохранена' });
       }
     } catch (error) {
       console.log('Error', error);
@@ -178,17 +172,12 @@ export const FormsEdit: FC = () => {
       if (formId) {
         await deleteForm(formId).unwrap();
         dispatch(deleteLocalForm(formId));
-        notification.info({
-          message: 'Успешно',
-          description: 'Форма удалена',
-        });
+        notification.info({ message: 'Форма успешно удалена' });
         navigate('/');
       }
     } catch (error) {
       console.log('Error', error);
-      notification.error({
-        message: 'Ошибка',
-      });
+      notification.error({ message: 'Ошибка' });
     }
   };
 
