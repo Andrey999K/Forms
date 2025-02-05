@@ -34,7 +34,18 @@ export const userApi = createApi({
       },
       invalidatesTags: ['me'],
     }),
+    sendVerificationEmail: builder.mutation<{ success: boolean; message: string }, void>({
+      queryFn: async () => {
+        try {
+          const response = await firestoreService.sendVerificationEmail();
+          return { data: response };
+        } catch (error) {
+          return { error: getFirebaseError(error) };
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetMeInfoQuery, useUpdateMeInfoMutation } = userApi;
+export const { useGetMeInfoQuery, useUpdateMeInfoMutation, useSendVerificationEmailMutation } =
+  userApi;

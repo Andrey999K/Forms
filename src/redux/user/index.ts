@@ -10,4 +10,5 @@ export const userQueryReducer = userApi.reducer;
 export const userReducerPath = userApi.reducerPath;
 export const userMiddleware = userApi.middleware;
 
-export const { useGetMeInfoQuery, useUpdateMeInfoMutation } = userApi;
+export const { useGetMeInfoQuery, useUpdateMeInfoMutation, useSendVerificationEmailMutation } =
+  userApi;

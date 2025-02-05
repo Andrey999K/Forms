@@ -2,33 +2,47 @@ import { MeAvatar, MeProfileActions, MeProfileDetails } from '@/components/Me';
 import { Loader } from '@/components/ui/Loader';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { RootState } from '@/redux/store';
 import { useGetMeInfoQuery, useUpdateMeInfoMutation } from '@/redux/user';
 import { uploadToCloudinary } from '@/services/cloudinary.service';
 import { MeChangeFields } from '@/types/me';
 import { Alert, Form, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 
 export const Me = () => {
   const [isEdit, setEdit] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
   const [isAlertVisible, setAlertVisible] = useState<boolean>(true);
-  const [userUid, setUserUid] = useState(localStorage.getItem('user'));
 
-  useEffect(() => {
-    const storedUid = localStorage.getItem('user');
-    if (storedUid) setUserUid(storedUid);
-  }, []);
+  const user = useSelector((state: RootState) => state.user.user);
+  const uid = user?.uid;
+
+  console.log('####: uid', uid);
 
   const {
-    data: user,
+    data: userData,
     error,
     isLoading,
-  } = useGetMeInfoQuery(userUid || '', {
-    skip: !userUid,
+  } = useGetMeInfoQuery(uid || '', {
+    skip: !uid,
   });
 
+  console.log('####: ', userData);
+
   const [updateUserInfo, { isLoading: isUpdating }] = useUpdateMeInfoMutation();
+
+  // const [sendVerificationEmail, { isVerifyLoading }] = useSendVerificationEmailMutation();
+
+  // const handleSendVerification = async () => {
+  //   try {
+  //     const response = await sendVerificationEmail().unwrap();
+  //     notification.success({ message: response.message });
+  //   } catch (error) {
+  //     notification.error({ message: 'Не удалось отправить письмо. Попробуйте позже.' });
+  //   }
+  // };
 
   const {
     control,
@@ -41,26 +55,26 @@ export const Me = () => {
   });
 
   useEffect(() => {
-    if (user) {
+    if (userData) {
       reset({
-        firstName: user?.firstName || '',
-        lastName: user?.lastName || '',
-        email: user?.email || '',
+        firstName: userData?.firstName || '',
+        lastName: userData?.lastName || '',
+        email: userData?.email || '',
       });
     }
-  }, [user]);
+  }, [userData, reset]);
 
   useEffect(() => {
     if (avatar) {
       setValue('avatarUrl', 'uploaded', { shouldDirty: true });
     }
-  }, [avatar]);
+  }, [avatar, setValue]);
 
   const onSubmit = async (data: MeChangeFields) => {
     if (JSON.stringify(dirtyFields) === '{}') return;
-    if (userUid) {
+    if (uid) {
       try {
-        let avatarUrl = user?.avatarUrl || '';
+        let avatarUrl = userData?.avatarUrl || '';
 
         if (avatar) {
           avatarUrl = await uploadToCloudinary(avatar);
@@ -71,7 +85,7 @@ export const Me = () => {
           updatedData.avatarUrl = avatarUrl;
         }
         await updateUserInfo({
-          id: userUid,
+          id: uid,
           data: updatedData,
         }).unwrap();
 
@@ -88,7 +102,7 @@ export const Me = () => {
 
   usePageTitle('Профиль');
 
-  if (!user || isLoading || isUpdating) return <Loader />;
+  if (!userData || isLoading || isUpdating) return <Loader />;
 
   return (
     <div className="flex relative justify-center p-4 break-words w-full">
@@ -112,7 +126,7 @@ export const Me = () => {
             showIcon
           />
         ) : (
-          <div className="">
+          <div>
             <Form
               onFinish={handleSubmit(onSubmit)}
               className="w-full flex flex-col gap-4 text-center"
@@ -126,7 +140,7 @@ export const Me = () => {
                 avatar={avatar}
               />
               <MeAvatar
-                currentAvatarUrl={user.avatarUrl}
+                currentAvatarUrl={userData.avatarUrl}
                 isLoading={isLoading}
                 isEdit={isEdit}
                 setAvatar={setAvatar}
@@ -136,11 +150,23 @@ export const Me = () => {
                 isEditing={isEdit}
                 control={control}
                 reset={reset}
-                user={user}
+                user={userData}
                 setEdit={setEdit}
                 setAvatar={setAvatar}
               />
             </Form>
+            {/* {user && !user.emailVerified && (
+              <Button
+                style={{
+                  marginTop: '20px',
+                }}
+                type="primary"
+                onClick={handleSendVerification}
+                loading={isLoading}
+              >
+                Пройти верификацию почты
+              </Button>
+            )} */}
           </div>
         )}
       </GlassWrapper>

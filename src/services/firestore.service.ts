@@ -20,6 +20,8 @@ import {
 } from 'firebase/firestore';
 import {
   createUserWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
@@ -163,7 +165,7 @@ export const firestoreService = {
       [key: string]: unknown;
     }
   ): Promise<object> => {
-    const { id, avatarUrl, ...updateData } = payload;
+    const { id, email, avatarUrl, ...updateData } = payload;
     delete updateData?.['userId'];
     delete updateData?.['createdAt'];
 
@@ -180,6 +182,19 @@ export const firestoreService = {
         updatedFields.avatarUrl = avatarUrl;
       }
 
+      // if (email && auth.currentUser) {
+      //   console.log('####: check!');
+      //   await updateEmail(auth.currentUser, email as string);
+      //   updatedFields.email = email;
+      // }
+      const signInMethods = await fetchSignInMethodsForEmail(auth, email as string);
+
+      if (email && auth.currentUser) {
+        if (signInMethods.length > 0) {
+          throw new Error('Этот email уже зарегистрирован. Выберите другой.');
+        }
+      }
+
       await updateDoc(docRef, updatedFields as Partial<DocumentData>);
 
       return { id, ...updatedFields };
@@ -192,6 +207,13 @@ export const firestoreService = {
     const docRef = doc(db, collectionName, id);
     await deleteDoc(docRef);
     return true;
+  },
+
+  async sendVerificationEmail() {
+    if (!auth.currentUser) throw new Error('Пользователь не найден');
+
+    await sendEmailVerification(auth.currentUser);
+    return { success: true, message: 'Письмо для подтверждения отправлено. Проверьте почту.' };
   },
 
   login: async (email: string, password: string): Promise<object> => {
@@ -209,16 +231,15 @@ export const firestoreService = {
   ): Promise<object> => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-    const defaultAvatar = `https://res.cloudinary.com/dgl60edaq/image/upload/v1738281588/jmkt7m2spadfz9aoqmyi.jpg`;
-
     const user = userCredential.user;
+
     const docRef = doc(db, collectionName, user.uid);
     await setDoc(docRef, {
       uid: user.uid,
       firstName: name,
       lastName: surname,
-      email,
-      avatarUrl: defaultAvatar,
+      email: user.email,
+      avatarUrl: `https://res.cloudinary.com/dgl60edaq/image/upload/v1738281588/jmkt7m2spadfz9aoqmyi.jpg`,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });

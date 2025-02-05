@@ -70,6 +70,7 @@ export const Home = () => {
     (state) => state.formSlice.status
   );
   const user = useSelector((state: RootState) => state.user.user);
+  console.log('####: ', user);
   const savedOrder = useSelector((state: RootState) => state.formSlice.order);
   const savedSearch = useSelector((state: RootState) => state.formSlice.search);
   const formsList = useSelector((state: RootState) => state.formSlice.data);
@@ -156,7 +157,7 @@ export const Home = () => {
 
   return (
     <div data-testid="home-page">
-      <Flex justify="space-between" gap={12} vertical className="mb-4 sm:flex-row sm:mb-8">
+      <Flex justify="space-between" gap={12} vertical className="mb-48 sm:flex-row sm:mb-8">
         <Search defaultValue={search} onSearch={onSearch} className="w-full sm:w-[300px]" />
         <Select
           value={order}
