@@ -9,7 +9,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { incrementResponseCount, useGetFormQuery } from '@/redux/form';
 import { useCreateResponseMutation } from '@/redux/response';
 import { AppDispatch } from '@/redux/store';
-import { Form, notification, Typography } from 'antd';
+import { Flex, Form, notification, Tag, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -119,6 +119,13 @@ export const FormPage = () => {
                 <Typography.Text className="text-sm line-clamp-3">
                   {formData.description}
                 </Typography.Text>
+                <Flex>
+                  {formData.tags.map((tag) => (
+                    <Tag key={tag.id} color={tag.color}>
+                      {tag.label}
+                    </Tag>
+                  ))}
+                </Flex>
               </div>
             </div>
             <FillingForm form={form} onSend={sendForm} isLoading={isLoadingCreateResponse} />

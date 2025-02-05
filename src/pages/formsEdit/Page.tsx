@@ -86,8 +86,6 @@ export const FormsEdit: FC = () => {
 
       const newFields = fields.map((field) => {
         if (field.id === id) {
-          console.log(updates, updates.question, field.question);
-
           if (updates.question) updateFieldErrors(id, 'delete');
           if (field.options) {
             field.options.forEach((option) => updateFieldErrors(option.id, 'delete'));
