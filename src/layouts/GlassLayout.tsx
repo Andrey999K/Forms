@@ -224,7 +224,7 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
   }, [startGeneratingCircles]);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen dark:bg-[#051923]">
       <div className="absolute inset-0 overflow-hidden -z-[99]">
         {circles.map((circle) => (
           <div

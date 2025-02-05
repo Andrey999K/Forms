@@ -9,9 +9,13 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store.ts';
 import { FiLogOut } from 'react-icons/fi';
 import { FaTimes, FaBars } from 'react-icons/fa';
+// import { toggleTheme } from '@/redux/theme';
+import { ThemeToggle } from '@/components/ui/ThemeToggle/index.tsx';
 
 export const PageLayout = ({ children }: { children?: ReactNode }) => {
   const [navOpen, setNavOpen] = useState(false);
+  // const dispatch = useDispatch();
+  // const theme = useSelector((state: RootState) => state.theme.theme);
 
   const [logout] = useLogoutMutation();
   const location = useLocation();
@@ -55,6 +59,9 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
                     Forms
                   </div>
                 </NavLink>
+                {/* <div className="hidden md:block">
+                  <ThemeToggle />
+                </div> */}
 
                 {/*// menu */}
                 <ul className="hidden md:flex items-center gap-8">
@@ -69,7 +76,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
                               location.pathname.startsWith('/forms') &&
                               location.pathname.endsWith('/edit'))
                               ? 'text-orange-500'
-                              : 'text-gray-700'
+                              : 'text-gray-700 dark:text-gray-300'
                           }`
                         }
                         end
@@ -78,10 +85,16 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
                       </NavLink>
                     </li>
                   ))}
+
+                  <li>
+                    <div className="hidden md:block hover:text-orange-500 dark:text-gray-300 text-gray-700">
+                      <ThemeToggle />
+                    </div>
+                  </li>
                   <li>
                     <button
                       onClick={handleExit}
-                      className="hover:text-orange-500 text-gray-700 transition-colors"
+                      className="hover:text-orange-500 dark:text-gray-300 text-gray-700 flex items-center transition-colors"
                     >
                       <FiLogOut size={20} />
                     </button>

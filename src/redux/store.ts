@@ -17,6 +17,7 @@ import {
 } from './response';
 import { authReducerPath, authReducer, authMiddleware } from './auth';
 import { userReducer, userQueryReducer, userReducerPath, userMiddleware } from './user';
+import { themeReducer } from './theme';
 
 const rootReducer = combineReducers({
   [formReducerPath]: formReducer,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   [responseSliceReducerPath]: responseSliceReducer,
   [formsSliceReducerPath]: formsSliceReducer,
   user: userReducer,
+  theme: themeReducer,
 });
 
 export const store = configureStore({
