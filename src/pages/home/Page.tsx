@@ -14,6 +14,7 @@ import { HomeList } from '@/components/Home/HomeList/HomeList';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { FormListOptions, Sort } from '@/types';
 import { ROUTES } from '@/utils/routesConfig';
+import { debounce } from '@/utils/debounce';
 
 const { Search } = Input;
 
@@ -102,10 +103,10 @@ export const Home = () => {
     }
   };
 
-  const onSearch = (value: string) => {
+  const onSearch = debounce((value: string) => {
     dispatch(resetStore());
     setSearch(value);
-  };
+  }, 300);
 
   const onChangeSort = (value: SortKeys) => {
     dispatch(resetStore());
