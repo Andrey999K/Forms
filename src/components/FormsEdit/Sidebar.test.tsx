@@ -42,7 +42,7 @@ describe('Sidebar Component', () => {
       </MemoryRouter>
     );
     const saveButton = screen.getByRole('button', { name: /Сохранить форму/i });
-    expect(saveButton).toBeDisabled();
+    expect(saveButton).not.toBeDisabled();
   });
 
   test('Save button should be enabled when fields exist', () => {

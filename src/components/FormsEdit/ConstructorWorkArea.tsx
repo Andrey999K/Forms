@@ -1,16 +1,16 @@
 import { ConstructorField, ConstructorForm, FieldType } from '@/types';
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { getUUID } from '@/utils/getUUID';
+import { ExclamationCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Dropdown, MenuProps } from 'antd';
 import { FC, Fragment, useEffect, useRef, useState } from 'react';
 import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 import { ConstructorDraggableField } from './ConstructorDraggableField';
 import { ConstructorDropZone } from './ConstructorDropZone';
 import { useConstructorItems } from './useConstructorItems';
-import { getUUID } from '@/utils/getUUID';
 
 type Props = {
   constructor: ConstructorForm;
-  onError: (id: string, updates: boolean) => void;
+  errors: { [key: string]: string[] };
   onDropField: (type: FieldType, index?: number, newId?: string) => void;
   onMoveField: (dragIndex: number, hoverIndex: number) => void;
   onRemoveField: (id: string) => void;
@@ -26,7 +26,7 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
     onRemoveField,
     onUpdateField,
     onCopyField,
-    onError,
+    errors,
   } = props;
   const workspaceRef = useRef<HTMLDivElement>(null);
   const [copyFieldsId, setCopyFieldId] = useState<string | null>(null);
@@ -92,14 +92,22 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
   return (
     <GlassWrapper
       ref={workspaceRef}
-      className="flex flex-col border border-dashed rounded-2xl border-primary px-4"
+      className="flex flex-col border border-dashed rounded-2xl border-colorPrimary px-4"
+      style={errors['fields'] ? { border: '1px solid red' } : {}}
     >
       {constructor.fields.length === 0 ? (
         <ConstructorDropZone
           onDropField={(type) => onDropField(type, 0)}
-          className="!min-h-64"
           index={0}
-        />
+          className="h-full flex items-center justify-center min-h-64"
+        >
+          {errors['fields'] && (
+            <div className="flex gap-2">
+              <ExclamationCircleOutlined className="text-red-500" />
+              <span className="text-red-500 opacity-50">{errors['fields']}</span>
+            </div>
+          )}
+        </ConstructorDropZone>
       ) : (
         <>
           <ConstructorDropZone onDropField={(type) => onDropField(type, 0)} index={0} />
@@ -108,7 +116,7 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
               <ConstructorDraggableField
                 field={field}
                 index={index}
-                onError={onError}
+                errors={errors}
                 onMoveField={onMoveField}
                 onRemoveField={onRemoveField}
                 onUpdateField={onUpdateField}

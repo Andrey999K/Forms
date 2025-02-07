@@ -1,9 +1,9 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { validateAuthError } from '@/utils/errors/validateAuthError';
-import { toast } from 'react-toastify';
-import { FirebaseError } from 'firebase/app';
 import { firestoreService } from '@/services/firestore.service';
 import { AuthUser, SignInFormValues, SignUpFormValues } from '@/types/auth';
+import { validateAuthError } from '@/utils/errors/validateAuthError';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { notification } from 'antd';
+import { FirebaseError } from 'firebase/app';
 const COLLECTION = 'users';
 
 export const authApi = createApi({
@@ -20,10 +20,10 @@ export const authApi = createApi({
         } catch (error: unknown) {
           const firebaseError = error as FirebaseError;
           const validatedError = validateAuthError(firebaseError.message);
-          toast.error(
-            (validatedError.data as string) ||
-              'Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже.'
-          );
+          notification.error({
+            message: 'Ошибка',
+            description: (validatedError.data as string) || 'Пожалуйста, попробуйте позже.',
+          });
           return { error: validatedError };
         }
       },
@@ -44,10 +44,10 @@ export const authApi = createApi({
         } catch (error: unknown) {
           const firebaseError = error as FirebaseError;
           const validatedError = validateAuthError(firebaseError.message);
-          toast.error(
-            (validatedError.data as string) ||
-              'Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже.'
-          );
+          notification.error({
+            message: 'Ошибка',
+            description: (validatedError.data as string) || 'Пожалуйста, попробуйте позже.',
+          });
           return { error: validatedError };
         }
       },
@@ -73,9 +73,10 @@ export const authApi = createApi({
         } catch (error) {
           const firebaseError = error as FirebaseError;
           const validatedError = validateAuthError(firebaseError.message);
-          toast.error(
-            (validatedError.data as string) || 'Произошла ошибка. Пожалуйста, попробуйте позже.'
-          );
+          notification.error({
+            message: 'Ошибка',
+            description: (validatedError.data as string) || 'Пожалуйста, попробуйте позже.',
+          });
           return { error: validatedError };
         }
       },

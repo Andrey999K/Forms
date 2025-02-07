@@ -8,7 +8,7 @@ import { RadioEditor } from './RadioEditor';
 type Props = {
   field: ConstructorField;
   index: number;
-  onError: (id: string, updates: boolean) => void;
+  errors: { [key: string]: string[] };
   onMoveField: (dragIndex: number, hoverIndex: number) => void;
   onRemoveField: (id: string) => void;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
@@ -29,7 +29,7 @@ export const ConstructorDraggableField = memo((props: Props) => {
     onUpdateField,
     isOutsideWorkspace,
     onCopyField,
-    onError,
+    errors,
     copyFieldsId,
     copiedFields,
     sourceFieldId,
@@ -110,7 +110,7 @@ export const ConstructorDraggableField = memo((props: Props) => {
     field,
     onUpdateField,
     onRemoveField: handleDelete,
-    onError,
+    errors,
     onCopyField,
     index,
   };
@@ -125,7 +125,7 @@ export const ConstructorDraggableField = memo((props: Props) => {
       }
       case FieldTypes.RADIO:
       case FieldTypes.CHECKBOX: {
-        return <RadioEditor field={field} onUpdateField={onUpdateField} onError={onError} />;
+        return <RadioEditor field={field} onUpdateField={onUpdateField} errors={errors} />;
       }
       default:
         return null;

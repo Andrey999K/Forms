@@ -95,7 +95,7 @@ export const Sidebar: FC<Props> = (props) => {
             className="w-full"
             icon={<SaveOutlined />}
             loading={isUpdating || isCreating}
-            disabled={constructor.fields.length === 0 || isDeleting || isError}
+            disabled={isDeleting || isError}
             onClick={onSaveConstructor}
           >
             {'updatedAt' in constructor && constructor?.updatedAt

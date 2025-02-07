@@ -2,19 +2,18 @@ import { ConstructorField, FieldTypes } from '@/types';
 import { getUUID } from '@/utils/getUUID';
 import { ExclamationCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Input, InputRef, Radio, Select, Tooltip } from 'antd';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 
 type Props = {
   field: ConstructorField;
   onUpdateField: (id: string, updates: Partial<ConstructorField>) => void;
-  onError: (id: string, updates: boolean) => void;
+  errors: { [key: string]: string | string[] };
 };
 
 export const RadioEditor: FC<Props> = (props) => {
-  const { field, onUpdateField, onError } = props;
+  const { field, onUpdateField, errors } = props;
   const options = field.options || [];
   const [newInputId, setNewInputId] = useState<string | null>(null);
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [deleteId, setDeleteId] = useState('');
 
   const handleChangeType = (type: FieldTypes) => {
@@ -30,25 +29,11 @@ export const RadioEditor: FC<Props> = (props) => {
   const handleRemove = (id: string) => {
     const newOptions = options.filter((option) => option.id !== id);
     onUpdateField(field.id, { options: newOptions });
-    onError(id, false);
-  };
-
-  const getErrors = (id: string, label: string): Record<string, string> => {
-    if (label.trim() === '') {
-      onError(id, true);
-      return { ...errors, [id]: 'Поле не может быть пустым' };
-    } else {
-      const newErrors = { ...errors };
-      onError(id, false);
-      delete newErrors[id];
-      return newErrors;
-    }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newOptions = options.map((option) => {
       if (option.id === e.target.id) {
-        setErrors(getErrors(e.target.id, e.target.value));
         return { ...option, label: e.target.value };
       }
       return option;
@@ -63,10 +48,6 @@ export const RadioEditor: FC<Props> = (props) => {
     }
   };
 
-  const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
-    getErrors(e.target.id, e.target.value);
-  };
-
   const handleDelete = (id: string) => {
     setDeleteId(id);
     setTimeout(() => {
@@ -74,12 +55,6 @@ export const RadioEditor: FC<Props> = (props) => {
       setDeleteId('');
     }, 300);
   };
-
-  useEffect(() => {
-    options.forEach((option) => {
-      getErrors(option.id, option.label);
-    });
-  }, []);
 
   return (
     <>
@@ -95,7 +70,6 @@ export const RadioEditor: FC<Props> = (props) => {
             value={option.label}
             placeholder={`Вариант ${index + 1}`}
             onChange={handleChange}
-            onBlur={handleBlur}
             ref={handleRef}
             suffix={
               errors[option.id] ? (
