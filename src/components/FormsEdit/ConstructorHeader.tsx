@@ -23,8 +23,7 @@ export const ConstructorHeader: FC<Props> = (props) => {
         onError={onError}
         size="large"
       >
-        <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-colorPrimary rounded">
-          {/* <h1 className="text-lg font-medium">{constructor.title}</h1> */}
+        <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-primary rounded">
           <Typography.Title level={4} style={{ fontSize: '1.125rem', fontWeight: 500, margin: 0 }}>
             {constructor.title}
           </Typography.Title>
@@ -37,8 +36,7 @@ export const ConstructorHeader: FC<Props> = (props) => {
         onChange={onChangeForm}
         onError={onError}
       >
-        <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-colorPrimary rounded">
-          {/* <h2 className="text-sm text-gray-600">{constructor.description}</h2> */}
+        <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-primary rounded">
           <Typography.Text type="secondary" style={{ fontSize: '0.875rem' }}>
             {constructor.description}
           </Typography.Text>

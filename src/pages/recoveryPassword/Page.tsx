@@ -31,9 +31,9 @@ export const RecoveryPassword = () => {
   usePageTitle('Восстановление пароля');
 
   return (
-    <Layout className="min-h-screen auth-bg-gradient bg-cover bg-center overflow-hidden">
+    <Layout className="min-h-screen bg-gradientAuthBg overflow-hidden">
       <Content className="flex justify-center items-center min-h-screen overflow-y-auto px-8">
-        <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
+        <div className="bg-bgBase bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
           <div className="mb-6">
             <Typography.Title
               level={2}
@@ -58,7 +58,7 @@ export const RecoveryPassword = () => {
               name="email"
               placeholder="Email"
               rules={UserFormValidationRules.email}
-              prefix={<MdMail color="#808897" size={20} className="mr-1" />}
+              prefix={<MdMail size={20} className="mr-1" />}
             />
             <AuthSubmitButton disabled={isLoading} loading={isLoading}>
               Сбросить пароль

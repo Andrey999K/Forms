@@ -5,33 +5,40 @@ import { toastConfig } from './utils/toast.config.ts';
 import { ConfigProvider } from 'antd';
 import { RootState } from './redux/store.ts';
 import { useSelector } from 'react-redux';
-import { darkThemeConfig, lightThemeConfig } from './utils/themeConfig.ts';
-import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { Theme } from './redux/theme/ThemeSlice.ts';
 import { useEffect } from 'react';
+import { theme } from 'antd';
+import './App.css';
+
+const { defaultAlgorithm, darkAlgorithm } = theme;
 
 export const App = () => {
   useFirebaseAuth();
   const theme = useSelector((state: RootState) => state.theme.theme);
-  const antdTheme = theme === 'dark' ? darkThemeConfig : lightThemeConfig;
-
-  const rawSetTheme = (theme: Theme) => {
-    const root = window.document.documentElement;
-    const isDark = theme === 'dark';
-
-    root.classList.remove(isDark ? 'light' : 'dark');
-    root.classList.add(theme);
-  };
 
   useEffect(() => {
-    rawSetTheme(theme);
+    const root = document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
   }, [theme]);
 
   return (
     <>
       <ToastContainer {...toastConfig} />
-      <ConfigProvider theme={antdTheme}>
+      <ConfigProvider
+        theme={{
+          algorithm: theme === 'dark' ? darkAlgorithm : defaultAlgorithm,
+          cssVar: true,
+          token: {
+            colorPrimary: theme === 'dark' ? '#e9ecef' : '#fa9145',
+            colorTextBase: theme === 'dark' ? '#adb5bd' : '#885028',
+            colorBgBase: theme === 'dark' ? '#212529' : '#fdf8f4',
+            colorLinkActive: theme === 'dark' ? '#e9ecef' : '#fa9145',
+            colorLinkHover: theme === 'dark' ? '#dee2e6' : '#fa9145',
+            colorBorder: theme === 'dark' ? '#495057' : '#e9dac5',
+          },
+        }}
+      >
         <AppRouter />
       </ConfigProvider>
     </>

@@ -92,7 +92,7 @@ export const ConstructorWorkArea: FC<Props> = (props) => {
   return (
     <GlassWrapper
       ref={workspaceRef}
-      className="flex flex-col border border-dashed rounded-2xl border-orange-400 px-4"
+      className="flex flex-col border border-dashed rounded-2xl border-primary px-4"
     >
       {constructor.fields.length === 0 ? (
         <ConstructorDropZone

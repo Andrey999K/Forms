@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-primary: #fa9145;
+  --color-text: #885028;
+  --color-bg: #fdf8f4;
+  --color-link-active: #fa9145;
+  --color-link-hover: #fa9145;
+  --color-border: #e9dac5;
+
+  --color-bg-base: #f8f9fa;
+
+  --gradient-auth-bg: linear-gradient(to bottom, #fdf8f4, #e8b989, #a5673d);
+
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(138, 80, 40, 0.1);
+  --shadow-hover: 0 6px 12px rgba(250, 145, 69, 0.2), 0 2px 4px rgba(138, 80, 40, 0.15);
+}
+
+.dark {
+  --color-primary: #e9ecef;
+  --color-text: #adb5bd;
+  --color-bg: #212529;
+  --color-link-active: #e9ecef;
+  --color-link-hover: #e9ecef;
+  --color-border: #495057;
+
+  --color-bg-base: #2b3035;
+
+  --gradient-auth-bg: linear-gradient(to bottom, #111827, #374151, #b45309);
+
+  --shadow: 0 4px 6px rgba(255, 255, 255, 0.1), 0 1px 3px rgba(173, 181, 189, 0.1);
+  --shadow-hover: 0 6px 12px rgba(233, 236, 239, 0.2), 0 2px 4px rgba(173, 181, 189, 0.15);
+}
+
+html,
+body {
+  background-color: var(--color-bg-base);
+  transition: background-color 0.3s ease-in-out;
+}

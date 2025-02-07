@@ -3,13 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export type Theme = 'light' | 'dark';
 
 const getInitialTheme = (): Theme => {
-  if (typeof window !== 'undefined' && window.localStorage) {
+  if (typeof localStorage !== 'undefined') {
     const storedPrefs = localStorage.getItem('app-theme') as Theme | null;
     if (typeof storedPrefs === 'string') {
       return storedPrefs;
     }
 
-    const userMedia = window.matchMedia('(prefers-color-scheme: dark)');
+    const userMedia = matchMedia('(prefers-color-scheme: dark)');
     if (userMedia.matches) {
       return 'dark';
     }

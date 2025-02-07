@@ -107,10 +107,6 @@ html {
 /*  margin-bottom: 40px !important;*/
 /*}*/
 
-.auth-bg-gradient {
-  background: linear-gradient(to bottom, #9da9b3, #d4c6a9, #eea53a);
-}
-
 .font-quicksand {
   font-family: 'Quicksand', sans-serif;
 }

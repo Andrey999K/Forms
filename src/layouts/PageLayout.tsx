@@ -9,13 +9,25 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store.ts';
 import { FiLogOut } from 'react-icons/fi';
 import { FaTimes, FaBars } from 'react-icons/fa';
-// import { toggleTheme } from '@/redux/theme';
 import { ThemeToggle } from '@/components/ui/ThemeToggle/index.tsx';
+
+const pages = [
+  {
+    title: 'Главная',
+    href: ROUTES.HOME,
+  },
+  {
+    title: 'Новая форма',
+    href: ROUTES.FORMS_NEW,
+  },
+  {
+    title: 'Профиль',
+    href: ROUTES.ME,
+  },
+];
 
 export const PageLayout = ({ children }: { children?: ReactNode }) => {
   const [navOpen, setNavOpen] = useState(false);
-  // const dispatch = useDispatch();
-  // const theme = useSelector((state: RootState) => state.theme.theme);
 
   const [logout] = useLogoutMutation();
   const location = useLocation();
@@ -31,124 +43,104 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
 
   const toggleNav = () => setNavOpen((prev) => !prev);
 
-  const pages = [
-    {
-      title: 'Главная',
-      href: ROUTES.HOME,
-    },
-    {
-      title: 'Новая форма',
-      href: ROUTES.FORMS_NEW,
-    },
-    {
-      title: 'Профиль',
-      href: ROUTES.ME,
-    },
-  ];
+  const navLinkClass = (href: string, isActive: boolean) => {
+    const { pathname } = location;
+    return `hover:text-linkHover transition-colors ${
+      isActive ||
+      (href === ROUTES.FORMS_NEW && pathname.startsWith('/forms') && pathname.endsWith('/edit'))
+        ? 'text-primary'
+        : 'text-textPrimary'
+    }`;
+  };
 
   return (
-    <>
-      <ShapeWrapper>
-        {user && (
-          <header className="sticky top-0 z-50">
-            <GlassWrapper className="relative py-5 flex m-auto items-center justify-center border-b-[1px] border-solid border-gray-200 ">
-              <div className="flex justify-between items-center gap-5 px-4 w-full max-w-screen-lg">
-                {/* //logo */}
-                <NavLink to={ROUTES.HOME}>
-                  <div className="absolute top-1.5 text-[35px] font-bold text-[#f97316] font-quicksand">
-                    Forms
-                  </div>
-                </NavLink>
-                {/* <div className="hidden md:block">
-                  <ThemeToggle />
-                </div> */}
+    <ShapeWrapper>
+      {user && (
+        <header className="sticky top-0 z-50">
+          <GlassWrapper className="relative py-5 flex m-auto items-center justify-center border-b-[1px] border-solid">
+            <div className="flex justify-between items-center gap-5 px-4 w-full max-w-screen-lg">
+              {/* //logo */}
+              <NavLink to={ROUTES.HOME}>
+                <div className="absolute top-1.5 text-[35px] font-bold text-primary dark:text-dark-primary font-quicksand">
+                  Forms
+                </div>
+              </NavLink>
 
-                {/*// menu */}
-                <ul className="hidden md:flex items-center gap-8">
+              {/*// dekstop menu */}
+              <ul className="hidden md:flex items-center gap-8">
+                {pages.map((page) => (
+                  <li key={page.href}>
+                    <NavLink
+                      to={page.href}
+                      className={({ isActive }) => navLinkClass(page.href, isActive)}
+                      end
+                    >
+                      {page.title}
+                    </NavLink>
+                  </li>
+                ))}
+
+                <li>
+                  <div className="hidden md:block">
+                    <ThemeToggle />
+                  </div>
+                </li>
+                <li>
+                  <div
+                    onClick={handleExit}
+                    className="text-textPrimary hover:text-linkHover flex items-center transition-colors cursor-pointer"
+                  >
+                    <FiLogOut size={20} />
+                  </div>
+                </li>
+              </ul>
+
+              {/* //humburger */}
+              <div
+                className="md:hidden z-10 text-textPrimary hover:text-linkHover cursor-pointer"
+                onClick={toggleNav}
+              >
+                {navOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+              </div>
+
+              {/* //mobile menu */}
+              {navOpen && (
+                <ul className="absolute top-0 left-0 w-full h-screen bg-bgBase flex flex-col justify-center items-center md:hidden">
                   {pages.map((page) => (
-                    <li key={page.href}>
+                    <li key={page.href} className="py-6 text-2xl">
                       <NavLink
+                        onClick={toggleNav}
                         to={page.href}
-                        className={({ isActive }) =>
-                          `hover:text-orange-500 transition-colors ${
-                            isActive ||
-                            (page.href === ROUTES.FORMS_NEW &&
-                              location.pathname.startsWith('/forms') &&
-                              location.pathname.endsWith('/edit'))
-                              ? 'text-orange-500'
-                              : 'text-gray-700 dark:text-gray-300'
-                          }`
-                        }
+                        className={({ isActive }) => navLinkClass(page.href, isActive)}
                         end
                       >
                         {page.title}
                       </NavLink>
                     </li>
                   ))}
-
-                  <li>
-                    <div className="hidden md:block hover:text-orange-500 dark:text-gray-300 text-gray-700">
+                  <li className="py-6 text-2xl">
+                    <div>
                       <ThemeToggle />
                     </div>
                   </li>
-                  <li>
+                  <li className="py-6 text-2xl">
                     <button
-                      onClick={handleExit}
-                      className="hover:text-orange-500 dark:text-gray-300 text-gray-700 flex items-center transition-colors"
+                      onClick={() => {
+                        toggleNav();
+                        handleExit();
+                      }}
+                      className="text-textPrimary hover:text-linkHover transition-colors"
                     >
-                      <FiLogOut size={20} />
+                      Выйти из приложения
                     </button>
                   </li>
                 </ul>
-
-                {/* //humburger */}
-                <div className="md:hidden z-10 cursor-pointer" onClick={toggleNav}>
-                  {navOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
-                </div>
-
-                {/* //mobile menu */}
-                {navOpen && (
-                  <ul className="absolute top-0 left-0 w-full h-screen bg-white flex flex-col justify-center items-center md:hidden">
-                    {pages.map((page) => (
-                      <li key={page.href} className="py-6 text-2xl">
-                        <NavLink
-                          onClick={toggleNav}
-                          to={page.href}
-                          className={({ isActive }) =>
-                            `hover:text-orange-500 transition-colors ${
-                              isActive ||
-                              (page.href === ROUTES.FORMS_NEW &&
-                                location.pathname.startsWith('/forms') &&
-                                location.pathname.endsWith('/edit'))
-                                ? 'text-orange-500'
-                                : 'text-gray-700'
-                            }`
-                          }
-                          end
-                        >
-                          {page.title}
-                        </NavLink>
-                      </li>
-                    ))}
-                    <li className="py-6 text-2xl">
-                      <button
-                        onClick={() => {
-                          toggleNav();
-                          handleExit();
-                        }}
-                        className="hover:text-orange-500 text-gray-700 transition-colors"
-                      >
-                        Выйти из приложения
-                      </button>
-                    </li>
-                  </ul>
-                )}
-              </div>
-            </GlassWrapper>
-          </header>
-        )}
-        <div className="mt-5 w-full max-w-screen-lg m-auto px-4">{children || <Outlet />}</div>
-      </ShapeWrapper>
-    </>
+              )}
+            </div>
+          </GlassWrapper>
+        </header>
+      )}
+      <div className="mt-5 w-full max-w-screen-lg m-auto px-4">{children || <Outlet />}</div>
+    </ShapeWrapper>
   );
 };

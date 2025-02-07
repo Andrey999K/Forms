@@ -7,10 +7,21 @@ module.exports = {
       fontFamily: {
         caveat: ['Caveat', 'cursive'],
       },
+      boxShadow: {
+        custom: 'var(--shadow)',
+        'custom-hover': 'var(--shadow-hover)',
+      },
       colors: {
-        colorPrimary: '#fa9145',
-        colorTextBase: '#885028',
-        colorBgBase: '#fdf8f4',
+        primary: 'var(--color-primary)',
+        textPrimary: 'var(--color-text)',
+        bgPrimary: 'var(--color-bg)',
+        linkActive: 'var(--color-link-active)',
+        linkHover: 'var(--color-link-hover)',
+        border: 'var(--color-border)',
+        bgBase: 'var(--color-bg-base)',
+      },
+      backgroundImage: {
+        gradientAuthBg: 'var(--gradient-auth-bg)',
       },
       spacing: {
         'page-layout-offset': '93px',

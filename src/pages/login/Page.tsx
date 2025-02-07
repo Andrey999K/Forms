@@ -44,13 +44,13 @@ export const Login = () => {
   usePageTitle('Авторизация');
 
   return (
-    <Layout className="min-h-screen auth-bg-gradient overflow-hidden">
+    <Layout className="min-h-screen bg-gradientAuthBg overflow-hidden">
       <Content className="flex justify-center items-center min-h-screen overflow-y-auto px-8">
-        <div className="bg-white dark:bg-slate-800 bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
+        <div className="bg-bgBase bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
           <div className="mb-6">
             <div className="flex justify-center mb-2">
-              <div className="w-14 h-14 flex items-center justify-center bg-[#EEF5F8] rounded-2xl shadow-lg">
-                <FiLogIn size={30} color="#808897" />
+              <div className="w-14 h-14 flex items-center justify-center bg-bgPrimary rounded-2xl shadow-lg">
+                <FiLogIn size={30} />
               </div>
             </div>
             <Typography.Title
@@ -76,7 +76,7 @@ export const Login = () => {
               name="email"
               placeholder="Email"
               rules={UserFormValidationRules.email}
-              prefix={<MdMail color="#808897" size={20} className="mr-1" />}
+              prefix={<MdMail size={20} className="mr-1" />}
             />
             <UserFormInput
               control={control}
@@ -84,7 +84,7 @@ export const Login = () => {
               type={showPassword ? 'text' : 'password'}
               placeholder="Пароль"
               rules={UserFormValidationRules.password}
-              prefix={<RiLockFill color="#808897" size={20} className="mr-1" />}
+              prefix={<RiLockFill size={20} className="mr-1" />}
               suffix={
                 <span
                   onClick={togglePasswordVisibility}

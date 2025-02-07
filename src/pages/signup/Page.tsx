@@ -47,13 +47,13 @@ export const Signup = () => {
   usePageTitle('Регистрация');
 
   return (
-    <Layout className="min-h-screen auth-bg-gradient overflow-hidden">
+    <Layout className="min-h-screen bg-gradientAuthBg overflow-hidden">
       <Content className="flex justify-center items-center min-h-screen overflow-y-auto px-8">
-        <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
+        <div className="bg-bgBase bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
           <div className="mb-6">
             <div className="flex justify-center mb-2">
-              <div className="w-14 h-14 flex items-center justify-center bg-[#EEF5F8] rounded-2xl shadow-lg">
-                <MdPersonAddAlt1 size={30} color="#808897" />
+              <div className="w-14 h-14 flex items-center justify-center bg-bgPrimary rounded-2xl shadow-lg">
+                <MdPersonAddAlt1 size={30} />
               </div>
             </div>
             <Typography.Title
@@ -79,21 +79,21 @@ export const Signup = () => {
               name="name"
               placeholder="Имя"
               rules={UserFormValidationRules.name}
-              prefix={<MdPerson color="#808897" size={20} className="mr-1" />}
+              prefix={<MdPerson size={20} className="mr-1" />}
             />
             <UserFormInput
               control={control}
               name="surname"
               placeholder="Фамилия"
               rules={UserFormValidationRules.surname}
-              prefix={<MdPerson color="#808897" size={20} className="mr-1" />}
+              prefix={<MdPerson size={20} className="mr-1" />}
             />
             <UserFormInput
               control={control}
               name="email"
               placeholder="Email"
               rules={UserFormValidationRules.email}
-              prefix={<MdMail color="#808897" size={20} className="mr-1" />}
+              prefix={<MdMail size={20} className="mr-1" />}
             />
             <UserFormInput
               control={control}
@@ -101,7 +101,7 @@ export const Signup = () => {
               type={showPassword ? 'text' : 'password'}
               placeholder="Пароль"
               rules={UserFormValidationRules.password}
-              prefix={<RiLockFill color="#808897" size={20} className="mr-1" />}
+              prefix={<RiLockFill size={20} className="mr-1" />}
               suffix={
                 <span
                   onClick={togglePasswordVisibility}
@@ -118,7 +118,7 @@ export const Signup = () => {
               type={showCopyPassword ? 'text' : 'password'}
               placeholder="Пароль"
               rules={UserFormValidationRules.copyPassword(password)}
-              prefix={<RiLockFill color="#808897" size={20} className="mr-1" />}
+              prefix={<RiLockFill size={20} className="mr-1" />}
               suffix={
                 <span
                   onClick={toggleCopyPasswordVisibility}
