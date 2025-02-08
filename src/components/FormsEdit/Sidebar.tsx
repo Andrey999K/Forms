@@ -1,6 +1,6 @@
 import { ConstructorForm, HandleChangeForm } from '@/types';
 import { DeleteOutlined, HomeOutlined, SaveOutlined, SettingOutlined } from '@ant-design/icons';
-import { Button, Divider, Tabs } from 'antd';
+import { Button, Divider, Tabs, Typography } from 'antd';
 import { FC, useEffect, useState } from 'react';
 import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 import { ConstructorTab } from './ConstructorTab';
@@ -73,7 +73,11 @@ export const Sidebar: FC<Props> = (props) => {
       <Tabs defaultActiveKey="constructor" items={TABS_ITEMS} />
       <Divider className="my-4" />
       <div>
-        <h3 className="text-base font-medium mb-4">Действия</h3>
+        <Typography.Text
+          style={{ fontSize: '1rem', fontWeight: 500, marginBottom: '1rem', display: 'block' }}
+        >
+          Действия
+        </Typography.Text>
         <div className="flex flex-col gap-2">
           {!isNew && (
             <Button

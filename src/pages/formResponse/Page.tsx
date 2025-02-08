@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Typography } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { useGetFormQuery } from '@/redux/form';
 import { useGetResponseQuery } from '@/redux/response';
@@ -22,8 +22,12 @@ export const FormResponse = () => {
 
   return (
     <div className="pt-5 pb-20">
-      <h2 className="font-semibold">Название формы — {form.title}</h2>
-      <p className="text-sm mt-2">{form.description}</p>
+      <Typography.Text style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>
+        Название формы — {form.title}
+      </Typography.Text>
+      <Typography.Paragraph style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
+        {form.description}
+      </Typography.Paragraph>{' '}
       <div className="flex flex-col gap-2 mt-8">
         {response.fields.map((field) => (
           <AnswerCard key={field.id} data={field} />

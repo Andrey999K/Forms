@@ -43,7 +43,7 @@ export const ConstructorDropZone: FC<Props> = (props) => {
           isOverNewItem ? 'animate-scaleUp' : 'opacity-0'
         }`}
       >
-        <div className="w-full border-2 border-colorPrimary rounded-xl" />
+        <div className="w-full border-2 border-primary rounded-xl" />
       </div>
       {!isOverNewItem && children}
     </div>

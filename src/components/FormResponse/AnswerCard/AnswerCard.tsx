@@ -1,6 +1,7 @@
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { FC } from 'react';
 import { ResponseField } from '@/types/response';
+import { Typography } from 'antd';
 
 type AnswerCardProps = {
   data: ResponseField;
@@ -9,14 +10,26 @@ type AnswerCardProps = {
 export const AnswerCard: FC<AnswerCardProps> = ({ data }) => {
   const renderAnswer = (answer: string | string[]) => {
     if (typeof answer === 'string') {
-      return <p className="text-start text-sm">{answer}</p>;
+      return (
+        <Typography.Paragraph style={{ textAlign: 'start', fontSize: '0.875rem' }}>
+          {answer}
+        </Typography.Paragraph>
+      );
     } else {
       return (
-        <p className="text-start text-sm flex flex-col gap-2">
+        <Typography.Paragraph
+          style={{
+            textAlign: 'start',
+            fontSize: '0.875rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem',
+          }}
+        >
           {answer.map((item, index) => (
-            <span key={item + index}>{item}</span>
+            <Typography.Text key={item + index}>{item}</Typography.Text>
           ))}
-        </p>
+        </Typography.Paragraph>
       );
     }
   };
@@ -24,7 +37,9 @@ export const AnswerCard: FC<AnswerCardProps> = ({ data }) => {
   return (
     <GlassWrapper key={data.id} className="p-5">
       <div className="flex flex-col items-start gap-1">
-        <h3 className="font-semibold">{data.question}</h3>
+        <Typography.Title level={5} style={{ fontWeight: 600, marginBottom: 0 }}>
+          {data.question}
+        </Typography.Title>
         {renderAnswer(data.answer)}
       </div>
     </GlassWrapper>

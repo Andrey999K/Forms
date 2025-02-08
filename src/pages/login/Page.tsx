@@ -1,4 +1,4 @@
-import { Form, Layout, Typography } from 'antd';
+import { Form, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { FiLogIn } from 'react-icons/fi';
@@ -16,6 +16,8 @@ import { setLoading } from '@/redux/user';
 import { UserFormValidationRules } from '@/utils/validation';
 import { UserFormInput } from '@/components/Auth/UserFormInput';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
+import ShapeWrapper from '@/layouts/GlassLayout';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -44,13 +46,13 @@ export const Login = () => {
   usePageTitle('Авторизация');
 
   return (
-    <Layout className="min-h-screen auth-bg-gradient overflow-hidden">
-      <Content className="flex justify-center items-center min-h-screen overflow-y-auto px-8">
-        <div className="bg-white bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
+    <ShapeWrapper>
+      <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
+        <GlassWrapper className="px-8 py-8 rounded-2xl max-w-sm w-full" style={{ zIndex: 10 }}>
           <div className="mb-6">
             <div className="flex justify-center mb-2">
-              <div className="w-14 h-14 flex items-center justify-center bg-[#EEF5F8] rounded-2xl shadow-lg">
-                <FiLogIn size={30} color="#808897" />
+              <div className="w-14 h-14 flex items-center justify-center bg-bgPrimary rounded-2xl shadow-lg">
+                <FiLogIn size={30} />
               </div>
             </div>
             <Typography.Title
@@ -76,7 +78,7 @@ export const Login = () => {
               name="email"
               placeholder="Email"
               rules={UserFormValidationRules.email}
-              prefix={<MdMail color="#808897" size={20} className="mr-1" />}
+              prefix={<MdMail size={20} className="mr-1" />}
             />
             <UserFormInput
               control={control}
@@ -84,7 +86,7 @@ export const Login = () => {
               type={showPassword ? 'text' : 'password'}
               placeholder="Пароль"
               rules={UserFormValidationRules.password}
-              prefix={<RiLockFill color="#808897" size={20} className="mr-1" />}
+              prefix={<RiLockFill size={20} className="mr-1" />}
               suffix={
                 <span
                   onClick={togglePasswordVisibility}
@@ -100,7 +102,7 @@ export const Login = () => {
             </AuthSubmitButton>
             <AuthTextLink
               text="Забыли пароль?"
-              linkText="Сбросить пароль"
+              linkText="Сбросить"
               linkTo={ROUTES.RECOVERY_PASSWORD}
             />
             <AuthTextLink
@@ -109,8 +111,8 @@ export const Login = () => {
               linkTo={ROUTES.SIGNUP}
             />
           </Form>
-        </div>
+        </GlassWrapper>
       </Content>
-    </Layout>
+    </ShapeWrapper>
   );
 };

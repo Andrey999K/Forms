@@ -1,6 +1,8 @@
+import { RootState } from '@/redux/store';
 import { getRandomColor } from '@/utils/getRandomColor';
 import { getUUID } from '@/utils/getUUID';
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 type Props = {
   children: ReactNode;
@@ -38,13 +40,18 @@ type PageSize = {
 
 export const ShapeWrapper = ({ children, settings }: Props) => {
   const [circles, setCircles] = useState<Circle[]>([]);
+  const theme = useSelector((state: RootState) => state.theme.theme);
   const pageSize = useRef<PageSize>({
     width: typeof window !== 'undefined' ? window.innerWidth : 1000,
     height: typeof window !== 'undefined' ? window.innerHeight : 1000,
   });
   const currentInterval = useRef<NodeJS.Timeout | null>(null);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
-  const CONFIG = { ...defaultSettings, ...settings };
+  const CONFIG = {
+    ...defaultSettings,
+    ...settings,
+    color: theme === 'dark' ? 'rgba(200, 200, 200, 0.1)' : 'rgba(150, 150, 150, 0.3)',
+  };
 
   const generateRandomSize = useCallback(() => {
     const maxSize = Math.min(
@@ -225,17 +232,20 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
 
   return (
     <div className="relative min-h-screen">
-      <div className="absolute inset-0 overflow-hidden -z-[99]">
+      <div className="absolute inset-0 overflow-hidden  z-0">
         {circles.map((circle) => (
           <div
             key={circle.id}
-            className="absolute rounded-full -z-[99] animate-scaleUp"
+            className="absolute rounded-full z-0 animate-scaleUp"
             style={{
               width: `${circle.size}px`,
               height: `${circle.size}px`,
               left: `${circle.x}px`,
               top: `${circle.y}px`,
-              border: `3px solid ${CONFIG.color}`,
+              border:
+                theme === 'dark'
+                  ? '1px solid rgba(255, 255, 255, 0.2)'
+                  : '1px solid rgba(0, 0, 0, 0.1)',
             }}
           />
         ))}

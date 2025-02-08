@@ -9,7 +9,7 @@ type Props = {
 
 export const AuthSubmitButton = ({ children, disabled, loading }: Props) => {
   return (
-    <Form.Item className="mb-2">
+    <Form.Item>
       <Button
         htmlType="submit"
         block

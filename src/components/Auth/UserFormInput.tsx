@@ -38,7 +38,7 @@ export const UserFormInput = <T extends FieldValues>({
                   display: 'block',
                   lineHeight: '1.4',
                 }}
-                className="text-red-500 text-xs md:text-sm ml-2 "
+                className="text-xs md:text-sm ml-2"
               >
                 {fieldState.error.message}
               </Typography.Text>
@@ -54,7 +54,7 @@ export const UserFormInput = <T extends FieldValues>({
               style={{
                 boxShadow: 'none',
               }}
-              className="py-1.5 px-4 rounded-lg bg-[#EFF2F6] placeholder-[#4a4b4d] focus:!outline-none focus:!ring-0 focus:!border-transparent focus:!transition-none !transition-none"
+              className="py-1.5 px-4 rounded-lg focus:!outline-none focus:!ring-0 focus:!border-transparent focus:!transition-none !transition-none"
             />
           </div>
         </Form.Item>

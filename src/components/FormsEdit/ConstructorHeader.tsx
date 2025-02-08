@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 import { EditableText } from './EditableText';
 import { EditableTextarea } from './EditableTextarea';
+import { Typography } from 'antd';
 
 type Props = {
   constructor: ConstructorForm;
@@ -22,8 +23,10 @@ export const ConstructorHeader: FC<Props> = (props) => {
         errors={errors}
         size="large"
       >
-        <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-colorPrimary rounded">
-          <h1 className="text-lg font-medium">{constructor.title}</h1>
+        <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-primary rounded">
+          <Typography.Title level={4} style={{ fontSize: '1.125rem', fontWeight: 500, margin: 0 }}>
+            {constructor.title}
+          </Typography.Title>
         </div>
       </EditableText>
       <EditableTextarea
@@ -33,8 +36,10 @@ export const ConstructorHeader: FC<Props> = (props) => {
         onChange={onChangeForm}
         errors={errors}
       >
-        <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-colorPrimary rounded">
-          <h2 className="text-sm text-gray-600">{constructor.description}</h2>
+        <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-primary rounded">
+          <Typography.Text type="secondary" style={{ fontSize: '0.875rem' }}>
+            {constructor.description}
+          </Typography.Text>
         </div>
       </EditableTextarea>
     </GlassWrapper>

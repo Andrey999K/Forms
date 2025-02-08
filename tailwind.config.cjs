@@ -1,15 +1,24 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
         caveat: ['Caveat', 'cursive'],
       },
+      boxShadow: {
+        custom: 'var(--shadow)',
+        'custom-hover': 'var(--shadow-hover)',
+      },
       colors: {
-        colorPrimary: '#fa9145',
-        colorTextBase: '#885028',
-        colorBgBase: '#fdf8f4',
+        primary: 'var(--color-primary)',
+        textPrimary: 'var(--color-text)',
+        bgPrimary: 'var(--color-bg)',
+        linkActive: 'var(--color-link-active)',
+        linkHover: 'var(--color-link-hover)',
+        border: 'var(--color-border)',
+        bgBase: 'var(--color-bg-base)',
       },
       spacing: {
         'page-layout-offset': '93px',
