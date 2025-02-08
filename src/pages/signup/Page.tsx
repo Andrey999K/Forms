@@ -1,4 +1,4 @@
-import { Button, Form, Layout, Typography } from 'antd';
+import { Button, Form, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { MdMail, MdPerson, MdPersonAddAlt1, MdVisibility, MdVisibilityOff } from 'react-icons/md';
@@ -15,6 +15,8 @@ import { setLoading } from '@/redux/user';
 import { UserFormValidationRules } from '@/utils/validation';
 import { UserFormInput } from '@/components/Auth/UserFormInput';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import ShapeWrapper from '@/layouts/GlassLayout';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 
 export const Signup = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -47,9 +49,9 @@ export const Signup = () => {
   usePageTitle('Регистрация');
 
   return (
-    <Layout className="min-h-screen bg-gradientAuthBg overflow-hidden">
+    <ShapeWrapper>
       <Content className="flex justify-center items-center min-h-screen overflow-y-auto px-8">
-        <div className="bg-bgBase bg-opacity-20 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-lg max-w-sm w-full">
+        <GlassWrapper className="px-8 py-8 rounded-2xl max-w-sm w-full" style={{ zIndex: 10 }}>
           <div className="mb-6">
             <div className="flex justify-center mb-2">
               <div className="w-14 h-14 flex items-center justify-center bg-bgPrimary rounded-2xl shadow-lg">
@@ -132,8 +134,8 @@ export const Signup = () => {
             <AuthSubmitButton disabled={isLoading} loading={isLoading}>
               Зарегистрироваться
             </AuthSubmitButton>
-            <div className="flex items-center justify-between gap-3">
-              <Form.Item className="flex justify-end ml-1 mb-0">
+            <div className="flex items-center justify-between">
+              <Form.Item className="flex justify-end mb-0">
                 <Button onClick={() => reset()} color="default" variant="solid">
                   Очистить форму
                 </Button>
@@ -141,8 +143,8 @@ export const Signup = () => {
               <AuthTextLink text="Есть аккаунт?" linkText="Войти" linkTo={ROUTES.LOGIN} />
             </div>
           </Form>
-        </div>
+        </GlassWrapper>
       </Content>
-    </Layout>
+    </ShapeWrapper>
   );
 };

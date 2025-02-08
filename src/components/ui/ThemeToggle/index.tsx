@@ -9,7 +9,7 @@ export const ThemeToggle = () => {
 
   return (
     //стиль select-none - отключает выделение текста (при нескольких быстрых кликах)
-    <div className="min-w-36 select-none">
+    <div className="min-w-[130px] select-none">
       {theme === 'dark' ? (
         <div
           className="flex items-center justify-center text-textPrimary hover:text-linkHover transition-colors cursor-pointer"

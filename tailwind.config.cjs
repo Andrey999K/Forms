@@ -20,9 +20,6 @@ module.exports = {
         border: 'var(--color-border)',
         bgBase: 'var(--color-bg-base)',
       },
-      backgroundImage: {
-        gradientAuthBg: 'var(--gradient-auth-bg)',
-      },
       spacing: {
         'page-layout-offset': '93px',
       },

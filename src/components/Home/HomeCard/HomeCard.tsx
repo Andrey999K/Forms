@@ -61,15 +61,11 @@ export const HomeCard = (props: Props) => {
       bordered={false}
       actions={actions}
       className="h-full flex flex-col bg-bgPrimary shadow-custom"
-      bodyStyle={{
-        display: 'flex',
-        flexGrow: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
     >
-      <div className="line-clamp-3 text-textPrimary">{item.description}</div>
-      <div className="border-t border-border bg-transparent" />
+      <div className="flex flex-grow items-center justify-center">
+        <div className="line-clamp-3 text-textPrimary">{item.description}</div>
+        <div className="border-t border-border bg-transparent" />
+      </div>
     </Card>
   );
 };
