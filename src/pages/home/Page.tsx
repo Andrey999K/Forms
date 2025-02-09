@@ -160,7 +160,12 @@ export const Home = () => {
   return (
     <div data-testid="home-page" className="flex flex-col gap-4">
       <GlassWrapper className="p-5 flex-col sm:flex-row flex justify-between gap-4">
-        <Search defaultValue={search} onSearch={onSearch} className="w-full sm:w-[300px]" />
+        <Search
+          defaultValue={search}
+          onSearch={onSearch}
+          className="w-full sm:w-[300px]"
+          disabled={status === 'pending'}
+        />
         <Select
           value={order}
           options={sortOptions}
