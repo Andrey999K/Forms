@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { CardWithCount } from '@/types/card';
-import { Badge, Card } from 'antd';
-import { MdOutlineEdit, MdOutlineDelete, MdOutlineQuestionAnswer } from 'react-icons/md';
+import { Badge, Button } from 'antd';
+import { MdOutlineDelete, MdOutlineEdit, MdOutlineQuestionAnswer } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
 type Props = {
@@ -16,56 +16,53 @@ export const HomeCard = (props: Props) => {
     onDelete(item.id);
   };
 
-  const actions: ReactNode[] = [
-    <Link key="response" to={`/forms/${item.id}/responses`}>
-      <Badge
-        count={item.responseCount ?? 0}
-        showZero
-        size="small"
-        styles={{ indicator: { fontSize: 10 }, root: { color: 'inherit' } }}
-        offset={[2, -2]}
-      >
-        <MdOutlineQuestionAnswer
-          size={18}
-          className="text-textPrimary hover:text-linkHover transition-colors"
-        />
-      </Badge>
-    </Link>,
-    <Link key="edit" to={`/forms/${item.id}/edit`}>
-      <MdOutlineEdit
-        size={18}
-        style={{ margin: '0 auto' }}
-        href={`/forms/${item.id}/edit`}
-        className="text-textPrimary hover:text-linkHover transition-colors"
-      />
-    </Link>,
-    <div
-      key="delete"
-      data-testid="delete-button"
-      className="text-red-600 hover:text-red-400 transition-all duration-200 ease-in-out cursor-pointer"
-      onClick={handleDeleteClick}
-    >
-      <MdOutlineDelete size={18} style={{ margin: '0 auto' }} />
-    </div>,
-  ];
-
-  const titleElement = (
-    <Link to={`/forms/${item.id}`} className="text-textPrimary hover:text-primary">
-      {item.title}
-    </Link>
-  );
-
   return (
-    <Card
-      title={titleElement}
-      bordered={false}
-      actions={actions}
-      className="h-full flex flex-col bg-bgPrimary shadow-custom"
-    >
-      <div className="flex flex-grow items-center justify-center">
-        <div className="line-clamp-3 text-textPrimary">{item.description}</div>
-        <div className="border-t border-border bg-transparent" />
+    <GlassWrapper className="h-full flex flex-col">
+      <div className="py-4">
+        <Link
+          to={`/forms/${item.id}`}
+          className="text-textPrimary hover:text-primary font-xl block"
+        >
+          {item.title}
+        </Link>
       </div>
-    </Card>
+      <div className="flex flex-grow items-center justify-center py-4 border-t border-b dark:border-border-dark">
+        <div className="line-clamp-3 text-textPrimary">{item.description}</div>
+      </div>
+      <div className="flex justify-around items-center p-3">
+        <Link key="response" to={`/forms/${item.id}/responses`} className="block w-full">
+          <Button
+            block
+            type="text"
+            icon={
+              <Badge
+                count={item.responseCount ?? 0}
+                showZero
+                size="small"
+                styles={{ indicator: { fontSize: 10 }, root: { color: 'inherit' } }}
+                // offset={[2, -2]}
+              >
+                <MdOutlineQuestionAnswer size={18} />
+              </Badge>
+            }
+          ></Button>
+        </Link>
+        <div className="border-l w-1 h-full ml-2 pl-2 dark:border-border-dark"></div>
+        <Link key="edit" to={`/forms/${item.id}/edit`} className="block w-full">
+          <Button block type="text" icon={<MdOutlineEdit size={18} />}></Button>
+        </Link>
+        <div className="border-l w-1 h-full ml-2 pl-2 dark:border-border-dark"></div>
+        <Button
+          block
+          className="block"
+          type="text"
+          key="delete"
+          data-testid="delete-button"
+          danger
+          icon={<MdOutlineDelete size={18} />}
+          onClick={handleDeleteClick}
+        ></Button>
+      </div>
+    </GlassWrapper>
   );
 };

@@ -17,7 +17,10 @@ module.exports = {
         bgPrimary: 'var(--color-bg)',
         linkActive: 'var(--color-link-active)',
         linkHover: 'var(--color-link-hover)',
-        border: 'var(--color-border)',
+        border: {
+          DEFAULT: 'var(--color-border)', // Цвет границы по умолчанию (light)
+          dark: '#455566',
+        },
         bgBase: 'var(--color-bg-base)',
       },
       spacing: {

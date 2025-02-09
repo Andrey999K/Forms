@@ -86,7 +86,7 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
           </div>
           {children}
         </div>
-        <div className="px-4 border-t flex justify-between">
+        <div className="px-4 border-t flex justify-between dark:border-border-dark">
           <div className="flex gap-2 items-center text-sm px-1 text-gray-500">
             {items[field.type].jsxIcon}
             {items[field.type].label}
@@ -106,11 +106,8 @@ export const ConstructorFieldWrapper: FC<Props> = (props) => {
           </div>
         </div>
       </div>
-      <div>
-        <button
-          ref={dragRef}
-          className={`border-l h-full cursor-move text-gray-500 hover:text-orange-500`}
-        >
+      <div className="border-l dark:border-border-dark">
+        <button ref={dragRef} className={`h-full cursor-move text-gray-500 hover:text-orange-500`}>
           <HolderOutlined />
         </button>
       </div>

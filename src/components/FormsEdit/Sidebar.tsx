@@ -67,7 +67,7 @@ export const Sidebar: FC<Props> = (props) => {
 
   return (
     <GlassWrapper
-      className={`w-full max-w-72 px-5 pb-5 ${isSticky ? 'sticky top-4' : ''}`}
+      className={`w-full max-w-72 px-5 pb-5 ${isSticky ? 'sticky top-24' : ''}`}
       style={{ zIndex: 10 }}
     >
       <Tabs defaultActiveKey="constructor" items={TABS_ITEMS} />

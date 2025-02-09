@@ -50,7 +50,7 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
   const CONFIG = {
     ...defaultSettings,
     ...settings,
-    color: theme === 'dark' ? 'rgba(200, 200, 200, 0.1)' : 'rgba(150, 150, 150, 0.3)',
+    color: theme === 'dark' ? 'rgba(200, 200, 200, 0.05)' : 'rgba(150, 150, 150, 0.3)',
   };
 
   const generateRandomSize = useCallback(() => {
@@ -244,8 +244,8 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
               top: `${circle.y}px`,
               border:
                 theme === 'dark'
-                  ? '1px solid rgba(255, 255, 255, 0.2)'
-                  : '1px solid rgba(0, 0, 0, 0.1)',
+                  ? '1px solid rgba(255, 255, 255, 0.05)'
+                  : '1px solid rgba(0, 0, 0, 0.05)',
             }}
           />
         ))}
