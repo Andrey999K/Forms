@@ -27,7 +27,7 @@ describe('HomeCard', () => {
   test('renders HomeList with title and description', () => {
     render(
       <Router>
-        <HomeList items={mockItems} onDelete={() => {}} />
+        <HomeList items={mockItems} onDelete={() => {}} isDeleting={false} />
       </Router>
     );
 
