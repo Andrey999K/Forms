@@ -257,14 +257,12 @@ export const firestoreService = {
 
   updateUserPassword: async (currentPassword: string, newPassword: string): Promise<void> => {
     if (!auth.currentUser) {
-      throw new Error('Пользователь не авторизован');
+      return;
     }
 
     const user = auth.currentUser;
-
     const credential = EmailAuthProvider.credential(user.email!, currentPassword);
     await reauthenticateWithCredential(user, credential);
-
     await updatePassword(user, newPassword);
   },
 };

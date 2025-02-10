@@ -100,7 +100,7 @@ export const Login = () => {
             <AuthSubmitButton disabled={isLoading} loading={isLoading}>
               Войти
             </AuthSubmitButton>
-            <div className="flex flex-col gap-0">
+            <div>
               <AuthTextLink
                 text="Забыли пароль?"
                 linkText="Сбросить"
