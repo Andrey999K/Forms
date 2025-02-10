@@ -236,16 +236,16 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
         {circles.map((circle) => (
           <div
             key={circle.id}
-            className="absolute rounded-full z-0 animate-scaleUp"
+            className="absolute rounded-full z-0 animate-scaleUp border border-border-glass"
             style={{
               width: `${circle.size}px`,
               height: `${circle.size}px`,
               left: `${circle.x}px`,
               top: `${circle.y}px`,
-              border:
-                theme === 'dark'
-                  ? '1px solid rgba(255, 255, 255, 0.05)'
-                  : '1px solid rgba(0, 0, 0, 0.05)',
+              // border:
+              //   theme === 'dark'
+              //     ? '1px solid rgba(255, 255, 255, 0.05)'
+              //     : '1px solid rgba(0, 0, 0, 0.05)',
             }}
           />
         ))}

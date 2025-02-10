@@ -9,6 +9,7 @@
   --color-link-active: #fa9145;
   --color-link-hover: #fa9145;
   --color-border: #e9dac5;
+  --color-border-glass: rgba(0, 0, 0, 0.05);
 
   --color-bg-base: #f8f9fa;
 
@@ -23,6 +24,7 @@
   --color-link-active: #e9ecef;
   --color-link-hover: #e9ecef;
   --color-border: #495057;
+  --color-border-glass: rgba(255, 255, 255, 0.05);
 
   --color-bg-base: #2b3035;
 
