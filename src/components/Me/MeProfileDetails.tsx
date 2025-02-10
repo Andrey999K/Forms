@@ -3,11 +3,10 @@ import { Control, UseFormReset } from 'react-hook-form';
 import { Dispatch, SetStateAction } from 'react';
 import { MeChangeFields, MeData } from '@/types/me';
 import { Button, Input, notification } from 'antd';
-import { MdOutlineCancel } from 'react-icons/md';
+import { MdOutlineCancel, MdPerson } from 'react-icons/md';
 import { formatUserCreatedAt } from '@/utils/formatUserCreatedAt';
 import { UserFormInput } from '../Auth/UserFormInput';
-import { MdOutlineDateRange, MdOutlineAlternateEmail } from 'react-icons/md';
-import { MdOutlineAssignment } from 'react-icons/md';
+import { MdOutlineDateRange, MdOutlineAlternateEmail, MdOutlineAssignment } from 'react-icons/md';
 
 type Props = {
   control: Control<any>;
@@ -100,7 +99,8 @@ export const MeProfileDetails = ({
               accept="image/*"
               disabled={isUpdating}
               onChange={handleFileChange}
-              className="text-textPrimary file:cursor-pointer file:bg-transparent file:border-none file:text-textPrimary "
+              style={{ height: '35.81px' }}
+              className="text-textPrimary file:cursor-pointer file:bg-transparent file:border-none file:text-textPrimary py-1.5 px-4 rounded-lg"
             />
           </div>
           <UserFormInput
@@ -109,6 +109,7 @@ export const MeProfileDetails = ({
             label="Имя"
             name="firstName"
             placeholder="Имя"
+            prefix={<MdPerson size={20} className="mr-1" />}
             rules={UserFormValidationRules.name}
           />
           <UserFormInput
@@ -117,6 +118,7 @@ export const MeProfileDetails = ({
             name="lastName"
             placeholder="Фамилия"
             label="Фамилия"
+            prefix={<MdPerson size={20} className="mr-1" />}
             rules={UserFormValidationRules.surname}
           />
           <div className="flex flex-col gap-5 mb-6">
