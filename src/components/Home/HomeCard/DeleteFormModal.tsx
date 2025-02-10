@@ -56,7 +56,7 @@ export const DeleteFormModal: FC<Props> = (props) => {
           </Button>,
         ]}
       >
-        <p>Вы действительно хоите удалить форму?</p>
+        <p>Вы действительно хотите удалить форму?</p>
       </Modal>
     </>
   );
