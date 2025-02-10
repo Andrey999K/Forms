@@ -285,7 +285,7 @@ export const FormsEdit: FC = () => {
 
   return (
     <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-      <div className="flex gap-4 items-start p-4">
+      <div className="flex gap-4 items-start">
         <Sidebar
           constructor={constructor}
           isCreating={isCreating}

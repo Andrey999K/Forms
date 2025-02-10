@@ -137,3 +137,9 @@ html {
   -webkit-text-fill-color: var(--color-text) !important;
   transition: background-color 5000s ease-in-out 0s !important;
 }
+
+/* для корректного переноса текста но новую строку */
+.break-words {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}

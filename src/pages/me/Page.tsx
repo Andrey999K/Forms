@@ -101,8 +101,8 @@ export const Me = () => {
   }
 
   return (
-    <div className="flex p-4 break-words w-full">
-      <Content className="flex flex-col items-center md:flex-row gap-4 w-full md:items-start">
+    <div data-testid="me-page">
+      <Content className="flex flex-col px-1 md:p-0 items-center md:flex-row gap-4 w-full md:items-start">
         <GlassWrapper
           className="w-full min-w-56 md:w-1/2 px-5 py-5 text-center"
           style={{ zIndex: 10 }}
@@ -132,7 +132,7 @@ export const Me = () => {
             />
           </Form>
         </GlassWrapper>
-        <GlassWrapper className="w-1/3 px-5 min-w-56 py-5 text-center" style={{ zIndex: 10 }}>
+        <GlassWrapper className="w-1/3 px-5 min-w-80 py-5 text-center" style={{ zIndex: 10 }}>
           <MeChangePassword />
         </GlassWrapper>
       </Content>

@@ -1,4 +1,4 @@
-import { Button, Flex, Input, notification, Select, Spin } from 'antd';
+import { Button, Input, notification, Select } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
 import Title from 'antd/es/typography/Title';
 import { useEffect, useState } from 'react';
@@ -11,10 +11,12 @@ import { AppDispatch, RootState } from '@/redux/store';
 
 import { HomeList } from '@/components/Home/HomeList/HomeList';
 
+import { Loader } from '@/components/ui/Loader';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { FormListOptions, Sort } from '@/types';
-import { ROUTES } from '@/utils/routesConfig';
 import { debounce } from '@/utils/debounce';
+import { ROUTES } from '@/utils/routesConfig';
 
 const { Search } = Input;
 
@@ -156,48 +158,48 @@ export const Home = () => {
   usePageTitle('Главная страница');
 
   return (
-    <div data-testid="home-page">
-      <Flex justify="space-between" gap={12} vertical className="mb-4 sm:flex-row sm:mb-8">
-        <Search defaultValue={search} onSearch={onSearch} className="w-full sm:w-[300px]" />
+    <div data-testid="home-page" className="flex flex-col gap-4">
+      <GlassWrapper className="p-5 flex-col sm:flex-row flex justify-between gap-4">
+        <Search
+          defaultValue={search}
+          onSearch={onSearch}
+          className="w-full sm:w-[300px]"
+          disabled={status === 'pending'}
+        />
         <Select
           value={order}
           options={sortOptions}
           onChange={onChangeSort}
           className="w-full sm:w-[200px]"
         />
-      </Flex>
+      </GlassWrapper>
 
-      <div className="pb-5">
+      <GlassWrapper className="p-5">
         {formsList.length > 0 ? (
           <HomeList items={formsList.filter((item) => item !== null)} onDelete={onDelete} />
         ) : (
           status !== 'pending' &&
           !showTrigger && (
             <div className="flex flex-col gap-4">
-              <Title className="!text-2xl md:!text-3xl">Нет доступных форм.</Title>
+              <Title className="!text-xl md:!text-2xl">Нет доступных форм.</Title>
               <Link to={ROUTES.FORMS_NEW}>
                 <Button type="primary">Создать форму</Button>
               </Link>
             </div>
           )
         )}
-      </div>
+        {status === 'pending' && <Loader />}
 
-      {status === 'pending' && (
-        <div className="mb-5 mt-4">
-          <Spin />
-        </div>
-      )}
+        {showTrigger && (
+          <div ref={intersectionRef} className="mt-4 mb-5">
+            <Loader />
+          </div>
+        )}
 
-      {showTrigger && (
-        <div ref={intersectionRef} className="mt-4 mb-5">
-          <Spin />
-        </div>
-      )}
-
-      {status === 'rejected' && !formsList.length && (
-        <Title level={2}>Произошла ошибка, попробуйте обновить страницу</Title>
-      )}
+        {status === 'rejected' && !formsList.length && (
+          <Title level={4}>Произошла ошибка, попробуйте обновить страницу</Title>
+        )}
+      </GlassWrapper>
     </div>
   );
 };

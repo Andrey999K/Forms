@@ -1,15 +1,14 @@
+import { ThemeToggle } from '@/components/ui/ThemeToggle/index.tsx';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
 import { useLogoutMutation } from '@/redux/auth/authApi.js';
+import { RootState } from '@/redux/store.ts';
 import { ReactNode, useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { FaBars, FaTimes } from 'react-icons/fa';
+import { FiLogOut } from 'react-icons/fi';
+import { useSelector } from 'react-redux';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ROUTES } from '../utils/routesConfig.ts';
 import { ShapeWrapper } from './GlassLayout.js';
-import { useLocation } from 'react-router-dom';
-import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store.ts';
-import { FiLogOut } from 'react-icons/fi';
-import { FaTimes, FaBars } from 'react-icons/fa';
-import { ThemeToggle } from '@/components/ui/ThemeToggle/index.tsx';
 import { Divider } from 'antd';
 
 const pages = [
@@ -59,7 +58,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
       <div className="min-h-screen flex flex-col">
         {user && (
           <header className="sticky top-0 z-50">
-            <GlassWrapper className="relative py-5 flex m-auto items-center justify-center border-b-[1px] border-solid">
+            <GlassWrapper className="relative py-5 flex m-auto items-center justify-center border-l-0 border-r-0 border-t-0 rounded-none">
               <div className="flex justify-between items-center gap-5 px-4 w-full max-w-screen-lg">
                 {/* //logo */}
                 <NavLink to={ROUTES.HOME}>
@@ -142,7 +141,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
             </GlassWrapper>
           </header>
         )}
-        <div className="mt-5 flex-grow w-full max-w-screen-lg m-auto px-4">
+        <div className="my-8 flex-grow w-full max-w-screen-lg m-auto px-4">
           {children || <Outlet />}
         </div>
         <Divider className="my-0 " />

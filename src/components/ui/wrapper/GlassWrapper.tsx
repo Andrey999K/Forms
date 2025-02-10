@@ -11,11 +11,10 @@ export const GlassWrapper = forwardRef<HTMLDivElement, Props>(
       <div
         ref={ref}
         className={`shadow-custom 
-          backdrop-blur-[3px] 
-          bg-[rgba(255, 255, 255, 0.2)] 
-          dark:bg-[rgba(0, 0, 0, 0.5)] 
+          border border-border dark:border-border-dark
+          backdrop-blur-[4px] 
+          bg-[rgba(255, 255, 255, 0.2)] dark:bg-[rgba(0, 0, 0, 0.2)] 
           rounded-2xl 
-          hover:shadow-custom-hover 
           transition-shadow 
           ${className || ''}`}
         {...rest}

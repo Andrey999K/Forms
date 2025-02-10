@@ -1,18 +1,20 @@
-import { fetchResponseSlice, resetStore } from '@/redux/response';
+import { Loader } from '@/components/ui/Loader';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import { useSaveCsv } from '@/hooks/useSaveCsv';
 import { useGetFormQuery } from '@/redux/form';
+import { fetchResponseSlice, resetStore } from '@/redux/response';
+import { fetchAllResponses } from '@/redux/response/responseSlice';
 import { AppDispatch, RootState } from '@/redux/store';
 import { FormListOptions, FormResponse, Sort } from '@/types';
-import { ComponentProps, useEffect, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Card, DatePicker, Select, Spin } from 'antd';
-import typography from 'antd/es/typography';
-import { useInView } from 'react-intersection-observer';
-import dayjs, { Dayjs } from 'dayjs';
-import { usePageTitle } from '@/hooks/usePageTitle';
 import { DownloadOutlined } from '@ant-design/icons';
-import { fetchAllResponses } from '@/redux/response/responseSlice';
-import { useSaveCsv } from '@/hooks/useSaveCsv';
+import { Button, DatePicker, Select } from 'antd';
+import typography from 'antd/es/typography';
+import dayjs, { Dayjs } from 'dayjs';
+import { ComponentProps, useEffect, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 const { Text, Title } = typography;
 
@@ -195,12 +197,14 @@ export const FormResponses = () => {
   usePageTitle(form ? `Отклики | ${form.title}` : 'Отклики');
 
   return (
-    <>
-      <Title className="mt-10 px-5 !text-2xl lg:px-0 md:!text-4xl">
-        Отклики формы <br /> &quot;{form?.title}&quot;
-      </Title>
+    <div className="flex flex-col gap-4">
+      <GlassWrapper className="p-2">
+        <Title className="!text-xl lg:px-0 md:!text-2xl">
+          Отклики формы <br /> &quot;{form?.title}&quot;
+        </Title>
+      </GlassWrapper>
 
-      <div className="flex flex-col w-full gap-2 mt-10 mb-4 sm:justify-between sm:flex-row">
+      <GlassWrapper className="flex flex-col w-full gap-2 sm:justify-between sm:flex-row p-5">
         <Select
           defaultValue={sort}
           onChange={handleChangeSort}
@@ -224,41 +228,34 @@ export const FormResponses = () => {
             onClick={handleLoadCsv}
           />
         </div>
-      </div>
+      </GlassWrapper>
 
-      <div className="flex flex-col gap-4 mb-4">
+      <GlassWrapper className="flex flex-col gap-4 p-5">
         {list.length
           ? list.map((response, index) => (
               <Link to={`/forms/${formId}/responses/${response.id}`} key={response.id}>
-                <Card className="bg-[#fdf8f4]/85 backdrop-blur-sm hover:backdrop-blur-sm hover:bg-[#fdf8f4] hover:-translate-y-1 hover:shadow-lg transition duration-200 ease-in-out">
-                  <div className="flex items-center justify-between gap-5">
-                    <Title italic level={5} style={{ margin: 0 }}>
-                      Отклик #{index + 1}
-                    </Title>
-                    <Text>{dayjs(response.updatedAt).format('DD.MM.YYYY HH:mm:ss')}</Text>
-                  </div>
-                </Card>
+                <GlassWrapper className="hover:translate-y-[2px] transition duration-300 ease-in-out !shadow-none flex p-3 items-center justify-between gap-5">
+                  <Title italic level={5} style={{ margin: 0 }}>
+                    Отклик #{index + 1}
+                  </Title>
+                  <Text>{dayjs(response.updatedAt).format('DD.MM.YYYY HH:mm:ss')}</Text>
+                </GlassWrapper>
               </Link>
             ))
           : status !== 'pending' &&
-            !showTrigger && <Title level={2}>У данной формы нет откликов.</Title>}
-      </div>
+            !showTrigger && <Title level={4}>У данной формы нет откликов.</Title>}
+        {status === 'pending' && <Loader />}
 
-      {status === 'pending' && (
-        <div className="mb-5 mt-4">
-          <Spin />
-        </div>
-      )}
+        {showTrigger && (
+          <div ref={intersectionRef} className="mt-4 mb-5">
+            <Loader />
+          </div>
+        )}
 
-      {showTrigger && (
-        <div ref={intersectionRef} className="mt-4 mb-5">
-          <Spin />
-        </div>
-      )}
-
-      {status === 'rejected' && !list.length && (
-        <Title level={2}>Произошла ошибка, попробуйте обновить страницу</Title>
-      )}
-    </>
+        {status === 'rejected' && !list.length && (
+          <Title level={4}>Произошла ошибка, попробуйте обновить страницу</Title>
+        )}
+      </GlassWrapper>
+    </div>
   );
 };

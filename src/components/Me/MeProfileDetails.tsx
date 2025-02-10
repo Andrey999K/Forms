@@ -73,7 +73,7 @@ export const MeProfileDetails = ({
             </div>
             <div className="flex gap-2 items-center justify-start">
               <MdOutlineAlternateEmail size={20} />
-              <span className="w-full text-lg font-semibold text-left break-words">
+              <span className="break-words text-lg font-semibold text-left break-all">
                 {user?.email}
               </span>
             </div>
@@ -117,7 +117,7 @@ export const MeProfileDetails = ({
           <div className="flex flex-col gap-5 mb-6">
             <div className="flex gap-2 items-center justify-start">
               <MdOutlineAlternateEmail size={20} />
-              <span className="w-full text-lg font-semibold text-left break-words">
+              <span className="w-full text-lg font-semibold text-left break-words ">
                 {user?.email}
               </span>
             </div>
