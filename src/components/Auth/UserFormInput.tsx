@@ -6,6 +6,7 @@ type Props<T extends FieldValues> = {
   name: Path<T>;
   control: Control<T>;
   rules: RegisterOptions<T>;
+  disabled?: boolean;
   type?: 'text' | 'password';
   placeholder: 'Email' | 'Пароль' | 'Имя' | 'Фамилия' | 'Новый пароль' | 'Текущий пароль';
   prefix?: ReactNode;

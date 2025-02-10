@@ -80,14 +80,14 @@ export const Me = () => {
         setEdit(false);
       } catch (error) {
         notification.error({ message: 'Не удалось обновить данные' });
-        console.error('Ошибка обновления данных:', error);
+        console.log('Ошибка обновления данных:', error);
       }
     }
   };
 
   usePageTitle('Профиль');
 
-  if (isLoading || isUpdating) return <Loader />;
+  if (isLoading) return <Loader />;
 
   if (error || !user) {
     return (
@@ -123,16 +123,17 @@ export const Me = () => {
               avatar={avatar}
             />
             <MeProfileDetails
-              isEditing={isEdit}
+              isEdit={isEdit}
               control={control}
               reset={reset}
               user={user}
               setEdit={setEdit}
               setAvatar={setAvatar}
+              isUpdating={isUpdating}
             />
           </Form>
         </GlassWrapper>
-        <GlassWrapper className="w-1/3 px-5 min-w-80 py-5 text-center" style={{ zIndex: 10 }}>
+        <GlassWrapper className="w-1/3 px-5 py-5 min-w-80  text-center" style={{ zIndex: 10 }}>
           <MeChangePassword />
         </GlassWrapper>
       </Content>

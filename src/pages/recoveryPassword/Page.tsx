@@ -62,6 +62,7 @@ export const RecoveryPassword = () => {
             <UserFormInput
               control={control}
               name="email"
+              disabled={isLoading}
               placeholder="Email"
               rules={UserFormValidationRules.email}
               prefix={<MdMail size={20} className="mr-1" />}

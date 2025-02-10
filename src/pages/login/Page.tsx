@@ -77,6 +77,7 @@ export const Login = () => {
               control={control}
               name="email"
               placeholder="Email"
+              disabled={isLoading}
               rules={UserFormValidationRules.email}
               prefix={<MdMail size={20} className="mr-1" />}
             />
@@ -85,6 +86,7 @@ export const Login = () => {
               name="password"
               type={showPassword ? 'text' : 'password'}
               placeholder="Пароль"
+              disabled={isLoading}
               rules={UserFormValidationRules.password}
               prefix={<RiLockFill size={20} className="mr-1" />}
               suffix={

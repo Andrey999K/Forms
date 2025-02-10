@@ -1,4 +1,5 @@
 import { MeData } from '@/types/me';
+import { Spin } from 'antd';
 import { Dispatch, SetStateAction } from 'react';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
@@ -29,8 +30,10 @@ export const MeProfileActions = ({
   }`;
   const isSubmitDisabled = !isValid || (JSON.stringify(dirtyFields) === '{}' && !avatar);
 
-  return isEdit ? (
-    <button type="submit" className={submitBtnStyles} disabled={isSubmitDisabled || isUpdating}>
+  return isUpdating ? (
+    <Spin size="large" className={btnPositionStyles} />
+  ) : isEdit ? (
+    <button type="submit" className={submitBtnStyles} disabled={isSubmitDisabled}>
       <FaRegCheckCircle size={30} />
     </button>
   ) : (

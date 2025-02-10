@@ -14,17 +14,19 @@ type Props = {
   reset: UseFormReset<MeChangeFields>;
   user: MeData;
   setEdit: Dispatch<SetStateAction<boolean>>;
-  isEditing: boolean;
+  isEdit: boolean;
   setAvatar: Dispatch<SetStateAction<File | null>>;
+  isUpdating: boolean;
 };
 
 export const MeProfileDetails = ({
-  isEditing,
+  isEdit,
   control,
   reset,
   user,
   setEdit,
   setAvatar,
+  isUpdating,
 }: Props) => {
   const handleFormsReset = () => {
     reset({
@@ -43,7 +45,7 @@ export const MeProfileDetails = ({
       if (!isJpgOrPng) {
         notification.error({
           message: 'Ошибка',
-          description: 'Можно загружать только JPG/PNG/WEBP!',
+          description: 'Для аватара можно загружать только форматы JPG/PNG/WEBP!',
         });
         return;
       }
@@ -63,7 +65,7 @@ export const MeProfileDetails = ({
 
   return (
     <>
-      {!isEditing ? (
+      {!isEdit ? (
         <div className="flex flex-col items-start gap-2">
           <div className="flex flex-col items-start gap-2">
             <div className="flex gap-2 items-start justify-start">
@@ -96,12 +98,14 @@ export const MeProfileDetails = ({
             <Input
               type="file"
               accept="image/*"
+              disabled={isUpdating}
               onChange={handleFileChange}
               className="text-textPrimary file:cursor-pointer file:bg-transparent file:border-none file:text-textPrimary "
             />
           </div>
           <UserFormInput
             control={control}
+            disabled={isUpdating}
             label="Имя"
             name="firstName"
             placeholder="Имя"
@@ -109,6 +113,7 @@ export const MeProfileDetails = ({
           />
           <UserFormInput
             control={control}
+            disabled={isUpdating}
             name="lastName"
             placeholder="Фамилия"
             label="Фамилия"

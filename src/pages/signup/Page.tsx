@@ -79,6 +79,7 @@ export const Signup = () => {
             <UserFormInput
               control={control}
               name="name"
+              disabled={isLoading}
               placeholder="Имя"
               rules={UserFormValidationRules.name}
               prefix={<MdPerson size={20} className="mr-1" />}
@@ -86,6 +87,7 @@ export const Signup = () => {
             <UserFormInput
               control={control}
               name="surname"
+              disabled={isLoading}
               placeholder="Фамилия"
               rules={UserFormValidationRules.surname}
               prefix={<MdPerson size={20} className="mr-1" />}
@@ -93,6 +95,7 @@ export const Signup = () => {
             <UserFormInput
               control={control}
               name="email"
+              disabled={isLoading}
               placeholder="Email"
               rules={UserFormValidationRules.email}
               prefix={<MdMail size={20} className="mr-1" />}
@@ -100,6 +103,7 @@ export const Signup = () => {
             <UserFormInput
               control={control}
               name="password"
+              disabled={isLoading}
               type={showPassword ? 'text' : 'password'}
               placeholder="Пароль"
               rules={UserFormValidationRules.password}
@@ -118,6 +122,7 @@ export const Signup = () => {
               control={control}
               name="copyPassword"
               type={showCopyPassword ? 'text' : 'password'}
+              disabled={isLoading}
               placeholder="Пароль"
               rules={UserFormValidationRules.copyPassword(password)}
               prefix={<RiLockFill size={20} className="mr-1" />}

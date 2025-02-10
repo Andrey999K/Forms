@@ -37,7 +37,21 @@ export const MeChangePassword = () => {
 
   return (
     <>
-      {isEdit ? (
+      <div
+        onClick={() => setEdit(!isEdit)}
+        className={`flex justify-center items-center cursor-pointer select-none ${isEdit && 'mb-6'}`}
+      >
+        <Typography.Title
+          level={5}
+          style={{
+            marginBottom: 0,
+          }}
+          className="hover:text-primary transition-all duration-300 ease-in-out"
+        >
+          Изменить пароль
+        </Typography.Title>
+      </div>
+      {isEdit && (
         <Form onFinish={handleSubmit(onSubmit)} layout="vertical" className="w-full">
           <UserFormInput
             control={control}
@@ -86,9 +100,12 @@ export const MeChangePassword = () => {
               Обновить пароль
             </Button>
           </Form.Item>
-          <Form.Item>
+          <Form.Item className="mb-0">
             <Button
-              onClick={() => setEdit(!isEdit)}
+              onClick={() => {
+                reset();
+                setEdit(!isEdit);
+              }}
               color="danger"
               variant="filled"
               icon={<MdOutlineCancel size={15} />}
@@ -101,21 +118,6 @@ export const MeChangePassword = () => {
             </Button>
           </Form.Item>
         </Form>
-      ) : (
-        <div
-          onClick={() => setEdit(!isEdit)}
-          className="flex justify-center items-center cursor-pointer"
-        >
-          <Typography.Title
-            level={5}
-            style={{
-              marginBottom: 0,
-            }}
-            className="hover:text-primary transition-all duration-300 ease-in-out"
-          >
-            Изменить пароль
-          </Typography.Title>
-        </div>
       )}
     </>
   );
