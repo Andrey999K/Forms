@@ -242,10 +242,6 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
               height: `${circle.size}px`,
               left: `${circle.x}px`,
               top: `${circle.y}px`,
-              // border:
-              //   theme === 'dark'
-              //     ? '1px solid rgba(255, 255, 255, 0.05)'
-              //     : '1px solid rgba(0, 0, 0, 0.05)',
             }}
           />
         ))}
