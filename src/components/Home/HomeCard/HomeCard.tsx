@@ -1,16 +1,18 @@
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { CardWithCount } from '@/types/card';
 import { Badge, Button } from 'antd';
-import { MdOutlineDelete, MdOutlineEdit, MdOutlineQuestionAnswer } from 'react-icons/md';
+import { MdOutlineEdit, MdOutlineQuestionAnswer } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { DeleteFormModal } from './DeleteFormModal';
 
 type Props = {
   item: CardWithCount;
   onDelete: (id: string) => void;
+  isDeleting: boolean;
 };
 
 export const HomeCard = (props: Props) => {
-  const { item, onDelete } = props;
+  const { item, onDelete, isDeleting } = props;
 
   const handleDeleteClick = () => {
     onDelete(item.id);
@@ -52,16 +54,7 @@ export const HomeCard = (props: Props) => {
           <Button block type="text" icon={<MdOutlineEdit size={18} />}></Button>
         </Link>
         <div className="border-l w-1 h-full ml-2 pl-2 dark:border-border-dark"></div>
-        <Button
-          block
-          className="block"
-          type="text"
-          key="delete"
-          data-testid="delete-button"
-          danger
-          icon={<MdOutlineDelete size={18} />}
-          onClick={handleDeleteClick}
-        ></Button>
+        <DeleteFormModal isDeleting={isDeleting} onRemoveConstructor={handleDeleteClick} />
       </div>
     </GlassWrapper>
   );
