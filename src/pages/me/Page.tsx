@@ -1,4 +1,5 @@
 import { MeAvatar, MeProfileActions, MeProfileDetails } from '@/components/Me';
+import { MeChangePassword } from '@/components/Me/MeChangePassword';
 import { Loader } from '@/components/ui/Loader';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { usePageTitle } from '@/hooks/usePageTitle';
@@ -6,13 +7,13 @@ import { useGetMeInfoQuery, useUpdateMeInfoMutation } from '@/redux/user';
 import { uploadToCloudinary } from '@/services/cloudinary.service';
 import { MeChangeFields } from '@/types/me';
 import { Alert, Form, notification } from 'antd';
+import { Content } from 'antd/es/layout/layout';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export const Me = () => {
   const [isEdit, setEdit] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
-  const [isAlertVisible, setAlertVisible] = useState<boolean>(true);
   const [userUid, setUserUid] = useState(localStorage.getItem('user'));
 
   useEffect(() => {
@@ -45,7 +46,6 @@ export const Me = () => {
       reset({
         firstName: user?.firstName || '',
         lastName: user?.lastName || '',
-        email: user?.email || '',
       });
     }
   }, [user]);
@@ -77,73 +77,66 @@ export const Me = () => {
 
         notification.success({ message: 'Данные успешно обновлены' });
         setAvatar(null);
-        setAlertVisible(false);
         setEdit(false);
       } catch (error) {
         notification.error({ message: 'Не удалось обновить данные' });
-        console.error('Ошибка обновления данных:', error);
+        console.log('Ошибка обновления данных:', error);
       }
     }
   };
 
   usePageTitle('Профиль');
 
-  if (!user || isLoading || isUpdating) return <Loader />;
+  if (isLoading) return <Loader />;
+
+  if (error || !user) {
+    return (
+      <Alert
+        message="Ошибка"
+        description="Не удалось получить информацию о пользователе"
+        type="error"
+        showIcon
+      />
+    );
+  }
 
   return (
-    <div className="flex relative justify-center p-4 break-words w-full">
-      {isEdit && isAlertVisible && (
-        <div className="absolute top-[-10px] z-50">
-          <Alert
-            message="Для изменения аватара наведите на него и нажмите"
-            type="info"
-            showIcon
-            closable
-            onClose={() => setAlertVisible(false)}
-          />
-        </div>
-      )}
-      <GlassWrapper className="w-full md:w-1/2 px-5 py-5 text-center" style={{ zIndex: 10 }}>
-        {error ? (
-          <Alert
-            message="Ошибка загрузки данных"
-            description="Не удалось получить информацию о пользователе"
-            type="error"
-            showIcon
-          />
-        ) : (
-          <div className="">
-            <Form
-              onFinish={handleSubmit(onSubmit)}
-              className="w-full flex flex-col gap-4 text-center"
-            >
-              <MeProfileActions
-                isEdit={isEdit}
-                dirtyFields={dirtyFields}
-                isValid={isValid}
-                setEdit={setEdit}
-                isUpdating={isUpdating}
-                avatar={avatar}
-              />
-              <MeAvatar
-                currentAvatarUrl={user.avatarUrl}
-                isLoading={isLoading}
-                isEdit={isEdit}
-                setAvatar={setAvatar}
-                avatar={avatar}
-              />
-              <MeProfileDetails
-                isEditing={isEdit}
-                control={control}
-                reset={reset}
-                user={user}
-                setEdit={setEdit}
-                setAvatar={setAvatar}
-              />
-            </Form>
-          </div>
-        )}
-      </GlassWrapper>
+    <div data-testid="me-page">
+      <Content className="flex flex-col px-1 md:p-0 items-center md:flex-row gap-4 w-full md:items-start">
+        <GlassWrapper
+          className="w-full min-w-56 md:w-1/2 px-5 py-5 text-center"
+          style={{ zIndex: 10 }}
+        >
+          <Form onFinish={handleSubmit(onSubmit)}>
+            <MeProfileActions
+              isEdit={isEdit}
+              dirtyFields={dirtyFields}
+              isValid={isValid}
+              setEdit={setEdit}
+              isUpdating={isUpdating}
+              avatar={avatar}
+            />
+            <MeAvatar
+              currentAvatarUrl={user.avatarUrl}
+              isLoading={isLoading}
+              setAvatar={setAvatar}
+              avatar={avatar}
+            />
+            <MeProfileDetails
+              isEdit={isEdit}
+              control={control}
+              reset={reset}
+              user={user}
+              setEdit={setEdit}
+              setAvatar={setAvatar}
+              isUpdating={isUpdating}
+            />
+          </Form>
+        </GlassWrapper>
+        <GlassWrapper className="w-1/3 px-5 py-5 min-w-80  text-center" style={{ zIndex: 10 }}>
+          <MeChangePassword />
+        </GlassWrapper>
+      </Content>
     </div>
   );
 };

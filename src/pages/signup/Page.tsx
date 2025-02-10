@@ -50,7 +50,7 @@ export const Signup = () => {
 
   return (
     <ShapeWrapper>
-      <Content className="flex justify-center items-center min-h-screen overflow-y-auto px-8">
+      <Content className="flex px-8 md:p-0 justify-center items-center min-h-screen overflow-y-auto">
         <GlassWrapper className="px-8 py-8 rounded-2xl max-w-sm w-full" style={{ zIndex: 10 }}>
           <div className="mb-6">
             <div className="flex justify-center mb-2">
@@ -79,6 +79,7 @@ export const Signup = () => {
             <UserFormInput
               control={control}
               name="name"
+              disabled={isLoading}
               placeholder="Имя"
               rules={UserFormValidationRules.name}
               prefix={<MdPerson size={20} className="mr-1" />}
@@ -86,6 +87,7 @@ export const Signup = () => {
             <UserFormInput
               control={control}
               name="surname"
+              disabled={isLoading}
               placeholder="Фамилия"
               rules={UserFormValidationRules.surname}
               prefix={<MdPerson size={20} className="mr-1" />}
@@ -93,6 +95,7 @@ export const Signup = () => {
             <UserFormInput
               control={control}
               name="email"
+              disabled={isLoading}
               placeholder="Email"
               rules={UserFormValidationRules.email}
               prefix={<MdMail size={20} className="mr-1" />}
@@ -100,6 +103,7 @@ export const Signup = () => {
             <UserFormInput
               control={control}
               name="password"
+              disabled={isLoading}
               type={showPassword ? 'text' : 'password'}
               placeholder="Пароль"
               rules={UserFormValidationRules.password}
@@ -118,6 +122,7 @@ export const Signup = () => {
               control={control}
               name="copyPassword"
               type={showCopyPassword ? 'text' : 'password'}
+              disabled={isLoading}
               placeholder="Пароль"
               rules={UserFormValidationRules.copyPassword(password)}
               prefix={<RiLockFill size={20} className="mr-1" />}
@@ -134,8 +139,8 @@ export const Signup = () => {
             <AuthSubmitButton disabled={isLoading} loading={isLoading}>
               Зарегистрироваться
             </AuthSubmitButton>
-            <div className="flex items-center justify-between">
-              <Form.Item className="flex justify-end mb-0">
+            <div className="flex justify-between mb-0 gap-1">
+              <Form.Item className="flex items-center justify-end">
                 <Button onClick={() => reset()} color="default" variant="solid">
                   Очистить форму
                 </Button>

@@ -2,6 +2,8 @@ import { firestoreService } from '@/services/firestore.service';
 import { ConstructorForm, FormData } from '@/types';
 import { getFirebaseError } from '@/utils/firebase/getFirebaseError';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { store } from '@/redux/store';
+import { userApi } from '../user/userApi';
 
 export const COLLECTION = 'form';
 
@@ -28,6 +30,7 @@ export const formApi = createApi({
         try {
           const userRef = await firestoreService.getRef('users', form.userId);
           const result = await firestoreService.create(COLLECTION, { ...form, userId: userRef });
+          store.dispatch(userApi.util.invalidateTags(['me']));
           return { data: result as FormData };
         } catch (error) {
           return { error: getFirebaseError(error) };
@@ -52,6 +55,7 @@ export const formApi = createApi({
       queryFn: async (id) => {
         try {
           const result = await firestoreService.delete(COLLECTION, id);
+          store.dispatch(userApi.util.invalidateTags(['me']));
           return { data: result };
         } catch (error) {
           return { error: getFirebaseError(error) };

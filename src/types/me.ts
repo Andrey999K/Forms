@@ -7,6 +7,11 @@ export type MeData = {
   createdAt?: number;
   updatedAt?: number;
   avatarUrl?: string;
+  formsCount?: number;
 };
 
 export type MeChangeFields = Omit<MeData, 'uid' | 'id' | 'createdAt' | 'updatedAt'>;
+export type ChangePasswordFormValues = {
+  currentPassword: string;
+  newPassword: string;
+};

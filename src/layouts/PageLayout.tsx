@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ROUTES } from '../utils/routesConfig.ts';
 import { ShapeWrapper } from './GlassLayout.js';
+import { Divider } from 'antd';
 
 const pages = [
   {
@@ -143,11 +144,12 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
         <div className="my-8 flex-grow w-full max-w-screen-lg m-auto px-4">
           {children || <Outlet />}
         </div>
-        <GlassWrapper className="py-4 z-50 border-l-0 border-r-0 border-b-0 rounded-none">
+        <Divider className="my-0 " />
+        <footer className="py-4 z-50">
           <div className="justify-center flex text-textPrimary items-center px-2 text-xs lg:text-sm lg:px-0">
             © {new Date().getFullYear()} Все права защищены.
           </div>
-        </GlassWrapper>
+        </footer>
       </div>
     </ShapeWrapper>
   );

@@ -11,7 +11,7 @@ import { UserFormValidationRules } from '@/utils/validation';
 import { Form, notification, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { MdMail } from 'react-icons/md';
+import { MdMail, MdLockReset } from 'react-icons/md';
 
 export const RecoveryPassword = () => {
   const { control, handleSubmit, reset } = useForm<EmailValue>({
@@ -33,9 +33,14 @@ export const RecoveryPassword = () => {
 
   return (
     <ShapeWrapper>
-      <Content className="flex justify-center items-center min-h-screen overflow-y-auto px-8">
+      <Content className="flex px-8 md:p-0 justify-center items-center min-h-screen overflow-y-auto">
         <GlassWrapper className="px-8 py-8 rounded-2xl max-w-sm w-full" style={{ zIndex: 10 }}>
           <div className="mb-6">
+            <div className="flex justify-center mb-2">
+              <div className="w-14 h-14 flex items-center justify-center bg-bgPrimary rounded-2xl shadow-lg">
+                <MdLockReset size={30} />
+              </div>
+            </div>
             <Typography.Title
               level={2}
               style={{
@@ -57,6 +62,7 @@ export const RecoveryPassword = () => {
             <UserFormInput
               control={control}
               name="email"
+              disabled={isLoading}
               placeholder="Email"
               rules={UserFormValidationRules.email}
               prefix={<MdMail size={20} className="mr-1" />}

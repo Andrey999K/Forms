@@ -34,6 +34,17 @@ export const userApi = createApi({
       },
       invalidatesTags: ['me'],
     }),
+
+    updatePassword: builder.mutation<void, { currentPassword: string; newPassword: string }>({
+      queryFn: async ({ currentPassword, newPassword }) => {
+        try {
+          await firestoreService.updateUserPassword(currentPassword, newPassword);
+          return { data: undefined };
+        } catch (error) {
+          return { error: getFirebaseError(error) };
+        }
+      },
+    }),
   }),
 });
 

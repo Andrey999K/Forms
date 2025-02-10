@@ -25,7 +25,7 @@ module.exports = {
         bgBase: 'var(--color-bg-base)',
       },
       spacing: {
-        'page-layout-offset': '93px',
+        'page-layout-offset': '182px',
       },
       keyframes: {
         opacityUp: {
