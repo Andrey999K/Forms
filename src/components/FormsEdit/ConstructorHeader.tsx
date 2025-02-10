@@ -23,7 +23,7 @@ export const ConstructorHeader: FC<Props> = (props) => {
         errors={errors}
         size="large"
       >
-        <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-primary rounded">
+        <div className="text-start pt-[7px] pb-[6px] px-[11px] border border-transparent hover:border-primary rounded">
           <Typography.Title level={4} style={{ fontSize: '1.125rem', fontWeight: 500, margin: 0 }}>
             {constructor.title}
           </Typography.Title>
@@ -36,7 +36,7 @@ export const ConstructorHeader: FC<Props> = (props) => {
         onChange={onChangeForm}
         errors={errors}
       >
-        <div className="text-start p-[5px] px-[11px] border border-transparent hover:border-primary rounded">
+        <div className="text-start p-[3px] px-[11px] border border-transparent hover:border-primary rounded">
           <Typography.Text type="secondary" style={{ fontSize: '0.875rem' }}>
             {constructor.description}
           </Typography.Text>

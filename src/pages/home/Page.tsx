@@ -181,7 +181,7 @@ export const Home = () => {
           status !== 'pending' &&
           !showTrigger && (
             <div className="flex flex-col gap-4">
-              <Title className="!text-2xl md:!text-3xl">Нет доступных форм.</Title>
+              <Title className="!text-xl md:!text-2xl">Нет доступных форм.</Title>
               <Link to={ROUTES.FORMS_NEW}>
                 <Button type="primary">Создать форму</Button>
               </Link>
@@ -197,7 +197,7 @@ export const Home = () => {
         )}
 
         {status === 'rejected' && !formsList.length && (
-          <Title level={2}>Произошла ошибка, попробуйте обновить страницу</Title>
+          <Title level={4}>Произошла ошибка, попробуйте обновить страницу</Title>
         )}
       </GlassWrapper>
     </div>

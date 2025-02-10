@@ -17,19 +17,19 @@ export const HomeCard = (props: Props) => {
   };
 
   return (
-    <GlassWrapper className="h-full flex flex-col">
-      <div className="py-4">
+    <GlassWrapper className="h-full flex flex-col !shadow-none">
+      <div className="py-3 px-1 flex items-center justify-center ">
         <Link
           to={`/forms/${item.id}`}
-          className="text-textPrimary hover:text-primary font-xl block"
+          className="text-textPrimary hover:text-primary line-clamp-1 text-base font-semibold"
         >
           {item.title}
         </Link>
       </div>
-      <div className="flex flex-grow items-center justify-center py-4 border-t border-b dark:border-border-dark">
-        <div className="line-clamp-3 text-textPrimary">{item.description}</div>
+      <div className="flex flex-grow items-center justify-center py-3 px-1 border-t border-b dark:border-border-dark">
+        <div className="line-clamp-3 text-textPrimary text-sm">{item.description}</div>
       </div>
-      <div className="flex justify-around items-center p-3">
+      <div className="flex justify-around items-center p-2">
         <Link key="response" to={`/forms/${item.id}/responses`} className="block w-full">
           <Button
             block
