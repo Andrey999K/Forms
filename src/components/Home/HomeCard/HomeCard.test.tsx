@@ -1,7 +1,7 @@
 import { CardWithCount } from '@/types/card';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { describe, expect, test, vi } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { HomeCard } from './HomeCard';
 
 describe('HomeCard', () => {
@@ -14,12 +14,10 @@ describe('HomeCard', () => {
     updatedAt: new Date().getTime(),
   };
 
-  const mockOnDelete = vi.fn();
-
   test('renders HomeCard with title and description', () => {
     render(
       <Router>
-        <HomeCard item={mockItem} onDelete={mockOnDelete} isDeleting={false} />
+        <HomeCard item={mockItem} />
       </Router>
     );
 

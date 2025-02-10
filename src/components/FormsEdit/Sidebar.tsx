@@ -5,8 +5,9 @@ import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 import { ConstructorTab } from './ConstructorTab';
-import { DeleteFormModal } from './DeleteFormModal';
 import { SettingsTab } from './SettingsTab';
+import { DeleteFormModal } from '@/components/ui/DeleteFormModal';
+import { ROUTES } from '@/utils/routesConfig.ts';
 
 type Props = {
   constructor: ConstructorForm;
@@ -16,7 +17,6 @@ type Props = {
   isError: boolean;
   isNew: boolean;
   onSaveConstructor: () => void;
-  onRemoveConstructor: () => void;
   onChangeForm: ({ value, name }: HandleChangeForm) => void;
 };
 
@@ -29,7 +29,6 @@ export const Sidebar: FC<Props> = (props) => {
     isError,
     isNew,
     onSaveConstructor,
-    onRemoveConstructor,
     onChangeForm,
   } = props;
   const [isSticky, setIsSticky] = useState(false);
@@ -104,7 +103,11 @@ export const Sidebar: FC<Props> = (props) => {
               : 'Сохранить форму'}
           </Button>
           {!isNew && (
-            <DeleteFormModal isDeleting={isDeleting} onRemoveConstructor={onRemoveConstructor} />
+            <DeleteFormModal
+              formId={constructor.id}
+              buttonText="Удалить форму"
+              redirectUrl={ROUTES.HOME}
+            />
           )}
         </div>
       </div>

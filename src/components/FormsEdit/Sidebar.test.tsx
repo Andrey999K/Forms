@@ -35,7 +35,6 @@ describe('Sidebar Component', () => {
             isError={false}
             isNew={true}
             onSaveConstructor={vi.fn()}
-            onRemoveConstructor={vi.fn()}
             onChangeForm={vi.fn()}
           />
         </DndProvider>
@@ -57,7 +56,6 @@ describe('Sidebar Component', () => {
             isError={false}
             isNew={true}
             onSaveConstructor={vi.fn()}
-            onRemoveConstructor={vi.fn()}
             onChangeForm={vi.fn()}
           />
         </DndProvider>
@@ -80,7 +78,6 @@ describe('Sidebar Component', () => {
             isError={false}
             isNew={true}
             onSaveConstructor={mockSave}
-            onRemoveConstructor={vi.fn()}
             onChangeForm={vi.fn()}
           />
         </DndProvider>
@@ -104,7 +101,6 @@ describe('Sidebar Component', () => {
             isError={false}
             isNew={false}
             onSaveConstructor={mockSave}
-            onRemoveConstructor={vi.fn()}
             onChangeForm={vi.fn()}
           />
         </DndProvider>

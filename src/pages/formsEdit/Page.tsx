@@ -4,7 +4,6 @@ import { Sidebar } from '@/components/FormsEdit/Sidebar';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import {
   createLocalForm,
-  deleteLocalForm,
   updateLocalForm,
   useCreateFormMutation,
   useDeleteFormMutation,
@@ -28,13 +27,12 @@ import { FC, useCallback, useLayoutEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { MultiBackend } from 'react-dnd-multi-backend';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { NotFound } from '../notFoundPage/Page';
 
 export const FormsEdit: FC = () => {
   const { formId } = useParams<{ formId: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
   const location = useLocation();
   const newFormId: string = location.state?.id;
   const [constructor, setConstructor] = useState<ConstructorForm | null>(null);
@@ -43,7 +41,7 @@ export const FormsEdit: FC = () => {
   });
   const [createForm, { isLoading: isCreating }] = useCreateFormMutation();
   const [updateForm, { isLoading: isUpdating }] = useUpdateFormMutation();
-  const [deleteForm, { isLoading: isDeleting }] = useDeleteFormMutation();
+  const [, { isLoading: isDeleting }] = useDeleteFormMutation();
   const user = useSelector((state: RootState) => state.user.user);
   const [errors, setErrors] = useState<{ [key: string]: string[] }>({});
 
@@ -158,20 +156,6 @@ export const FormsEdit: FC = () => {
         };
         dispatch(createLocalForm(newConstructor));
         notification.success({ message: 'Форма успешно сохранена' });
-      }
-    } catch (error) {
-      console.log('Error', error);
-      notification.error({ message: 'Ошибка' });
-    }
-  };
-
-  const handleRemoveForms = async () => {
-    try {
-      if (formId) {
-        await deleteForm(formId).unwrap();
-        dispatch(deleteLocalForm(formId));
-        notification.info({ message: 'Форма успешно удалена' });
-        navigate('/');
       }
     } catch (error) {
       console.log('Error', error);
@@ -294,7 +278,6 @@ export const FormsEdit: FC = () => {
           isError={Object.keys(errors).length > 0}
           isNew={!('createdAt' in constructor)}
           onSaveConstructor={handleSaveForms}
-          onRemoveConstructor={handleRemoveForms}
           onChangeForm={handleChangeForm}
         />
         <div className="flex flex-col w-full relative gap-4 ">
