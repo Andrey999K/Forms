@@ -20,9 +20,12 @@ import {
 } from 'firebase/firestore';
 import {
   createUserWithEmailAndPassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
+  updatePassword,
 } from 'firebase/auth';
 import { db, auth } from '@/utils/firebase/firebaseConfig';
 import { FormListOptions, FormListResponse } from '@/types';
@@ -140,7 +143,20 @@ export const firestoreService = {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      return convertFirestoreData(docSnap);
+      const convertedData = convertFirestoreData<T>(docSnap);
+
+      if (collectionName === 'users') {
+        const formsRef = collection(db, 'form');
+        const userDocRef = doc(db, 'users', id);
+
+        const q = query(formsRef, where('userId', '==', userDocRef));
+        const formsSnapshot = await getDocs(q);
+        const formsCount = formsSnapshot.size;
+
+        return { ...convertedData, formsCount };
+      }
+
+      return convertedData;
     }
 
     throw new Error('Id not found');
@@ -237,5 +253,18 @@ export const firestoreService = {
   resetPassword: async (email: string): Promise<boolean> => {
     await sendPasswordResetEmail(auth, email);
     return true;
+  },
+
+  updateUserPassword: async (currentPassword: string, newPassword: string): Promise<void> => {
+    if (!auth.currentUser) {
+      throw new Error('Пользователь не авторизован');
+    }
+
+    const user = auth.currentUser;
+
+    const credential = EmailAuthProvider.credential(user.email!, currentPassword);
+    await reauthenticateWithCredential(user, credential);
+
+    await updatePassword(user, newPassword);
   },
 };

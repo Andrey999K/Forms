@@ -115,6 +115,10 @@ html {
   margin-bottom: 24px !important;
 }
 
+.input-item-text-link {
+  margin-bottom: 0 !important;
+}
+
 .ant-input::placeholder {
   font-size: 12px;
 }
@@ -123,4 +127,13 @@ html {
   .ant-input::placeholder {
     font-size: 14px;
   }
+}
+
+/* для сброса стилей автозаполнения браузера */
+.ant-input:-webkit-autofill,
+.ant-input-affix-wrapper:-webkit-autofill {
+  background-color: transparent !important;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: var(--color-text) !important;
+  transition: background-color 5000s ease-in-out 0s !important;
 }

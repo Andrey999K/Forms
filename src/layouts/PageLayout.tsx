@@ -145,8 +145,8 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
         <div className="mt-5 flex-grow w-full max-w-screen-lg m-auto px-4">
           {children || <Outlet />}
         </div>
+        <Divider className="my-0 " />
         <footer className="py-4 z-50">
-          <Divider />
           <div className="justify-center flex text-textPrimary items-center px-2 text-xs lg:text-sm lg:px-0">
             © {new Date().getFullYear()} Все права защищены.
           </div>

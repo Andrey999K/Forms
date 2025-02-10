@@ -47,7 +47,7 @@ export const Login = () => {
 
   return (
     <ShapeWrapper>
-      <Content className="flex justify-center items-center min-h-screen overflow-y-auto">
+      <Content className="flex px-8 md:p-0 justify-center items-center min-h-screen overflow-y-auto">
         <GlassWrapper className="px-8 py-8 rounded-2xl max-w-sm w-full" style={{ zIndex: 10 }}>
           <div className="mb-6">
             <div className="flex justify-center mb-2">
@@ -100,16 +100,18 @@ export const Login = () => {
             <AuthSubmitButton disabled={isLoading} loading={isLoading}>
               Войти
             </AuthSubmitButton>
-            <AuthTextLink
-              text="Забыли пароль?"
-              linkText="Сбросить"
-              linkTo={ROUTES.RECOVERY_PASSWORD}
-            />
-            <AuthTextLink
-              text="Нет аккаунта?"
-              linkText="Зарегистрироваться"
-              linkTo={ROUTES.SIGNUP}
-            />
+            <div className="flex flex-col gap-0">
+              <AuthTextLink
+                text="Забыли пароль?"
+                linkText="Сбросить"
+                linkTo={ROUTES.RECOVERY_PASSWORD}
+              />
+              <AuthTextLink
+                text="Нет аккаунта?"
+                linkText="Зарегистрироваться"
+                linkTo={ROUTES.SIGNUP}
+              />
+            </div>
           </Form>
         </GlassWrapper>
       </Content>
