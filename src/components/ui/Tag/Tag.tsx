@@ -19,7 +19,7 @@ export const Tag: React.FC<Props> = (props) => {
     <div
       onClick={onClick}
       className={
-        'inline-flex gap-1 items-center px-2 py-[0.20rem] rounded text-sm border' +
+        'inline-flex gap-1 items-center px-2 py-[0.20rem] rounded text-sm border dark:border-border-dark' +
         (className ? ' ' + className : '')
       }
       style={{

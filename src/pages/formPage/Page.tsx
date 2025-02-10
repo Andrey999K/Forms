@@ -107,7 +107,7 @@ export const FormPage = () => {
   }
 
   return (
-    <div className="pt-5 relative">
+    <div className="relative">
       {isFormSubmitted ? (
         <ResponseSendMessage />
       ) : (
