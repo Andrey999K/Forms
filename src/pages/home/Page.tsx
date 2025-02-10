@@ -84,7 +84,7 @@ export const Home = () => {
     (searchParams.get('order') as SortKeys) ?? SortKeys.TIME_DESC
   );
 
-  const [deleteForm] = useDeleteFormMutation();
+  const [deleteForm, { isLoading: isDeleting }] = useDeleteFormMutation();
 
   const { ref: intersectionRef } = useInView({
     threshold: 1,
@@ -100,8 +100,10 @@ export const Home = () => {
     try {
       await deleteForm(id).unwrap();
       dispatch(deleteLocalForm(id));
+      notification.info({ message: 'Форма успешно удалена' });
     } catch (error) {
       console.error('Ошибка удаления:', error);
+      notification.error({ message: 'Ошибка' });
     }
   };
 
@@ -176,7 +178,11 @@ export const Home = () => {
 
       <GlassWrapper className="p-5">
         {formsList.length > 0 ? (
-          <HomeList items={formsList.filter((item) => item !== null)} onDelete={onDelete} />
+          <HomeList
+            items={formsList.filter((item) => item !== null)}
+            onDelete={onDelete}
+            isDeleting={isDeleting}
+          />
         ) : (
           status !== 'pending' &&
           !showTrigger && (

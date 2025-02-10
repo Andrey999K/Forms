@@ -1,11 +1,12 @@
 import { ConstructorForm, HandleChangeForm } from '@/types';
-import { DeleteOutlined, HomeOutlined, SaveOutlined, SettingOutlined } from '@ant-design/icons';
+import { HomeOutlined, SaveOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Divider, Tabs, Typography } from 'antd';
 import { FC, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 import { ConstructorTab } from './ConstructorTab';
+import { DeleteFormModal } from './DeleteFormModal';
 import { SettingsTab } from './SettingsTab';
-import { useNavigate } from 'react-router-dom';
 
 type Props = {
   constructor: ConstructorForm;
@@ -103,16 +104,7 @@ export const Sidebar: FC<Props> = (props) => {
               : 'Сохранить форму'}
           </Button>
           {!isNew && (
-            <Button
-              color="danger"
-              variant="filled"
-              className="w-full"
-              icon={<DeleteOutlined />}
-              loading={isDeleting}
-              onClick={onRemoveConstructor}
-            >
-              Удалить форму
-            </Button>
+            <DeleteFormModal isDeleting={isDeleting} onRemoveConstructor={onRemoveConstructor} />
           )}
         </div>
       </div>
