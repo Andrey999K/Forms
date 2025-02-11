@@ -7,7 +7,7 @@ import { RiLockFill } from 'react-icons/ri';
 import { useState } from 'react';
 import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
 import { AuthTextLink } from '@/components/Auth/AuthTextLink';
-import { ROUTES } from '@/utils/routesConfig';
+import { ROUTES } from '@/routes/routesPaths';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/redux/auth';
 import { SignInFormValues } from '@/types/auth';

@@ -6,7 +6,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import ShapeWrapper from '@/layouts/GlassLayout';
 import { useResetPasswordMutation } from '@/redux/auth';
 import { EmailValue } from '@/types/auth';
-import { ROUTES } from '@/utils/routesConfig';
+import { ROUTES } from '@/routes/routesPaths';
 import { UserFormValidationRules } from '@/utils/validation';
 import { Form, notification, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';

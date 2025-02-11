@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 export const Me = () => {
   const [isEdit, setEdit] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
+  const [isAlertVisible, setAlertVisible] = useState<boolean>(true);
   const [userUid, setUserUid] = useState(localStorage.getItem('user'));
 
   useEffect(() => {
@@ -70,6 +71,7 @@ export const Me = () => {
         if (avatarUrl) {
           updatedData.avatarUrl = avatarUrl;
         }
+
         await updateUserInfo({
           id: userUid,
           data: updatedData,
@@ -77,6 +79,7 @@ export const Me = () => {
 
         notification.success({ message: 'Данные успешно обновлены' });
         setAvatar(null);
+        setAlertVisible(false);
         setEdit(false);
       } catch (error) {
         notification.error({ message: 'Не удалось обновить данные' });
@@ -102,7 +105,7 @@ export const Me = () => {
 
   return (
     <div data-testid="me-page">
-      <Content className="flex flex-col px-1 md:p-0 items-center md:flex-row gap-4 w-full md:items-start">
+      <Content className="flex flex-col px-4 md:p-0 items-center md:flex-row gap-4 w-full md:items-start">
         <GlassWrapper
           className="w-full min-w-56 md:w-1/2 px-5 py-5 text-center"
           style={{ zIndex: 10 }}
@@ -118,9 +121,11 @@ export const Me = () => {
             />
             <MeAvatar
               currentAvatarUrl={user.avatarUrl}
-              isLoading={isLoading}
+              isEdit={isEdit}
               setAvatar={setAvatar}
               avatar={avatar}
+              setAlertVisible={setAlertVisible}
+              isAlertVisible={isAlertVisible}
             />
             <MeProfileDetails
               isEdit={isEdit}
@@ -133,7 +138,10 @@ export const Me = () => {
             />
           </Form>
         </GlassWrapper>
-        <GlassWrapper className="w-1/3 px-5 py-5 min-w-80  text-center" style={{ zIndex: 10 }}>
+        <GlassWrapper
+          className="w-full min-w-56 md:w-1/2 px-5 py-5 text-center"
+          style={{ zIndex: 10 }}
+        >
           <MeChangePassword />
         </GlassWrapper>
       </Content>

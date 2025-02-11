@@ -16,7 +16,7 @@ import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { FormListOptions, Sort } from '@/types';
 import { debounce } from '@/utils/debounce';
-import { ROUTES } from '@/utils/routesConfig';
+import { ROUTES } from '@/routes/routesPaths';
 
 const { Search } = Input;
 

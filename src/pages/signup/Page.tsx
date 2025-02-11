@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRegisterMutation } from '@/redux/auth';
 import { AuthSubmitButton } from '@/components/Auth/AuthSubmitButton';
 import { AuthTextLink } from '@/components/Auth/AuthTextLink';
-import { ROUTES } from '@/utils/routesConfig';
+import { ROUTES } from '@/routes/routesPaths';
 import { SignUpFormValues } from '@/types/auth';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/redux/user';
