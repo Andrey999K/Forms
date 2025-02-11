@@ -3,7 +3,8 @@ import { CardWithCount } from '@/types/card';
 import { Badge, Button } from 'antd';
 import { MdOutlineEdit, MdOutlineQuestionAnswer } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { DeleteFormModal } from '@/components/ui/DeleteFormModal';
+import { DeleteOutlined } from '@ant-design/icons';
+import { useDeleteForm } from '@/hooks/useDeleteForm.ts';
 
 type Props = {
   item: CardWithCount;
@@ -11,6 +12,7 @@ type Props = {
 
 export const HomeCard = (props: Props) => {
   const { item } = props;
+  const { handleSetFormDeleted } = useDeleteForm(item.id);
 
   return (
     <GlassWrapper className="h-full flex flex-col !shadow-none">
@@ -36,7 +38,6 @@ export const HomeCard = (props: Props) => {
                 showZero
                 size="small"
                 styles={{ indicator: { fontSize: 10 }, root: { color: 'inherit' } }}
-                // offset={[2, -2]}
               >
                 <MdOutlineQuestionAnswer size={18} />
               </Badge>
@@ -48,7 +49,17 @@ export const HomeCard = (props: Props) => {
           <Button block type="text" icon={<MdOutlineEdit size={18} />}></Button>
         </Link>
         <div className="border-l w-1 h-full ml-2 pl-2 dark:border-border-dark"></div>
-        <DeleteFormModal formId={item.id} />
+        <Button
+          block
+          color="danger"
+          type="text"
+          key="delete"
+          data-testid="delete-button"
+          danger
+          className="w-full flex items-center"
+          icon={<DeleteOutlined size={18} />}
+          onClick={handleSetFormDeleted}
+        ></Button>
       </div>
     </GlassWrapper>
   );

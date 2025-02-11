@@ -1,13 +1,12 @@
 import { ConstructorForm, HandleChangeForm } from '@/types';
-import { HomeOutlined, SaveOutlined, SettingOutlined } from '@ant-design/icons';
+import { DeleteOutlined, HomeOutlined, SaveOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Divider, Tabs, Typography } from 'antd';
 import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GlassWrapper } from '../ui/wrapper/GlassWrapper';
 import { ConstructorTab } from './ConstructorTab';
 import { SettingsTab } from './SettingsTab';
-import { DeleteFormModal } from '@/components/ui/DeleteFormModal';
-import { ROUTES } from '@/utils/routesConfig.ts';
+import { useDeleteForm } from '@/hooks/useDeleteForm.ts';
 
 type Props = {
   constructor: ConstructorForm;
@@ -33,6 +32,8 @@ export const Sidebar: FC<Props> = (props) => {
   } = props;
   const [isSticky, setIsSticky] = useState(false);
   const navigate = useNavigate();
+  const { handleSetFormDeleted } = useDeleteForm(constructor.id);
+
   const TABS_ITEMS = [
     {
       key: 'constructor',
@@ -102,12 +103,22 @@ export const Sidebar: FC<Props> = (props) => {
               ? 'Обновить форму'
               : 'Сохранить форму'}
           </Button>
+
           {!isNew && (
-            <DeleteFormModal
-              formId={constructor.id}
-              buttonText="Удалить форму"
-              redirectUrl={ROUTES.HOME}
-            />
+            <Button
+              block
+              color="danger"
+              type="text"
+              key="delete"
+              variant="filled"
+              data-testid="delete-button"
+              danger
+              className="w-full flex items-center"
+              icon={<DeleteOutlined size={18} />}
+              onClick={handleSetFormDeleted}
+            >
+              Удалить форму
+            </Button>
           )}
         </div>
       </div>

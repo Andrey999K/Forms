@@ -22,6 +22,7 @@ export const {
   actions: {
     resetStore,
     deleteLocalForm,
+    setDeletedForm,
     createLocalForm,
     updateLocalForm,
     incrementResponseCount,

@@ -56,6 +56,7 @@ type InitialState = {
   order?: FormListOptions['sort'];
   search?: string;
   hasNext: boolean;
+  removeId: null | string;
 };
 
 const initialState: InitialState = {
@@ -63,6 +64,7 @@ const initialState: InitialState = {
   error: null,
   data: [],
   hasNext: true,
+  removeId: null,
 };
 
 const formsSlice = createSlice({
@@ -89,6 +91,9 @@ const formsSlice = createSlice({
     deleteLocalForm: (state, action: PayloadAction<string>) => {
       state.data = state.data.filter((form) => form.id !== action.payload);
     },
+    setDeletedForm: (state, action: PayloadAction<string | null>) => {
+      state.removeId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -108,5 +113,7 @@ const formsSlice = createSlice({
       });
   },
 });
+
+export const getDeletedFormId = () => (state: RootState) => state.formSlice.removeId;
 
 export { formsSlice };
