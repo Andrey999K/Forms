@@ -10,36 +10,22 @@ type AnswerCardProps = {
 export const AnswerCard: FC<AnswerCardProps> = ({ data }) => {
   const renderAnswer = (answer: string | string[]) => {
     if (typeof answer === 'string') {
-      return (
-        <Typography.Paragraph style={{ textAlign: 'start', fontSize: '0.875rem' }}>
-          {answer}
-        </Typography.Paragraph>
-      );
+      return <Typography.Text>{answer}</Typography.Text>;
     } else {
       return (
-        <Typography.Paragraph
-          style={{
-            textAlign: 'start',
-            fontSize: '0.875rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.5rem',
-          }}
-        >
+        <Typography.Text>
           {answer.map((item, index) => (
             <Typography.Text key={item + index}>{item}</Typography.Text>
           ))}
-        </Typography.Paragraph>
+        </Typography.Text>
       );
     }
   };
 
   return (
-    <GlassWrapper key={data.id} className="p-5">
+    <GlassWrapper key={data.id} className="p-3 shadow-none">
       <div className="flex flex-col items-start gap-1">
-        <Typography.Title level={5} style={{ fontWeight: 600, marginBottom: 0 }}>
-          {data.question}
-        </Typography.Title>
+        <Typography.Text className="font-semibold">{data.question}</Typography.Text>
         {renderAnswer(data.answer)}
       </div>
     </GlassWrapper>

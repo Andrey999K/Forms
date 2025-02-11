@@ -160,52 +160,57 @@ export const Home = () => {
   usePageTitle('Главная страница');
 
   return (
-    <GlassWrapper data-testid="home-page" className="flex flex-col gap-4 p-5">
-      <div className="flex-col sm:flex-row flex justify-between gap-4">
-        <Search
-          defaultValue={search}
-          onSearch={onSearch}
-          className="w-full sm:w-[300px]"
-          disabled={status === 'pending'}
-        />
-        <Select
-          value={order}
-          options={sortOptions}
-          onChange={onChangeSort}
-          className="w-full sm:w-[200px]"
-        />
-      </div>
-
-      <div>
-        {formsList.length > 0 ? (
-          <HomeList
-            items={formsList.filter((item) => item !== null)}
-            onDelete={onDelete}
-            isDeleting={isDeleting}
+    <div className="flex flex-col gap-4">
+      <Text className="!text-xl font-medium xl:px-0 md:!text-2xl self-start">Мои формы</Text>
+      <GlassWrapper data-testid="home-page" className="flex flex-col gap-4 p-5 w-full">
+        <div className="flex-col sm:flex-row flex justify-between gap-4">
+          <Search
+            defaultValue={search}
+            onSearch={onSearch}
+            className="w-full sm:w-[300px]"
+            disabled={status === 'pending'}
           />
-        ) : (
-          status !== 'pending' &&
-          !showTrigger && (
-            <div className="flex flex-col gap-4">
-              <Text>Нет доступных форм.</Text>
-              <Link to={ROUTES.FORMS_NEW}>
-                <Button type="primary">Создать форму</Button>
-              </Link>
+          <Select
+            value={order}
+            options={sortOptions}
+            onChange={onChangeSort}
+            className="w-full sm:w-[200px]"
+            disabled={status === 'pending'}
+            placeholder={['Начало', 'Конец']}
+          />
+        </div>
+
+        <div>
+          {formsList.length > 0 ? (
+            <HomeList
+              items={formsList.filter((item) => item !== null)}
+              onDelete={onDelete}
+              isDeleting={isDeleting}
+            />
+          ) : (
+            status !== 'pending' &&
+            !showTrigger && (
+              <div className="flex flex-col gap-4">
+                <Text>Нет доступных форм.</Text>
+                <Link to={ROUTES.FORMS_NEW}>
+                  <Button type="primary">Создать форму</Button>
+                </Link>
+              </div>
+            )
+          )}
+          {status === 'pending' && <Loader />}
+
+          {showTrigger && (
+            <div ref={intersectionRef} className="mt-4 mb-5">
+              <Loader />
             </div>
-          )
-        )}
-        {status === 'pending' && <Loader />}
+          )}
 
-        {showTrigger && (
-          <div ref={intersectionRef} className="mt-4 mb-5">
-            <Loader />
-          </div>
-        )}
-
-        {status === 'rejected' && !formsList.length && (
-          <Text>Произошла ошибка, попробуйте обновить страницу</Text>
-        )}
-      </div>
-    </GlassWrapper>
+          {status === 'rejected' && !formsList.length && (
+            <Text>Произошла ошибка, попробуйте обновить страницу</Text>
+          )}
+        </div>
+      </GlassWrapper>
+    </div>
   );
 };

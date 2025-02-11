@@ -141,7 +141,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
             </GlassWrapper>
           </header>
         )}
-        <div className="my-8 flex-grow w-full max-w-screen-lg m-auto px-4">
+        <div className="mt-6 mb-10 flex-grow w-full max-w-screen-lg m-auto px-4">
           {children || <Outlet />}
         </div>
         <Divider className="my-0 " />

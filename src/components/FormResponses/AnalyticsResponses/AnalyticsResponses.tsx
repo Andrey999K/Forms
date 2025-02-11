@@ -90,12 +90,12 @@ export const AnalyticsResponses = () => {
             {
               data: counts,
               backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(153, 102, 255, 0.6)',
+                'rgba(255, 159, 64, 0.6)',
               ],
               borderColor: [
                 'rgba(255, 99, 132, 1)',
@@ -120,7 +120,7 @@ export const AnalyticsResponses = () => {
   if (Object.keys(pieData).length === 0) return <Loader />;
 
   return (
-    <div className="grid md:grid-cols-2">
+    <div className="grid md:grid-cols-2 gap-20">
       {Object.keys(pieData).map((id) => (
         <div key={id}>
           <h4>{pieData[id].question}</h4>
