@@ -6,11 +6,10 @@ import { ReactNode, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { ROUTES } from '../routes/routesPaths.ts';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ShapeWrapper } from './GlassLayout.js';
 import { Divider } from 'antd';
-import { BackButton } from '@/components/ui/BackButton/index.tsx';
+import { ROUTES } from '@/routes/routesPaths.js';
 
 const pages = [
   {
@@ -32,14 +31,11 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
 
   const [logout] = useLogoutMutation();
   const location = useLocation();
-  const navigate = useNavigate();
-
   const user = useSelector((state: RootState) => state.user.user);
 
   const handleExit = async () => {
     try {
       await logout().unwrap();
-      navigate(ROUTES.LOGIN);
     } catch (error) {
       console.log('####: logout error', error);
     }
@@ -59,7 +55,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
 
   return (
     <ShapeWrapper>
-      <div className="min-h-screen flex flex-col relative">
+      <div className="min-h-screen flex flex-col">
         {user && (
           <header className="sticky top-0 z-50">
             <GlassWrapper className="relative py-5 flex m-auto items-center justify-center border-l-0 border-r-0 border-t-0 rounded-none">
@@ -145,20 +141,15 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
             </GlassWrapper>
           </header>
         )}
-        <div className="flex-grow w-full max-w-screen-lg m-auto px-4 mt-9">
-          <div className="text-left relative">
-            {user && location.pathname !== ROUTES.HOME && <BackButton />}
-            <div className="flex-grow">{children || <Outlet />}</div>
-          </div>
+        <div className="mt-4 mb-10 flex-grow w-full max-w-screen-lg m-auto px-4">
+          {children || <Outlet />}
         </div>
         <Divider className="my-0 " />
-        <GlassWrapper className="z-50 border-l-0 border-r-0 border-b-0 rounded-none">
-          <footer className="py-4">
-            <div className="justify-center flex text-textPrimary items-center px-2 text-xs lg:text-sm lg:px-0">
-              © {new Date().getFullYear()} Все права защищены.
-            </div>
-          </footer>
-        </GlassWrapper>
+        <footer className="py-4 z-50">
+          <div className="justify-center flex text-textPrimary items-center px-2 text-xs lg:text-sm lg:px-0">
+            © {new Date().getFullYear()} Все права защищены.
+          </div>
+        </footer>
       </div>
     </ShapeWrapper>
   );

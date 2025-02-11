@@ -73,12 +73,12 @@ const formsSlice = createSlice({
       return initialState;
     },
     createLocalForm: (state, action: PayloadAction<CardWithCount>) => {
-      state.data = [...state.data, action.payload];
+      state.data = [action.payload, ...state.data];
     },
     updateLocalForm: (state, action: PayloadAction<Card>) => {
       const index = state.data.findIndex((form) => form.id === action.payload.id);
       if (index === -1) return;
-      state.data[index] = { ...state.data[index], ...action.payload };
+      state.data[index] = { ...action.payload, ...state.data[index] };
     },
     incrementResponseCount: (state, action: PayloadAction<{ id: string }>) => {
       const index = state.data.findIndex((form) => form.id === action.payload.id);

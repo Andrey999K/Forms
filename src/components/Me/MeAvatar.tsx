@@ -70,7 +70,7 @@ export const MeAvatar = ({
   return (
     <div className="flex flex-col items-center gap-4">
       {isEdit && isAlertVisible && (
-        <div className="absolute top-[-15px] z-50">
+        <div className="absolute top-[-20px] z-50">
           <Alert
             message="Для изменения аватара наведите на него и нажмите"
             type="info"

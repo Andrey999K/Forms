@@ -17,7 +17,7 @@ export const BackButton = () => {
   };
 
   return (
-    <div className="flex items-center z-50 h-[36px] absolute left-3 -top-9">
+    <div className="text-left">
       <Button type="link" style={{ padding: 0 }} onClick={hangleNavigate}>
         <FiArrowLeftCircle size={25} />
         Назад

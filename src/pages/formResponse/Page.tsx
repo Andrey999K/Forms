@@ -6,6 +6,8 @@ import { Loader } from '@/components/ui/Loader';
 import { AnswerCard } from '@/components/FormResponse/AnswerCard';
 import { NotFound } from '../notFoundPage/Page';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
+import { BackButton } from '@/components/ui/BackButton';
 
 export const FormResponse = () => {
   const { formId, responseId } = useParams();
@@ -21,26 +23,32 @@ export const FormResponse = () => {
   }
 
   return (
-    <div className="pt-5 pb-20">
-      <Typography.Text style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>
-        Название формы — {form.title}
-      </Typography.Text>
-      <Typography.Paragraph style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
-        {form.description}
-      </Typography.Paragraph>{' '}
-      <div className="flex flex-col gap-2 mt-8">
-        {response.fields.map((field) => (
-          <AnswerCard key={field.id} data={field} />
-        ))}
-        <div className="flex items-center gap-3 mt-4">
-          <Button type="primary">
-            <Link to={`/forms/${formId}`}>Перейти к форме</Link>
-          </Button>
-          <Button>
-            <Link to={`/forms/${formId}/edit`}>Редактировать форму</Link>
-          </Button>
-        </div>
+    <>
+      <BackButton />
+      <div className="flex flex-col gap-4">
+        <Typography.Text className="!text-xl font-medium xl:px-0 md:!text-2xl self-start">
+          Отклик на форму
+        </Typography.Text>
+        <GlassWrapper className="flex flex-col gap-4 p-5 w-full">
+          <div className="flex flex-col justify-center">
+            <Typography.Text className="text-xl">{form.title}</Typography.Text>
+            <Typography.Text>{form.description}</Typography.Text>
+          </div>
+          <div className="flex flex-col gap-3">
+            {response.fields.map((field) => (
+              <AnswerCard key={field.id} data={field} />
+            ))}
+            <div className="flex items-center gap-3 justify-end">
+              <Button>
+                <Link to={`/forms/${formId}/edit`}>Редактировать форму</Link>
+              </Button>
+              <Button type="primary">
+                <Link to={`/forms/${formId}`}>Перейти к форме</Link>
+              </Button>
+            </div>
+          </div>
+        </GlassWrapper>
       </div>
-    </div>
+    </>
   );
 };

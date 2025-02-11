@@ -1,6 +1,5 @@
-import { Button, Input, notification, Select } from 'antd';
+import { Button, Input, notification, Select, Typography } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
-import Title from 'antd/es/typography/Title';
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +18,7 @@ import { debounce } from '@/utils/debounce';
 import { ROUTES } from '@/routes/routesPaths';
 
 const { Search } = Input;
+const { Text } = Typography;
 
 enum SortKeys {
   TIME_ASC = 'TIME_ASC',
@@ -160,51 +160,56 @@ export const Home = () => {
   usePageTitle('Главная страница');
 
   return (
-    <div data-testid="home-page" className="flex flex-col gap-4">
-      <GlassWrapper className="p-5 flex-col sm:flex-row flex justify-between gap-4">
-        <Search
-          defaultValue={search}
-          onSearch={onSearch}
-          className="w-full sm:w-[300px]"
-          disabled={status === 'pending'}
-        />
-        <Select
-          value={order}
-          options={sortOptions}
-          onChange={onChangeSort}
-          className="w-full sm:w-[200px]"
-        />
-      </GlassWrapper>
-
-      <GlassWrapper className="p-5">
-        {formsList.length > 0 ? (
-          <HomeList
-            items={formsList.filter((item) => item !== null)}
-            onDelete={onDelete}
-            isDeleting={isDeleting}
+    <div className="flex flex-col gap-4 mt-[34.3px]">
+      <Text className="!text-xl font-medium xl:px-0 md:!text-2xl self-start">Мои формы</Text>
+      <GlassWrapper data-testid="home-page" className="flex flex-col gap-4 p-5 w-full">
+        <div className="flex-col sm:flex-row flex justify-between gap-4">
+          <Search
+            defaultValue={search}
+            onSearch={onSearch}
+            className="w-full sm:w-[300px]"
+            disabled={status === 'pending'}
           />
-        ) : (
-          status !== 'pending' &&
-          !showTrigger && (
-            <div className="flex flex-col gap-4">
-              <Title className="!text-xl md:!text-2xl">Нет доступных форм.</Title>
-              <Link to={ROUTES.FORMS_NEW}>
-                <Button type="primary">Создать форму</Button>
-              </Link>
+          <Select
+            value={order}
+            options={sortOptions}
+            onChange={onChangeSort}
+            className="w-full sm:w-[200px]"
+            disabled={status === 'pending'}
+            placeholder={['Начало', 'Конец']}
+          />
+        </div>
+
+        <div>
+          {formsList.length > 0 ? (
+            <HomeList
+              items={formsList.filter((item) => item !== null)}
+              onDelete={onDelete}
+              isDeleting={isDeleting}
+            />
+          ) : (
+            status !== 'pending' &&
+            !showTrigger && (
+              <div className="flex flex-col gap-4">
+                <Text>Нет доступных форм.</Text>
+                <Link to={ROUTES.FORMS_NEW}>
+                  <Button type="primary">Создать форму</Button>
+                </Link>
+              </div>
+            )
+          )}
+          {status === 'pending' && <Loader />}
+
+          {showTrigger && (
+            <div ref={intersectionRef} className="mt-4 mb-5">
+              <Loader />
             </div>
-          )
-        )}
-        {status === 'pending' && <Loader />}
+          )}
 
-        {showTrigger && (
-          <div ref={intersectionRef} className="mt-4 mb-5">
-            <Loader />
-          </div>
-        )}
-
-        {status === 'rejected' && !formsList.length && (
-          <Title level={4}>Произошла ошибка, попробуйте обновить страницу</Title>
-        )}
+          {status === 'rejected' && !formsList.length && (
+            <Text>Произошла ошибка, попробуйте обновить страницу</Text>
+          )}
+        </div>
       </GlassWrapper>
     </div>
   );
