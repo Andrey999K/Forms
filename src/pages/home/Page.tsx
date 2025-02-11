@@ -1,6 +1,5 @@
-import { Button, Input, notification, Select } from 'antd';
+import { Button, Input, notification, Select, Typography } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
-import Title from 'antd/es/typography/Title';
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +18,7 @@ import { debounce } from '@/utils/debounce';
 import { ROUTES } from '@/utils/routesConfig';
 
 const { Search } = Input;
+const { Text } = Typography;
 
 enum SortKeys {
   TIME_ASC = 'TIME_ASC',
@@ -160,8 +160,8 @@ export const Home = () => {
   usePageTitle('Главная страница');
 
   return (
-    <div data-testid="home-page" className="flex flex-col gap-4">
-      <GlassWrapper className="p-5 flex-col sm:flex-row flex justify-between gap-4">
+    <GlassWrapper data-testid="home-page" className="flex flex-col gap-4 p-5">
+      <div className="flex-col sm:flex-row flex justify-between gap-4">
         <Search
           defaultValue={search}
           onSearch={onSearch}
@@ -174,9 +174,9 @@ export const Home = () => {
           onChange={onChangeSort}
           className="w-full sm:w-[200px]"
         />
-      </GlassWrapper>
+      </div>
 
-      <GlassWrapper className="p-5">
+      <div>
         {formsList.length > 0 ? (
           <HomeList
             items={formsList.filter((item) => item !== null)}
@@ -187,7 +187,7 @@ export const Home = () => {
           status !== 'pending' &&
           !showTrigger && (
             <div className="flex flex-col gap-4">
-              <Title className="!text-xl md:!text-2xl">Нет доступных форм.</Title>
+              <Text>Нет доступных форм.</Text>
               <Link to={ROUTES.FORMS_NEW}>
                 <Button type="primary">Создать форму</Button>
               </Link>
@@ -203,9 +203,9 @@ export const Home = () => {
         )}
 
         {status === 'rejected' && !formsList.length && (
-          <Title level={4}>Произошла ошибка, попробуйте обновить страницу</Title>
+          <Text>Произошла ошибка, попробуйте обновить страницу</Text>
         )}
-      </GlassWrapper>
-    </div>
+      </div>
+    </GlassWrapper>
   );
 };
