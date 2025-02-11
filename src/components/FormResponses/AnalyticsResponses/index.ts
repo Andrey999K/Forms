@@ -1,2 +1,1 @@
-import { AnalyticsResponses } from './AnalyticsResponses';
-export { AnalyticsResponses };
+export { AnalyticsResponses } from './AnalyticsResponses';

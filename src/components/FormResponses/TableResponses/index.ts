@@ -1,2 +1,1 @@
-import { TableResponses } from './TableResponses';
-export { TableResponses };
+export { TableResponses } from './TableResponses';

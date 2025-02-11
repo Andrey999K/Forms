@@ -1,5 +1,4 @@
 import { Loader } from '@/components/ui/Loader';
-import { usePageTitle } from '@/hooks/usePageTitle';
 import { useSaveCsv } from '@/hooks/useSaveCsv';
 import { useGetFormQuery } from '@/redux/form';
 import { fetchResponseSlice, resetStore } from '@/redux/response';
@@ -14,7 +13,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { ComponentProps, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 const { Text } = typography;
 
@@ -54,6 +53,7 @@ const sortOptions = [
 ];
 
 export const TableResponses = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const status = useSelector<RootState, 'pending' | 'success' | 'rejected' | null>(
     (state) => state.responseSlice.status
@@ -70,6 +70,7 @@ export const TableResponses = () => {
     end: searchParams.get('end') ? dayjs.unix(Number(searchParams.get('end'))) : null,
   });
   const [hasNext, setHasNext] = useState<boolean>(true);
+
   const saveCsv = useSaveCsv();
   const { columns, data } = getTableSource(list);
 
@@ -191,8 +192,6 @@ export const TableResponses = () => {
 
   const showTrigger = (status === 'success' || status === null) && hasNext;
 
-  usePageTitle(form ? `Отклики | ${form.title}` : 'Отклики');
-
   function getTableSource(rawData: FormResponse[]) {
     const allQuestions: { [id: string]: { question: string; id: string } } = {};
 
@@ -248,6 +247,10 @@ export const TableResponses = () => {
     return { columns, data };
   }
 
+  const handleReload = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col w-full gap-2 sm:justify-between sm:flex-row">
@@ -258,7 +261,7 @@ export const TableResponses = () => {
           disabled={!list.length}
           className="w-full sm:w-[200px] text-left"
         />
-        <div className="flex gap-2 sm:justify-between">
+        <div className="flex gap-2 flex-col sm:justify-between sm:flex-row">
           <RangePicker
             defaultValue={[dates.start, dates.end]}
             onChange={handleEditDates}
@@ -266,13 +269,17 @@ export const TableResponses = () => {
             format={dateFormat}
             allowEmpty
             maxDate={dayjs()}
+            disabled={!list.length}
+            placeholder={['Начало', 'Конец']}
           />
           <Button
             type="primary"
             disabled={list.length === 0}
             icon={<DownloadOutlined />}
             onClick={handleLoadCsv}
-          />
+          >
+            Экспортировать CSV
+          </Button>
         </div>
       </div>
 
@@ -282,9 +289,17 @@ export const TableResponses = () => {
           dataSource={data}
           columns={columns}
           pagination={false}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'max-content', y: 500 }}
           loading={status === 'pending'}
           locale={{ emptyText: 'Ничего не найдено.' }}
+          onRow={(data) => {
+            return {
+              className: 'cursor-pointer',
+              onClick: () => {
+                navigate(`/forms/${formId}/responses/${data.key}`);
+              },
+            };
+          }}
         />
 
         {showTrigger && (
@@ -294,7 +309,10 @@ export const TableResponses = () => {
         )}
 
         {status === 'rejected' && !list.length && (
-          <Text>Произошла ошибка, попробуйте обновить страницу</Text>
+          <div className="flex flex-col gap-2 justify-center items-center">
+            <Text>Произошла ошибка, попробуйте обновить страницу</Text>
+            <Button onClick={handleReload}>Перезагрузить</Button>
+          </div>
         )}
       </div>
     </div>
