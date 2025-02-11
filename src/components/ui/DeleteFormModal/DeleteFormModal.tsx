@@ -15,6 +15,7 @@ type Props = {
 
 export const DeleteFormModal: FC<Props> = ({ formId, buttonText, buttonIcon, redirectUrl }) => {
   const [deleteForm, { isLoading: isDeleting }] = useDeleteFormMutation();
+  const [open, setOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -31,8 +32,6 @@ export const DeleteFormModal: FC<Props> = ({ formId, buttonText, buttonIcon, red
       notification.error({ message: 'Ошибка' });
     }
   };
-
-  const [open, setOpen] = useState(false);
 
   const showModal = () => {
     setOpen(true);

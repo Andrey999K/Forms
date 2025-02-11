@@ -1,8 +1,21 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { HomeList } from './HomeList';
 import { CardWithCount } from '@/types/card';
+import { store } from '@/redux/store.ts';
+import { Provider } from 'react-redux';
+
+// Мокаем Firebase конфигурацию
+vi.mock('@/utils/firebase/firebaseConfig', () => ({
+  auth: {},
+  db: {},
+}));
+
+vi.mock('firebase/auth', () => ({
+  onAuthStateChanged: vi.fn(() => () => {}),
+  getAuth: vi.fn(),
+}));
 
 describe('HomeCard', () => {
   const mockItems: CardWithCount[] = [
@@ -26,9 +39,11 @@ describe('HomeCard', () => {
 
   test('renders HomeList with title and description', () => {
     render(
-      <Router>
-        <HomeList items={mockItems} onDelete={() => {}} isDeleting={false} />
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <HomeList items={mockItems} />
+        </Router>
+      </Provider>
     );
 
     expect(screen.getByText('Test Card')).toBeInTheDocument();

@@ -4,8 +4,6 @@ import { HomeCard } from '../HomeCard/HomeCard';
 
 type Props = {
   items: CardWithCount[];
-  onDelete: (id: string) => void;
-  isDeleting: boolean;
 };
 
 export const HomeList = (props: Props) => {

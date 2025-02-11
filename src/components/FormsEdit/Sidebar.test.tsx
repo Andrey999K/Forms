@@ -6,6 +6,19 @@ import { DndProvider } from 'react-dnd';
 import { HTML5toTouch } from 'rdndmb-html5-to-touch';
 import { MultiBackend } from 'react-dnd-multi-backend';
 import { MemoryRouter } from 'react-router-dom';
+import { store } from '@/redux/store.ts';
+import { Provider } from 'react-redux';
+
+// Мокаем Firebase конфигурацию
+vi.mock('@/utils/firebase/firebaseConfig', () => ({
+  auth: {},
+  db: {},
+}));
+
+vi.mock('firebase/auth', () => ({
+  onAuthStateChanged: vi.fn(() => () => {}),
+  getAuth: vi.fn(),
+}));
 
 const mockConstructor: ConstructorForm = {
   id: '1',
@@ -25,20 +38,22 @@ const mockConstructorWithFields: ConstructorForm = {
 describe('Sidebar Component', () => {
   test('Save button should be disabled when no fields exist', () => {
     render(
-      <MemoryRouter>
-        <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-          <Sidebar
-            constructor={mockConstructor}
-            isCreating={false}
-            isUpdating={false}
-            isDeleting={false}
-            isError={false}
-            isNew={true}
-            onSaveConstructor={vi.fn()}
-            onChangeForm={vi.fn()}
-          />
-        </DndProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+            <Sidebar
+              constructor={mockConstructor}
+              isCreating={false}
+              isUpdating={false}
+              isDeleting={false}
+              isError={false}
+              isNew={true}
+              onSaveConstructor={vi.fn()}
+              onChangeForm={vi.fn()}
+            />
+          </DndProvider>
+        </MemoryRouter>
+      </Provider>
     );
     const saveButton = screen.getByRole('button', { name: /Сохранить форму/i });
     expect(saveButton).not.toBeDisabled();
@@ -46,20 +61,22 @@ describe('Sidebar Component', () => {
 
   test('Save button should be enabled when fields exist', () => {
     render(
-      <MemoryRouter>
-        <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-          <Sidebar
-            constructor={mockConstructorWithFields}
-            isCreating={false}
-            isUpdating={false}
-            isDeleting={false}
-            isError={false}
-            isNew={true}
-            onSaveConstructor={vi.fn()}
-            onChangeForm={vi.fn()}
-          />
-        </DndProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+            <Sidebar
+              constructor={mockConstructorWithFields}
+              isCreating={false}
+              isUpdating={false}
+              isDeleting={false}
+              isError={false}
+              isNew={true}
+              onSaveConstructor={vi.fn()}
+              onChangeForm={vi.fn()}
+            />
+          </DndProvider>
+        </MemoryRouter>
+      </Provider>
     );
     const saveButton = screen.getByText(/Сохранить форму/i);
     expect(saveButton).not.toBeDisabled();
@@ -68,20 +85,22 @@ describe('Sidebar Component', () => {
   test('Calls onSaveConstructor when save button is clicked', () => {
     const mockSave = vi.fn();
     render(
-      <MemoryRouter>
-        <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-          <Sidebar
-            constructor={mockConstructorWithFields}
-            isCreating={false}
-            isUpdating={false}
-            isDeleting={false}
-            isError={false}
-            isNew={true}
-            onSaveConstructor={mockSave}
-            onChangeForm={vi.fn()}
-          />
-        </DndProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+            <Sidebar
+              constructor={mockConstructorWithFields}
+              isCreating={false}
+              isUpdating={false}
+              isDeleting={false}
+              isError={false}
+              isNew={true}
+              onSaveConstructor={mockSave}
+              onChangeForm={vi.fn()}
+            />
+          </DndProvider>
+        </MemoryRouter>
+      </Provider>
     );
     const saveButton = screen.getByText(/Сохранить форму/i);
     fireEvent.click(saveButton);
@@ -91,20 +110,22 @@ describe('Sidebar Component', () => {
   test('Calls onSaveConstructor when updating form', () => {
     const mockSave = vi.fn();
     render(
-      <MemoryRouter>
-        <DndProvider backend={MultiBackend} options={HTML5toTouch}>
-          <Sidebar
-            constructor={{ ...mockConstructorWithFields, updatedAt: Date.now() }}
-            isCreating={false}
-            isUpdating={false}
-            isDeleting={false}
-            isError={false}
-            isNew={false}
-            onSaveConstructor={mockSave}
-            onChangeForm={vi.fn()}
-          />
-        </DndProvider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+            <Sidebar
+              constructor={{ ...mockConstructorWithFields, updatedAt: Date.now() }}
+              isCreating={false}
+              isUpdating={false}
+              isDeleting={false}
+              isError={false}
+              isNew={false}
+              onSaveConstructor={mockSave}
+              onChangeForm={vi.fn()}
+            />
+          </DndProvider>
+        </MemoryRouter>
+      </Provider>
     );
     const updateButton = screen.getByText(/Обновить форму/i);
     fireEvent.click(updateButton);
