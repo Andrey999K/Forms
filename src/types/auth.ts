@@ -24,4 +24,13 @@ export type AuthUser = {
   email: string | null;
 };
 
+export type UserFormPlaceholder =
+  | 'Email'
+  | 'Пароль'
+  | 'Повторите пароль'
+  | 'Имя'
+  | 'Фамилия'
+  | 'Новый пароль'
+  | 'Текущий пароль';
+
 export type EmailValue = Pick<AuthFormValues, 'email'>;

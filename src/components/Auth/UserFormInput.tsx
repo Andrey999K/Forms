@@ -1,3 +1,4 @@
+import { UserFormPlaceholder } from '@/types/auth';
 import { Typography, Input, Form } from 'antd';
 import { ReactNode } from 'react';
 import { Control, Controller, RegisterOptions, FieldValues, Path } from 'react-hook-form';
@@ -8,7 +9,7 @@ type Props<T extends FieldValues> = {
   rules: RegisterOptions<T>;
   disabled?: boolean;
   type?: 'text' | 'password';
-  placeholder: 'Email' | 'Пароль' | 'Имя' | 'Фамилия' | 'Новый пароль' | 'Текущий пароль';
+  placeholder: UserFormPlaceholder;
   prefix?: ReactNode;
   suffix?: ReactNode;
   label?: string;

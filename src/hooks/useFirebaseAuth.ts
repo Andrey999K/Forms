@@ -8,6 +8,7 @@ import { RootState } from '@/redux/store';
 export const useFirebaseAuth = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state: RootState) => state.user.user);
+  console.log('####: currentUser', currentUser);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {

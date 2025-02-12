@@ -4,6 +4,7 @@ import { validateAuthError } from '@/utils/errors/validateAuthError';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { notification } from 'antd';
 import { FirebaseError } from 'firebase/app';
+
 const COLLECTION = 'users';
 
 export const authApi = createApi({
@@ -15,7 +16,6 @@ export const authApi = createApi({
       queryFn: async ({ email, password }) => {
         try {
           const data = (await firestoreService.login(email, password)) as AuthUser;
-          localStorage.setItem('user', data.uid);
           return { data };
         } catch (error: unknown) {
           const firebaseError = error as FirebaseError;
@@ -39,7 +39,6 @@ export const authApi = createApi({
             name,
             surname
           )) as AuthUser;
-          localStorage.setItem('user', result.uid);
           return { data: result as AuthUser };
         } catch (error: unknown) {
           const firebaseError = error as FirebaseError;
@@ -57,7 +56,6 @@ export const authApi = createApi({
       queryFn: async () => {
         try {
           await firestoreService.logout();
-          localStorage.removeItem('user');
           return { data: undefined };
         } catch (error) {
           return { error: { status: 500, data: error } };

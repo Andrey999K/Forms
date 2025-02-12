@@ -4,6 +4,7 @@ import { BackButton } from '@/components/ui/BackButton';
 import { Loader } from '@/components/ui/Loader';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { RootState } from '@/redux/store';
 import { useGetMeInfoQuery, useUpdateMeInfoMutation } from '@/redux/user';
 import { uploadToCloudinary } from '@/services/cloudinary.service';
 import { MeChangeFields } from '@/types/me';
@@ -11,25 +12,15 @@ import { Alert, Form, notification, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 
 export const Me = () => {
   const [isEdit, setEdit] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
   const [isAlertVisible, setAlertVisible] = useState<boolean>(true);
-  const [userUid, setUserUid] = useState(localStorage.getItem('user'));
+  const uid = useSelector((state: RootState) => state.user.user)?.uid;
 
-  useEffect(() => {
-    const storedUid = localStorage.getItem('user');
-    if (storedUid) setUserUid(storedUid);
-  }, []);
-
-  const {
-    data: user,
-    error,
-    isLoading,
-  } = useGetMeInfoQuery(userUid || '', {
-    skip: !userUid,
-  });
+  const { data: user, error, isLoading } = useGetMeInfoQuery(uid as string);
 
   const [updateUserInfo, { isLoading: isUpdating }] = useUpdateMeInfoMutation();
 
@@ -60,7 +51,7 @@ export const Me = () => {
 
   const onSubmit = async (data: MeChangeFields) => {
     if (JSON.stringify(dirtyFields) === '{}') return;
-    if (userUid) {
+    if (uid) {
       try {
         let avatarUrl = user?.avatarUrl || '';
 
@@ -74,7 +65,7 @@ export const Me = () => {
         }
 
         await updateUserInfo({
-          id: userUid,
+          id: uid,
           data: updatedData,
         }).unwrap();
 
