@@ -153,6 +153,11 @@ export const TableResponses = () => {
       });
   };
 
+  // Не удалять. Необходим для сброса lastVisible в сторе
+  useEffect(() => {
+    resetLocalState();
+  }, []);
+
   const resetLocalState = () => {
     dispatch(resetStore());
     setHasNext(true);
