@@ -15,7 +15,6 @@ import { setLoading } from '@/redux/user';
 import { UserFormValidationRules } from '@/utils/validation';
 import { UserFormInput } from '@/components/Auth/UserFormInput';
 import { usePageTitle } from '@/hooks/usePageTitle';
-
 import { AuthFormWrapper } from '@/components/ui/wrapper/AuthFormWrapper';
 
 export const Login = () => {
