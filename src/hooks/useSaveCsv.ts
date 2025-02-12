@@ -19,7 +19,7 @@ export const useSaveCsv = () => {
 
     const escapeField = (field: string) => {
       const stringField = String(field);
-      if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+      if (stringField.includes(';') || stringField.includes('"') || stringField.includes('\n')) {
         return `"${stringField.replace(/"/g, '""')}"`;
       }
       return stringField;
@@ -30,13 +30,13 @@ export const useSaveCsv = () => {
       ...data.map((item) => headers.map((header) => escapeField(item[header] || ''))),
     ];
 
-    const csvString = csvRows.map((row) => row.join(',')).join('\n');
+    const csvString = csvRows.map((row) => row.join(';')).join('\n');
 
     const bom = new Uint8Array([0xef, 0xbb, 0xbf]);
     const csvData = new Uint8Array([...bom, ...new TextEncoder().encode(csvString)]);
 
     const blob = new Blob([csvData], {
-      type: 'text/csv;charset=utf-8',
+      type: 'text/csv;charset=utf-8;separator=;',
     });
 
     const url = URL.createObjectURL(blob);
