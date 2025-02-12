@@ -72,6 +72,7 @@ export const TableResponses = () => {
   const [hasNext, setHasNext] = useState<boolean>(true);
 
   const saveCsv = useSaveCsv();
+  const showTrigger = (status === 'success' || status === null) && hasNext;
   const { columns, data } = getTableSource(list);
 
   const filters: FormListOptions['filters'] = (() => {
@@ -195,8 +196,6 @@ export const TableResponses = () => {
       .catch(() => console.error('Cannot load csv'));
   };
 
-  const showTrigger = (status === 'success' || status === null) && hasNext;
-
   function getTableSource(rawData: FormResponse[]) {
     const allQuestions: { [id: string]: { question: string; id: string } } = {};
 
@@ -211,11 +210,11 @@ export const TableResponses = () => {
     const columns: ColumnsType<any> = [
       {
         title: '№',
-        dataIndex: 'index',
-        key: 'index',
-        render: (_: any, __: any, index: number) => (
-          <span className="text-nowrap">{index + 1}</span>
-        ),
+        dataIndex: 'id',
+        key: 'id',
+        render: (_: any, __: any, index: number) => {
+          return <span className="text-nowrap">{index + 1}</span>;
+        },
         width: 1,
         fixed: 'left',
       },
@@ -294,7 +293,7 @@ export const TableResponses = () => {
           dataSource={data}
           columns={columns}
           pagination={false}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'max-content', y: 500 }}
           loading={status === 'pending'}
           locale={{ emptyText: 'Ничего не найдено.' }}
           onRow={(data) => {
@@ -305,13 +304,25 @@ export const TableResponses = () => {
               },
             };
           }}
+          showHeader={data.length > 0}
+          summary={() =>
+            showTrigger ? (
+              <Table.Summary.Row>
+                <Table.Summary.Cell index={0} colSpan={columns.length}>
+                  <div ref={intersectionRef} className="py-4">
+                    <Loader />
+                  </div>
+                </Table.Summary.Cell>
+              </Table.Summary.Row>
+            ) : null
+          }
         />
 
-        {showTrigger && (
+        {/* {showTrigger && (
           <div ref={intersectionRef} className="mt-4 mb-5">
             <Loader />
           </div>
-        )}
+        )} */}
 
         {status === 'rejected' && !list.length && (
           <div className="flex flex-col gap-2 justify-center items-center">
