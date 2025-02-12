@@ -99,9 +99,7 @@ export const Sidebar: FC<Props> = (props) => {
             disabled={isDeleting || isError}
             onClick={onSaveConstructor}
           >
-            {'updatedAt' in constructor && constructor?.updatedAt
-              ? 'Обновить форму'
-              : 'Сохранить форму'}
+            Сохранить форму
           </Button>
           {!isNew && (
             <DeleteFormModal isDeleting={isDeleting} onRemoveConstructor={onRemoveConstructor} />
