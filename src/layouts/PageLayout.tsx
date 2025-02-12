@@ -1,7 +1,6 @@
 import { ThemeToggle } from '@/components/ui/ThemeToggle/index.tsx';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
 import { useLogoutMutation } from '@/redux/auth/authApi.js';
-import { RootState } from '@/redux/store.ts';
 import { ReactNode, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
@@ -9,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ShapeWrapper } from './GlassLayout.js';
 import { ROUTES } from '@/routes/routesPaths.js';
+import { getCurrentUser } from '@/redux/user/userSlice.ts';
 
 const pages = [
   {
@@ -30,7 +30,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
 
   const [logout] = useLogoutMutation();
   const location = useLocation();
-  const user = useSelector((state: RootState) => state.user.user);
+  const user = useSelector(getCurrentUser());
 
   const handleExit = async () => {
     try {
