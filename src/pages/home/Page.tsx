@@ -167,6 +167,7 @@ export const Home = () => {
           <Search
             defaultValue={search}
             onSearch={onSearch}
+            placeholder="Найти"
             className="w-full sm:w-[300px]"
             disabled={status === 'pending'}
           />
