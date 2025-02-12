@@ -190,7 +190,7 @@ export const TableResponses = () => {
               createdAt: dayjs(item.createdAt).toDate().toDateString(),
             };
           });
-          saveCsv(savedData, `${form?.title}_responses`);
+          saveCsv(savedData, `${form?.title}_responses.csv`);
         }
       })
       .catch(() => console.error('Cannot load csv'));
