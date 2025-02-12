@@ -116,9 +116,7 @@ export const FormPage = () => {
             <div className="flex items-center justify-around">
               <div className="flex flex-col gap-3">
                 <Typography className="text-lg font-bold leading-none">{formData.title}</Typography>
-                <Typography.Text className="text-sm line-clamp-3">
-                  {formData.description}
-                </Typography.Text>
+                <Typography.Text className="text-sm">{formData.description}</Typography.Text>
                 <Flex>
                   {formData.tags.map((tag) => (
                     <Tag key={tag.id} color={tag.color}>
