@@ -47,27 +47,6 @@ html {
   color: #888;
 }
 
-/* .ant-btn:focus,
-.ant-btn:active,
-.ant-btn:hover {
-  box-shadow: none !important;
-  border-color: transparent !important;
-  outline: none !important;
-  transition: none !important;
-}
-
-.ant-btn:focus {
-  box-shadow: none !important;
-  border-color: transparent !important;
-  outline: none !important;
-}
-
-.ant-btn:active {
-  box-shadow: none !important;
-  border-color: transparent !important;
-  outline: none !important;
-} */
-
 .custom-form .ant-form-item-explain-error {
   text-align: left;
 }
@@ -75,10 +54,6 @@ html {
 .custom-timer .ant-statistic-title {
   margin-bottom: 0;
 }
-
-/*.ant-form-item:last-child {*/
-/*  margin-bottom: 0 !important;*/
-/*}*/
 
 @media (max-width: 768px) {
   .ant-form-item {
@@ -94,18 +69,16 @@ html {
 
 /* Стилизация ползунка скроллбара */
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(250, 145, 69, 0.4); /* цвет ползунка */
+  /*background-color: rgba(250, 145, 69, 0.4); !* цвет ползунка *!*/
+  background-color: var(--color-text); /* цвет ползунка */
   border-radius: 5px; /* закругление углов ползунка */
 }
 
 /* Стилизация дорожки скроллбара */
 ::-webkit-scrollbar-track {
-  background-color: #f9f9fd; /* фон дорожки */
+  /*background-color: #f9f9fd; !* фон дорожки *!*/
+  background-color: var(--color-bg); /* фон дорожки */
 }
-
-/*.custom-form .ant-form-item {*/
-/*  margin-bottom: 40px !important;*/
-/*}*/
 
 .font-quicksand {
   font-family: 'Quicksand', sans-serif;
