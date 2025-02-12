@@ -4,11 +4,16 @@ import { useLogoutMutation } from '@/redux/auth/authApi.js';
 import { ReactNode, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ShapeWrapper } from './GlassLayout.js';
 import { ROUTES } from '@/routes/routesPaths.js';
 import { getCurrentUser } from '@/redux/user/userSlice.ts';
+import { AppDispatch } from '@/redux/store.js';
+import { resetStore as resetStoreResponse } from '@/redux/response/index';
+import { resetStore as resetStoreForm } from '@/redux/form/index';
+import { formApi } from '@/redux/form/formApi.js';
+import { responseApi } from '@/redux/response/responseApi.js';
 
 const pages = [
   {
@@ -27,10 +32,10 @@ const pages = [
 
 export const PageLayout = ({ children }: { children?: ReactNode }) => {
   const [navOpen, setNavOpen] = useState(false);
-
   const [logout] = useLogoutMutation();
   const location = useLocation();
   const user = useSelector(getCurrentUser());
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleExit = async () => {
     try {
@@ -41,6 +46,15 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
   };
 
   const toggleNav = () => setNavOpen((prev) => !prev);
+
+  const handleLogout = () => {
+    toggleNav();
+    handleExit();
+    dispatch(resetStoreResponse());
+    dispatch(resetStoreForm());
+    formApi.util.resetApiState();
+    responseApi.util.resetApiState();
+  };
 
   const navLinkClass = (href: string, isActive: boolean) => {
     const { pathname } = location;
@@ -125,10 +139,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
                     </li>
                     <li className="py-6 text-2xl">
                       <button
-                        onClick={() => {
-                          toggleNav();
-                          handleExit();
-                        }}
+                        onClick={handleLogout}
                         className="text-textPrimary hover:text-linkHover transition-colors"
                       >
                         Выйти
