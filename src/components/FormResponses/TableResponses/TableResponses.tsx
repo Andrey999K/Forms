@@ -153,6 +153,11 @@ export const TableResponses = () => {
       });
   };
 
+  // Не удалять. Необходим для сброса lastVisible в сторе
+  useEffect(() => {
+    resetLocalState();
+  }, []);
+
   const resetLocalState = () => {
     dispatch(resetStore());
     setHasNext(true);
@@ -289,7 +294,7 @@ export const TableResponses = () => {
           dataSource={data}
           columns={columns}
           pagination={false}
-          scroll={{ x: 'max-content', y: 500 }}
+          scroll={{ x: 'max-content' }}
           loading={status === 'pending'}
           locale={{ emptyText: 'Ничего не найдено.' }}
           onRow={(data) => {
