@@ -69,8 +69,11 @@ const formsSlice = createSlice({
   name: 'formSlice',
   initialState,
   reducers: {
-    resetStore: () => {
-      return initialState;
+    resetStore: (state) => {
+      state.status = null;
+      state.error = null;
+      state.data = [];
+      state.hasNext = true;
     },
     createLocalForm: (state, action: PayloadAction<CardWithCount>) => {
       state.data = [action.payload, ...state.data];

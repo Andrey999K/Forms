@@ -1,9 +1,13 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/routes/routesPaths';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
 import { Loader } from '@/components/ui/Loader';
 import { ReactNode } from 'react';
+import { resetStore as resetStoreResponse } from '@/redux/response';
+import { resetStore as resetStoreForm } from '@/redux/form';
+import { formApi } from '@/redux/form/formApi.ts';
+import { responseApi } from '@/redux/response/responseApi.ts';
 
 type Props = {
   children: ReactNode;
@@ -13,6 +17,8 @@ type Props = {
 export const ProtectedRoute = ({ children, inverted = false }: Props) => {
   const user = useSelector((state: RootState) => state.user.user);
   const isUserReady = useSelector((state: RootState) => state.user.isUserReady);
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   if (!isUserReady)
     return (
@@ -25,5 +31,13 @@ export const ProtectedRoute = ({ children, inverted = false }: Props) => {
     return user ? <Navigate to={ROUTES.HOME} /> : children;
   }
 
-  return user ? children : <Navigate to={ROUTES.LOGIN} />;
+  if (user) {
+    return children;
+  } else {
+    dispatch(resetStoreResponse());
+    dispatch(resetStoreForm());
+    formApi.util.resetApiState();
+    responseApi.util.resetApiState();
+    navigate(ROUTES.LOGIN);
+  }
 };
