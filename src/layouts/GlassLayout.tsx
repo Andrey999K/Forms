@@ -50,7 +50,7 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
   const CONFIG = {
     ...defaultSettings,
     ...settings,
-    color: theme === 'dark' ? 'rgba(200, 200, 200, 0.05)' : 'rgba(150, 150, 150, 0.3)',
+    color: theme === 'dark' ? 'rgba(200, 200, 200, 0.05)' : 'rgba(150, 150, 150, 0.05)',
   };
 
   const generateRandomSize = useCallback(() => {
@@ -232,7 +232,7 @@ export const ShapeWrapper = ({ children, settings }: Props) => {
 
   return (
     <div className="relative min-h-screen">
-      <div className="absolute inset-0 overflow-hidden  z-0">
+      <div className="absolute inset-0 overflow-hidden z-0">
         {circles.map((circle) => (
           <div
             key={circle.id}

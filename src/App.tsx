@@ -1,9 +1,9 @@
-import { useFirebaseAuth } from './hooks/useFirebaseAuth.ts';
-import { useChangeTheme } from './hooks/useChangeTheme.ts';
-import { AppRouter } from './routes/routes.tsx';
 import { ConfigProvider } from 'antd';
-import { antdThemeConfig } from './utils/antdThemeConfig.ts';
 import './App.css';
+import { useChangeTheme } from './hooks/useChangeTheme.ts';
+import { useFirebaseAuth } from './hooks/useFirebaseAuth.ts';
+import { AppRouter } from './routes/routes.tsx';
+import { antdThemeConfig } from './utils/antdThemeConfig.ts';
 
 export const App = () => {
   useFirebaseAuth();

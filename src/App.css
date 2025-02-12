@@ -143,3 +143,15 @@ html {
   word-break: break-word;
   overflow-wrap: break-word;
 }
+
+/* Темная тема для notification ant design */
+.dark .ant-notification .ant-notification-notice-wrapper {
+  background: #1f1f1f !important;
+}
+.dark .ant-notification .ant-notification-notice-wrapper .ant-notification-notice-close {
+  color: #fff !important;
+}
+.dark .ant-notification-notice-message,
+.dark .ant-notification-notice-description {
+  color: #fff !important;
+}
