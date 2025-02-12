@@ -169,14 +169,14 @@ export const Home = () => {
             onSearch={onSearch}
             placeholder="Найти"
             className="w-full sm:w-[300px]"
-            disabled={status === 'pending'}
+            disabled={status === 'pending' || (!formsList.length && !search)}
           />
           <Select
             value={order}
             options={sortOptions}
             onChange={onChangeSort}
             className="w-full sm:w-[200px]"
-            disabled={status === 'pending'}
+            disabled={status === 'pending' || !formsList.length}
             placeholder={['Начало', 'Конец']}
           />
         </div>
