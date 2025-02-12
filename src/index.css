@@ -36,4 +36,6 @@ html,
 body {
   background-color: var(--color-bg-base);
   transition: background-color 0.3s ease-in-out;
+  position: relative;
+  z-index: -100;
 }
