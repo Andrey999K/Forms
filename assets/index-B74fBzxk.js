@@ -1,1 +1,0 @@
-import{ap as n,bo as o,j as e,B as c,ck as r}from"./index-CEcggfRR.js";const d=()=>{const t=n(),s=o(),i=()=>{var a;((a=s.state)==null?void 0:a.from)==="/forms/new"?t(-2):(s.pathname.endsWith("/edit"),t(-1))};return e.jsx("div",{className:"text-left",children:e.jsxs(c,{type:"link",style:{padding:0},onClick:i,children:[e.jsx(r,{size:25}),"Назад"]})})};export{d as B};
