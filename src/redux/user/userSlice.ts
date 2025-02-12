@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { User } from 'firebase/auth';
+import { RootState } from '@/redux/store.ts';
 
 interface UserState {
   user: User | null;
@@ -33,3 +34,5 @@ export const userSlice = createSlice({
     },
   },
 });
+
+export const getCurrentUser = () => (state: RootState) => state.user.user;

@@ -2,9 +2,11 @@ import { Button, Form, FormInstance } from 'antd';
 import { renderField } from '@/utils/renderField.tsx';
 import { useEffect, useState } from 'react';
 import { useGetFormQuery } from '@/redux/form';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useLocalStorage from '@/hooks/useLocalStorage.ts';
 import { FormLocal } from '@/types/form.ts';
+import { useSelector } from 'react-redux';
+import { getCurrentUser } from '@/redux/user/userSlice.ts';
 
 type FillingFormProps = {
   form: FormInstance;
@@ -17,6 +19,7 @@ export const FillingForm = ({ form, onSend, isLoading }: FillingFormProps) => {
   const { data: formData } = useGetFormQuery(formId || '');
   const [isFormValid, setIsFormValid] = useState(false);
   const { value: formsLocal, update, remove } = useLocalStorage<FormLocal[]>('form');
+  const currentUser = useSelector(getCurrentUser());
 
   const deleteDraft = () => {
     remove();
@@ -99,10 +102,15 @@ export const FillingForm = ({ form, onSend, isLoading }: FillingFormProps) => {
         ))}
       </div>
       <div className="mb-0 py-5 relative h-full block border-t-[1px] border-solid border-gray-200">
-        <div className="flex justify-start">
+        <div className="flex justify-start gap-3">
           <Button type="primary" htmlType="submit" disabled={!isFormValid} loading={isLoading}>
             Отправить форму
           </Button>
+          {currentUser && formData.userId === currentUser.uid && (
+            <Button>
+              <Link to={`/forms/${formId}/edit`}>Редактировать форму</Link>
+            </Button>
+          )}
         </div>
       </div>
     </Form>

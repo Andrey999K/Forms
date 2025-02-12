@@ -1,5 +1,5 @@
 import TextArea, { TextAreaRef } from 'antd/es/input/TextArea';
-import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FC, ReactNode, useEffect, useRef, useState } from 'react';
 
 type Props = {
   value: string;
@@ -7,7 +7,7 @@ type Props = {
   placeholder?: string;
   onChange: ({ value, name }: { value: string; name: string }) => void;
   errors: { [key: string]: string[] };
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export const EditableTextarea: FC<Props> = (props) => {
@@ -49,14 +49,7 @@ export const EditableTextarea: FC<Props> = (props) => {
           status={errors[name] ? 'error' : undefined}
           placeholder={placeholder}
           ref={textareaRef}
-          rows={1}
-          // suffix={
-          //   isError ? (
-          //     <Tooltip title={errors[id]}>
-          //       <ExclamationCircleOutlined className="text-red-500" />
-          //     </Tooltip>
-          //   ) : null
-          // }
+          rows={3}
         />
       ) : (
         <div onClick={handleClick} className="cursor-pointer">

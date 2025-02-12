@@ -1,15 +1,14 @@
 import { ThemeToggle } from '@/components/ui/ThemeToggle/index.tsx';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper.tsx';
 import { useLogoutMutation } from '@/redux/auth/authApi.js';
-import { RootState } from '@/redux/store.ts';
 import { ReactNode, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ShapeWrapper } from './GlassLayout.js';
-import { Divider } from 'antd';
 import { ROUTES } from '@/routes/routesPaths.js';
+import { getCurrentUser } from '@/redux/user/userSlice.ts';
 
 const pages = [
   {
@@ -31,7 +30,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
 
   const [logout] = useLogoutMutation();
   const location = useLocation();
-  const user = useSelector((state: RootState) => state.user.user);
+  const user = useSelector(getCurrentUser());
 
   const handleExit = async () => {
     try {
@@ -132,7 +131,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
                         }}
                         className="text-textPrimary hover:text-linkHover transition-colors"
                       >
-                        Выйти из приложения
+                        Выйти
                       </button>
                     </li>
                   </ul>
@@ -144,11 +143,12 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
         <div className="mt-4 mb-10 flex-grow w-full max-w-screen-lg m-auto px-4">
           {children || <Outlet />}
         </div>
-        <Divider className="my-0 " />
-        <footer className="py-4 z-50">
-          <div className="justify-center flex text-textPrimary items-center px-2 text-xs lg:text-sm lg:px-0">
-            © {new Date().getFullYear()} Все права защищены.
-          </div>
+        <footer>
+          <GlassWrapper className="py-4 z-50 border-l-0 border-r-0 border-b-0 rounded-none">
+            <div className="justify-center flex text-textPrimary items-center px-2 text-xs lg:text-sm lg:px-0">
+              © {new Date().getFullYear()} Все права защищены.
+            </div>
+          </GlassWrapper>
         </footer>
       </div>
     </ShapeWrapper>
