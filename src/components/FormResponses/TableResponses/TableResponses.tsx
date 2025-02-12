@@ -304,6 +304,7 @@ export const TableResponses = () => {
               },
             };
           }}
+          showHeader={data.length > 0}
           summary={() =>
             showTrigger ? (
               <Table.Summary.Row>
