@@ -7,9 +7,9 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { ROUTES } from '../utils/routesConfig.ts';
 import { ShapeWrapper } from './GlassLayout.js';
 import { Divider } from 'antd';
+import { ROUTES } from '@/routes/routesPaths.js';
 
 const pages = [
   {
@@ -141,7 +141,7 @@ export const PageLayout = ({ children }: { children?: ReactNode }) => {
             </GlassWrapper>
           </header>
         )}
-        <div className="mt-6 mb-10 flex-grow w-full max-w-screen-lg m-auto px-4">
+        <div className="mt-4 mb-10 flex-grow w-full max-w-screen-lg m-auto px-4">
           {children || <Outlet />}
         </div>
         <Divider className="my-0 " />

@@ -15,7 +15,7 @@ import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { FormListOptions, Sort } from '@/types';
 import { debounce } from '@/utils/debounce';
-import { ROUTES } from '@/utils/routesConfig';
+import { ROUTES } from '@/routes/routesPaths';
 
 const { Search } = Input;
 const { Text } = Typography;
@@ -160,7 +160,7 @@ export const Home = () => {
   usePageTitle('Главная страница');
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 mt-[34.3px]">
       <Text className="!text-xl font-medium xl:px-0 md:!text-2xl self-start">Мои формы</Text>
       <GlassWrapper data-testid="home-page" className="flex flex-col gap-4 p-5 w-full">
         <div className="flex-col sm:flex-row flex justify-between gap-4">

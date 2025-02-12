@@ -90,9 +90,7 @@ export const MeChangePassword = () => {
           <Form.Item>
             <Button
               type="primary"
-              style={{
-                height: '35.81px',
-              }}
+              style={{ height: '35.81px' }}
               htmlType="submit"
               loading={isLoading}
               block

@@ -1,5 +1,6 @@
 import { MeAvatar, MeProfileActions, MeProfileDetails } from '@/components/Me';
 import { MeChangePassword } from '@/components/Me/MeChangePassword';
+import { BackButton } from '@/components/ui/BackButton';
 import { Loader } from '@/components/ui/Loader';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { usePageTitle } from '@/hooks/usePageTitle';
@@ -14,6 +15,7 @@ import { useForm } from 'react-hook-form';
 export const Me = () => {
   const [isEdit, setEdit] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
+  const [isAlertVisible, setAlertVisible] = useState<boolean>(true);
   const [userUid, setUserUid] = useState(localStorage.getItem('user'));
 
   useEffect(() => {
@@ -70,6 +72,7 @@ export const Me = () => {
         if (avatarUrl) {
           updatedData.avatarUrl = avatarUrl;
         }
+
         await updateUserInfo({
           id: userUid,
           data: updatedData,
@@ -77,6 +80,7 @@ export const Me = () => {
 
         notification.success({ message: 'Данные успешно обновлены' });
         setAvatar(null);
+        setAlertVisible(false);
         setEdit(false);
       } catch (error) {
         notification.error({ message: 'Не удалось обновить данные' });
@@ -101,47 +105,55 @@ export const Me = () => {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <Typography.Text className="!text-xl font-medium xl:px-0 md:!text-2xl self-start">
-        Мой профиль
-      </Typography.Text>
-      <div data-testid="me-page">
-        <Content className="flex flex-col px-1 md:p-0 items-center md:flex-row gap-4 w-full md:items-start">
-          <GlassWrapper
-            className="w-full min-w-56 md:w-1/2 px-5 py-5 text-center"
-            style={{ zIndex: 10 }}
-          >
-            <Form onFinish={handleSubmit(onSubmit)}>
-              <MeProfileActions
-                isEdit={isEdit}
-                dirtyFields={dirtyFields}
-                isValid={isValid}
-                setEdit={setEdit}
-                isUpdating={isUpdating}
-                avatar={avatar}
-              />
-              <MeAvatar
-                currentAvatarUrl={user.avatarUrl}
-                isLoading={isLoading}
-                setAvatar={setAvatar}
-                avatar={avatar}
-              />
-              <MeProfileDetails
-                isEdit={isEdit}
-                control={control}
-                reset={reset}
-                user={user}
-                setEdit={setEdit}
-                setAvatar={setAvatar}
-                isUpdating={isUpdating}
-              />
-            </Form>
-          </GlassWrapper>
-          <GlassWrapper className="w-1/3 px-5 py-5 min-w-80  text-center" style={{ zIndex: 10 }}>
-            <MeChangePassword />
-          </GlassWrapper>
-        </Content>
+    <>
+      <BackButton />
+      <div className="flex flex-col gap-4">
+        <Typography.Text className="!text-xl font-medium xl:px-0 md:!text-2xl self-start">
+          Мой профиль
+        </Typography.Text>
+        <div data-test-id="me-page">
+          <Content className="flex flex-col px-4 md:p-0 items-center md:flex-row gap-4 w-full md:items-start">
+            <GlassWrapper
+              className="w-full min-w-56 md:w-1/2 px-5 py-5 text-center"
+              style={{ zIndex: 10 }}
+            >
+              <Form onFinish={handleSubmit(onSubmit)}>
+                <MeProfileActions
+                  isEdit={isEdit}
+                  dirtyFields={dirtyFields}
+                  isValid={isValid}
+                  setEdit={setEdit}
+                  isUpdating={isUpdating}
+                  avatar={avatar}
+                />
+                <MeAvatar
+                  currentAvatarUrl={user.avatarUrl}
+                  isEdit={isEdit}
+                  setAvatar={setAvatar}
+                  avatar={avatar}
+                  setAlertVisible={setAlertVisible}
+                  isAlertVisible={isAlertVisible}
+                />
+                <MeProfileDetails
+                  isEdit={isEdit}
+                  control={control}
+                  reset={reset}
+                  user={user}
+                  setEdit={setEdit}
+                  setAvatar={setAvatar}
+                  isUpdating={isUpdating}
+                />
+              </Form>
+            </GlassWrapper>
+            <GlassWrapper
+              className="w-full min-w-56 md:w-1/2 px-5 py-5 text-center"
+              style={{ zIndex: 10 }}
+            >
+              <MeChangePassword />
+            </GlassWrapper>
+          </Content>
+        </div>
       </div>
-    </div>
+    </>
   );
 };

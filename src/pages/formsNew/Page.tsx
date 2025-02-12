@@ -10,7 +10,7 @@ export const FormsNew: FC = () => {
   useEffect(() => {
     const id = getUUID();
     if (id) {
-      navigate(`/forms/${id}/edit`, { state: { id } });
+      navigate(`/forms/${id}/edit`, { state: { id, from: '/forms/new' }, replace: true });
     }
   }, []);
 

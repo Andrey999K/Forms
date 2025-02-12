@@ -2,7 +2,7 @@ import { UserFormValidationRules } from '@/utils/validation';
 import { Control, UseFormReset } from 'react-hook-form';
 import { Dispatch, SetStateAction } from 'react';
 import { MeChangeFields, MeData } from '@/types/me';
-import { Button, Input, notification } from 'antd';
+import { Button } from 'antd';
 import { MdOutlineCancel, MdPerson } from 'react-icons/md';
 import { formatUserCreatedAt } from '@/utils/formatUserCreatedAt';
 import { UserFormInput } from '../Auth/UserFormInput';
@@ -36,32 +36,6 @@ export const MeProfileDetails = ({
     setEdit(false);
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const isJpgOrPng =
-        file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/webp';
-      if (!isJpgOrPng) {
-        notification.error({
-          message: 'Ошибка',
-          description: 'Для аватара можно загружать только форматы JPG/PNG/WEBP!',
-        });
-        return;
-      }
-
-      const isLt8M = file.size / 1024 / 1024 < 8;
-      if (!isLt8M) {
-        notification.error({
-          message: 'Ошибка',
-          description: 'Файл должен быть меньше 8MB!',
-        });
-        return;
-      }
-
-      setAvatar(file);
-    }
-  };
-
   return (
     <>
       {!isEdit ? (
@@ -92,7 +66,7 @@ export const MeProfileDetails = ({
         </div>
       ) : (
         <div>
-          <div className="flex flex-col items-start mb-6">
+          {/* <div className="flex flex-col items-start mb-6">
             <label className="ml-2">Аватар</label>
             <Input
               type="file"
@@ -102,7 +76,7 @@ export const MeProfileDetails = ({
               style={{ height: '35.81px' }}
               className="text-textPrimary file:cursor-pointer file:bg-transparent file:border-none file:text-textPrimary py-1.5 px-4 rounded-lg"
             />
-          </div>
+          </div> */}
           <UserFormInput
             control={control}
             disabled={isUpdating}
