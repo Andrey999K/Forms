@@ -110,7 +110,7 @@ describe('Sidebar Component', () => {
         </DndProvider>
       </MemoryRouter>
     );
-    const updateButton = screen.getByText(/Обновить форму/i);
+    const updateButton = screen.getByText(/Сохранить форму/i);
     fireEvent.click(updateButton);
     expect(mockSave).toHaveBeenCalled();
   });
