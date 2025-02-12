@@ -18,18 +18,18 @@
 }
 
 .dark {
-  --color-primary: #e9ecef;
-  --color-text: #adb5bd;
-  --color-bg: #212529;
-  --color-link-active: #e9ecef;
-  --color-link-hover: #e9ecef;
-  --color-border: #495057;
+  --color-primary: #fa9145;
+  --color-text: #f2e4db;
+  --color-bg: #1a1a1a;
+  --color-link-active: #ffb078;
+  --color-link-hover: #ffb078;
+  --color-border: #3a2b1e;
   --color-border-glass: rgba(255, 255, 255, 0.05);
 
-  --color-bg-base: #2b3035;
+  --color-bg-base: #121212;
 
-  --shadow: 0 4px 6px rgba(255, 255, 255, 0.1), 0 1px 3px rgba(173, 181, 189, 0.1);
-  --shadow-hover: 0 6px 12px rgba(233, 236, 239, 0.2), 0 2px 4px rgba(173, 181, 189, 0.15);
+  --shadow: 0 4px 6px rgba(255, 255, 255, 0.1), 0 1px 3px rgba(117, 175, 217, 0.1);
+  --shadow-hover: 0 6px 12px rgba(6, 94, 185, 0.2), 0 2px 4px rgba(117, 175, 217, 0.15);
 }
 
 html,
