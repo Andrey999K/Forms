@@ -55,11 +55,7 @@ export const MeAvatar = ({
     return false;
   };
 
-  const image = previewUrl
-    ? previewUrl
-    : currentAvatarUrl
-      ? currentAvatarUrl
-      : 'https://ui-avatars.com/api/?name=User&background=random';
+  const image = previewUrl ? previewUrl : currentAvatarUrl;
 
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }}>

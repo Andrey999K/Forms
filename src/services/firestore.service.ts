@@ -31,6 +31,8 @@ import { db, auth } from '@/utils/firebase/firebaseConfig';
 import { FormListOptions, FormListResponse } from '@/types';
 import { uploadToCloudinary } from './cloudinary.service';
 
+const DEFAULT_AVATAR_URL = 'https://cdn-icons-png.flaticon.com/512/847/847969.png';
+
 const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | number): string => {
   if (timestamp) {
     if (typeof timestamp !== 'number') {
@@ -225,8 +227,6 @@ export const firestoreService = {
   ): Promise<object> => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-    const defaultAvatar = `https://res.cloudinary.com/dgl60edaq/image/upload/v1738281588/jmkt7m2spadfz9aoqmyi.jpg`;
-
     const user = userCredential.user;
     const docRef = doc(db, collectionName, user.uid);
     await setDoc(docRef, {
@@ -234,7 +234,7 @@ export const firestoreService = {
       firstName: name,
       lastName: surname,
       email,
-      avatarUrl: defaultAvatar,
+      avatarUrl: DEFAULT_AVATAR_URL,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });
