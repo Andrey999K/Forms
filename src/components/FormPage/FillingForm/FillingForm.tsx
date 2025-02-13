@@ -101,7 +101,7 @@ export const FillingForm = ({ form, onSend, isLoading }: FillingFormProps) => {
           </Form.Item>
         ))}
       </div>
-      <div className="mb-0 py-5 relative h-full block border-t-[1px] border-solid border-gray-200">
+      <div className="mb-0 py-5 relative h-full block border-t-[1px] border-solid border-gray-200 dark:border-gray-600">
         <div className="flex justify-start gap-3">
           <Button type="primary" htmlType="submit" disabled={!isFormValid} loading={isLoading}>
             Отправить форму

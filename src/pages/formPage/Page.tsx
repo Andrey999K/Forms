@@ -103,7 +103,7 @@ export const FormPage = () => {
   }
 
   if (!timerStart && formData?.timer) {
-    return <StartTimer onStart={startTimer} />;
+    return <StartTimer onStart={startTimer} time={formData.timer} />;
   }
 
   return (
