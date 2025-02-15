@@ -40,7 +40,6 @@ export const UserFormInput = <T extends FieldValues>({
                   display: 'block',
                   lineHeight: '1.4',
                 }}
-                // className="text-xs md:text-sm ml-2"
                 className="text-xs ml-2"
               >
                 {fieldState.error.message}

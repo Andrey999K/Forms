@@ -33,7 +33,7 @@ export const MeAvatar = ({
     if (!file.type.startsWith('image/')) {
       notification.error({
         message: 'Ошибка',
-        description: 'Можно загружать только изображения (JPG, PNG, WEBP, GIF и др.)!',
+        description: 'Можно загружать только изображения форматов JPG, PNG, WEBP, GIF!',
       });
       return false;
     }
