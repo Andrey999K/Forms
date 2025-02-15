@@ -30,8 +30,7 @@ import {
 import { db, auth } from '@/utils/firebase/firebaseConfig';
 import { FormListOptions, FormListResponse } from '@/types';
 import { uploadToCloudinary } from './cloudinary.service';
-
-const DEFAULT_AVATAR_URL = 'https://cdn-icons-png.flaticon.com/512/847/847969.png';
+import { DEFAULT_AVATAR_URL } from '@/utils/constants/defaultAvatar';
 
 const convertTimestampToNumber = (timestamp: Timestamp | null | undefined | number): string => {
   if (timestamp) {

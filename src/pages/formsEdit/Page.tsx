@@ -287,7 +287,12 @@ export const FormsEdit: FC = () => {
   return (
     <>
       <BackButton />
-      <div className="flex flex-col gap-4">
+      <div className="sm:hidden flex justify-center px-4 text-center">
+        <Typography.Text className="text-lg font-semibold mt-5 min-w-36">
+          Конструктор форм не доступен в мобильной версии
+        </Typography.Text>
+      </div>
+      <div className="hidden sm:flex flex-col gap-4">
         <Typography.Text className="!text-xl font-medium xl:px-0 md:!text-2xl self-start">
           {'createdAt' in constructor ? 'Изменение формы' : 'Создание формы'}
         </Typography.Text>

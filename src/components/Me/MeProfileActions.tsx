@@ -28,7 +28,7 @@ export const MeProfileActions = ({
       ? 'opacity-30 cursor-not-allowed'
       : 'opacity-100 cursor-pointer hover:text-primary'
   }`;
-  const isSubmitDisabled = !isValid || (JSON.stringify(dirtyFields) === '{}' && !avatar);
+  const isSubmitDisabled = !isValid || (JSON.stringify(dirtyFields) === '{}' && avatar === null);
 
   return isUpdating ? (
     <Spin size="large" className={btnPositionStyles} />

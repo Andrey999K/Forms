@@ -16,6 +16,7 @@ type Props = {
   isEdit: boolean;
   setAvatar: Dispatch<SetStateAction<File | null>>;
   isUpdating: boolean;
+  setPreviewUrl: Dispatch<SetStateAction<string | null>>;
 };
 
 export const MeProfileDetails = ({
@@ -26,6 +27,7 @@ export const MeProfileDetails = ({
   setEdit,
   setAvatar,
   isUpdating,
+  setPreviewUrl,
 }: Props) => {
   const handleFormsReset = () => {
     reset({
@@ -66,17 +68,6 @@ export const MeProfileDetails = ({
         </div>
       ) : (
         <div>
-          {/* <div className="flex flex-col items-start mb-6">
-            <label className="ml-2">Аватар</label>
-            <Input
-              type="file"
-              accept="image/*"
-              disabled={isUpdating}
-              onChange={handleFileChange}
-              style={{ height: '35.81px' }}
-              className="text-textPrimary file:cursor-pointer file:bg-transparent file:border-none file:text-textPrimary py-1.5 px-4 rounded-lg"
-            />
-          </div> */}
           <UserFormInput
             control={control}
             disabled={isUpdating}
@@ -114,7 +105,10 @@ export const MeProfileDetails = ({
             </div>
           </div>
           <Button
-            onClick={handleFormsReset}
+            onClick={() => {
+              handleFormsReset();
+              setPreviewUrl(null);
+            }}
             color="danger"
             variant="filled"
             icon={<MdOutlineCancel size={15} />}
