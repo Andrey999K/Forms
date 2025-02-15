@@ -73,6 +73,9 @@ const formsSlice = createSlice({
       state.status = null;
       state.error = null;
       state.data = [];
+      state.lastVisible = undefined;
+      state.order = undefined;
+      state.search = '';
       state.hasNext = true;
     },
     createLocalForm: (state, action: PayloadAction<CardWithCount>) => {
