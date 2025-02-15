@@ -192,7 +192,7 @@ export const Home = () => {
           ) : (
             status !== 'pending' &&
             !showTrigger && (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col justify-center items-center gap-4">
                 <Text>Нет доступных форм.</Text>
                 <Link to={ROUTES.FORMS_NEW}>
                   <Button type="primary">Создать форму</Button>

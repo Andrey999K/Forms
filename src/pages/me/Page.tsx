@@ -4,10 +4,11 @@ import { BackButton } from '@/components/ui/BackButton';
 import { Loader } from '@/components/ui/Loader';
 import { GlassWrapper } from '@/components/ui/wrapper/GlassWrapper';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { RootState } from '@/redux/store';
 import { useGetMeInfoQuery, useUpdateMeInfoMutation } from '@/redux/user';
+import { getCurrentUser } from '@/redux/user/userSlice';
 import { uploadToCloudinary } from '@/services/cloudinary.service';
 import { MeChangeFields } from '@/types/me';
+import { DEFAULT_AVATAR_URL } from '@/utils/constants/defaultAvatar';
 import { Alert, Form, notification, Typography } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { useEffect, useState } from 'react';
@@ -17,8 +18,10 @@ import { useSelector } from 'react-redux';
 export const Me = () => {
   const [isEdit, setEdit] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
-  const [isAlertVisible, setAlertVisible] = useState<boolean>(true);
-  const uid = useSelector((state: RootState) => state.user.user)?.uid;
+  const [, setAlertVisible] = useState<boolean>(true);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const uid = useSelector(getCurrentUser())?.uid;
 
   const { data: user, error, isLoading } = useGetMeInfoQuery(uid as string);
 
@@ -53,22 +56,17 @@ export const Me = () => {
     if (JSON.stringify(dirtyFields) === '{}') return;
     if (uid) {
       try {
-        let avatarUrl = user?.avatarUrl || '';
+        let avatarUrl = data?.avatarUrl || DEFAULT_AVATAR_URL;
 
         if (avatar) {
           avatarUrl = await uploadToCloudinary(avatar);
+        } else if (!user?.avatarUrl || user.avatarUrl === DEFAULT_AVATAR_URL) {
+          avatarUrl = DEFAULT_AVATAR_URL;
         }
 
-        const updatedData: MeChangeFields = { ...data };
-        if (avatarUrl) {
-          updatedData.avatarUrl = avatarUrl;
-        }
+        const updatedData: MeChangeFields = { ...data, avatarUrl };
 
-        await updateUserInfo({
-          id: uid,
-          data: updatedData,
-        }).unwrap();
-
+        await updateUserInfo({ id: uid, data: updatedData }).unwrap();
         notification.success({ message: 'Данные успешно обновлены' });
         setAvatar(null);
         setAlertVisible(false);
@@ -122,8 +120,9 @@ export const Me = () => {
                   isEdit={isEdit}
                   setAvatar={setAvatar}
                   avatar={avatar}
-                  setAlertVisible={setAlertVisible}
-                  isAlertVisible={isAlertVisible}
+                  setValue={setValue}
+                  previewUrl={previewUrl}
+                  setPreviewUrl={setPreviewUrl}
                 />
                 <MeProfileDetails
                   isEdit={isEdit}
@@ -133,6 +132,7 @@ export const Me = () => {
                   setEdit={setEdit}
                   setAvatar={setAvatar}
                   isUpdating={isUpdating}
+                  setPreviewUrl={setPreviewUrl}
                 />
               </Form>
             </GlassWrapper>
