@@ -1,1 +1,0 @@
-import{aC as a,j as t,B as n,cn as i}from"./index-BR7ZzziA.js";const r=()=>{const s=a(),e=()=>s(-1);return t.jsx("div",{className:"text-left",children:t.jsxs(n,{type:"link",style:{padding:0},onClick:e,children:[t.jsx(i,{size:25}),"Назад"]})})};export{r as B};
