@@ -9,7 +9,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ShapeWrapper } from './GlassLayout.js';
 import { ROUTES } from '@/routes/routesPaths.js';
 import { getCurrentUser } from '@/redux/user/userSlice.ts';
-import { Footer } from 'antd/es/layout/layout.js';
+import { Footer } from '@/components/ui/Footer/index.js';
 
 const pages = [
   {
