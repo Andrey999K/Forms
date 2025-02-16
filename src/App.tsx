@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { Input } from "antd";
+import { ConfigProvider } from 'antd';
+import './App.css';
+import { useChangeTheme } from './hooks/useChangeTheme.ts';
+import { useFirebaseAuth } from './hooks/useFirebaseAuth.ts';
+import { AppRouter } from './routes/routes.tsx';
+import { antdThemeConfig } from './utils/antdThemeConfig.ts';
 
-function App() {
-  const [count, setCount] = useState(0)
+export const App = () => {
+  useFirebaseAuth();
+  const theme = useChangeTheme();
 
   return (
-    <>
-      <Input />
-    </>
-  )
-}
-
-export default App
+    <ConfigProvider theme={antdThemeConfig(theme)}>
+      <AppRouter />
+    </ConfigProvider>
+  );
+};

@@ -1,0 +1,3 @@
+{
+  "*.{tsx,jsx,css,cjs,json,html,ts}": ["eslint ."]
+}

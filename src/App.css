@@ -1,7 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+
+*,
+html {
+  scroll-behavior: smooth !important;
+}
 #root {
-  max-width: 1280px;
+  /* max-width: 1280px; */
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 2rem; */
   text-align: center;
 }
 
@@ -39,4 +45,90 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.custom-form .ant-form-item-explain-error {
+  text-align: left;
+}
+
+.custom-timer .ant-statistic-title {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .ant-form-item {
+    margin-bottom: 10px !important;
+  }
+}
+
+/* Стилизация всего скроллбара */
+::-webkit-scrollbar {
+  width: 10px; /* ширина скроллбара */
+  height: 10px; /* высота скроллбара */
+}
+
+/* Стилизация ползунка скроллбара */
+::-webkit-scrollbar-thumb {
+  /*background-color: rgba(250, 145, 69, 0.4); !* цвет ползунка *!*/
+  background-color: var(--color-text); /* цвет ползунка */
+  border-radius: 5px; /* закругление углов ползунка */
+}
+
+/* Стилизация дорожки скроллбара */
+::-webkit-scrollbar-track {
+  /*background-color: #f9f9fd; !* фон дорожки *!*/
+  background-color: var(--color-bg); /* фон дорожки */
+}
+
+.font-quicksand {
+  font-family: 'Quicksand', sans-serif;
+}
+
+.input-item {
+  margin-bottom: 20px !important;
+}
+
+.ant-form-item {
+  margin-bottom: 20px !important;
+}
+
+.input-item-text-link {
+  margin-bottom: 0 !important;
+}
+
+.ant-input::placeholder {
+  font-size: 12px;
+}
+
+@media (min-width: 760px) {
+  .ant-input::placeholder {
+    font-size: 14px;
+  }
+}
+
+/* для сброса стилей автозаполнения браузера */
+.ant-input:-webkit-autofill,
+.ant-input-affix-wrapper:-webkit-autofill {
+  background-color: transparent !important;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: var(--color-text) !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* для корректного переноса текста но новую строку */
+.break-words {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Темная тема для notification ant design */
+.dark .ant-notification .ant-notification-notice-wrapper {
+  background: #1f1f1f !important;
+}
+.dark .ant-notification .ant-notification-notice-wrapper .ant-notification-notice-close {
+  color: #fff !important;
+}
+.dark .ant-notification-notice-message,
+.dark .ant-notification-notice-description {
+  color: #fff !important;
 }
