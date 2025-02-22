@@ -20,5 +20,13 @@ export const convertTimeInWords = (timeString: string): string => {
   const minutesString = `${minutes} ${pluralize(minutes, ['минута', 'минуты', 'минут'])}`;
   const secondsString = `${seconds} ${pluralize(seconds, ['секунда', 'секунды', 'секунд'])}`;
 
-  return `${hoursString} ${minutesString} и ${secondsString}`;
+  if (minutes < 1 && hours < 1) {
+    return secondsString;
+  }
+
+  if (hours < 1) {
+    return `${minutesString} и ${secondsString}!`;
+  }
+
+  return `${hoursString} ${minutesString} и ${secondsString}!`;
 };

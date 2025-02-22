@@ -52,33 +52,40 @@ export const Timer: FC<TimerProps> = ({ value, onFinish, isLoading }) => {
     }
   }
 
+  const handleExit = () => {
+    const currentTimeForm = deadline - Date.now();
+    if (currentTimeForm > 0) {
+      const currentLocalForms = getForm();
+      if (currentLocalForms && typeof currentLocalForms === 'object') {
+        if (
+          (currentLocalForms as FormLocal[]).find((currentForm) => currentForm.formId === formId)
+        ) {
+          const newData = (currentLocalForms as FormLocal[]).map((currentForm) => {
+            if (currentForm.formId === formId) {
+              return { ...currentForm, timer: currentTimeForm };
+            } else {
+              return currentForm;
+            }
+          });
+          update(newData);
+        } else {
+          update([...currentLocalForms, { formId, timer: currentTimeForm }]);
+        }
+      } else if (formId) {
+        update([{ formId, timer: currentTimeForm }]);
+      }
+    }
+  };
+
   // чтобы оставшееся время отсчитывалось от текущего момента
   deadline += Date.now();
 
   useEffect(() => {
+    window.addEventListener('beforeunload', handleExit);
+
     return () => {
-      const currentTimeForm = deadline - Date.now();
-      if (currentTimeForm > 0) {
-        const currentLocalForms = getForm();
-        if (currentLocalForms && typeof currentLocalForms === 'object') {
-          if (
-            (currentLocalForms as FormLocal[]).find((currentForm) => currentForm.formId === formId)
-          ) {
-            const newData = (currentLocalForms as FormLocal[]).map((currentForm) => {
-              if (currentForm.formId === formId) {
-                return { ...currentForm, timer: currentTimeForm };
-              } else {
-                return currentForm;
-              }
-            });
-            update(newData);
-          } else {
-            update([...currentLocalForms, { formId, timer: currentTimeForm }]);
-          }
-        } else if (formId) {
-          update([{ formId, timer: currentTimeForm }]);
-        }
-      }
+      handleExit();
+      window.removeEventListener('beforeunload', handleExit);
     };
   }, []);
 
